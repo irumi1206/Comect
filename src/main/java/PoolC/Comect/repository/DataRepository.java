@@ -2,12 +2,13 @@ package PoolC.Comect.repository;
 
 import PoolC.Comect.domain.data.Data;
 import PoolC.Comect.domain.user.User;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+
 @Repository
-public interface DataRepository extends ReactiveCrudRepository<Data,String> {
-//    List<Data> findAllByValue(String value);
+public interface DataRepository extends MongoRepository<Data, String> {
+
 }

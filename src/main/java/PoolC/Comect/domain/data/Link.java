@@ -9,9 +9,6 @@ import org.springframework.data.annotation.Id;
 @Getter
 @Setter
 public class Link {
-    @Id
-    @Generated
-    private String id;
 
     private String name;
     private String picture;
@@ -27,7 +24,6 @@ public class Link {
     @Override
     public String toString() {
         return "Link{" +
-                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", picture='" + picture + '\'' +
                 ", parentFolderId='" + parentFolderId + '\'' +

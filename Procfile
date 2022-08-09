@@ -1,1 +1,1 @@
-web: java -Dserver.port=8080 -jar Comect-0.0.1-SNAPSHOT.jar
+web: java -Dspring.server.port=8080 -jar "target/Comect-0.0.1-SNAPSHOT.jar"

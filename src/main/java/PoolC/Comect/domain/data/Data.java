@@ -3,8 +3,10 @@ package PoolC.Comect.domain.data;
 import lombok.Generated;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +17,7 @@ import java.util.List;
 public class Data {
 
     @Id
-    @Generated
-    private String id;
-
+    private ObjectId id;
     private String folderName;
     private String picture;
     private List<Folder> folders;
@@ -40,7 +40,7 @@ public class Data {
     @Override
     public String toString() {
         return "Data{" +
-                "id='" + id + '\'' +
+                //"id='" + id + '\'' +
                 ", folderName='" + folderName + '\'' +
                 ", picture='" + picture + '\'' +
                 ", folders=" + folders +

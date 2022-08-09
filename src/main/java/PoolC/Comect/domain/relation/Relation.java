@@ -3,6 +3,7 @@ package PoolC.Comect.domain.relation;
 import lombok.Generated;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,12 +13,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Relation {
     @Id
     @Generated
-    private String id;
+    private ObjectId id;
     private RelationType relationType;
-    private String relationId1;
-    private String relationId2;
+    private ObjectId relationId1;
+    private ObjectId relationId2;
 
-    public Relation(String relationId1, String relationId2) {
+    public Relation(ObjectId relationId1, ObjectId relationId2) {
         this.relationId1 = relationId1;
         this.relationId2 = relationId2;
         this.relationType=RelationType.REQUEST;

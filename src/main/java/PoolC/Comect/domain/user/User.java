@@ -4,6 +4,7 @@ import PoolC.Comect.domain.relation.Relation;
 import lombok.Generated;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -17,19 +18,19 @@ public class User {
 
     @Id
     @Generated
-    private String id;
+    private ObjectId id;
 
     private String userNickname;
     private String email;
-    private String rootFolderId;
+    private ObjectId rootFolderId;
     private String picture;
-    private List<String> relations;
+    private List<ObjectId> relations;
 
     public void addRelation(Relation relation){
         this.relations.add(relation.getId());
     }
 
-    public User(String userNickname, String email, String rootFolderId, String picture) {
+    public User(String userNickname, String email, ObjectId rootFolderId, String picture) {
         this.userNickname = userNickname;
         this.email = email;
         this.rootFolderId = rootFolderId;

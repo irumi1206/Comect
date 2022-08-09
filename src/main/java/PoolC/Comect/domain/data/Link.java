@@ -12,7 +12,6 @@ public class Link {
 
     private String name;
     private String picture;
-    private String parentFolderId;
     private String link;
 
     public Link(String name, String picture, String link) {
@@ -26,7 +25,6 @@ public class Link {
         return "Link{" +
                 ", name='" + name + '\'' +
                 ", picture='" + picture + '\'' +
-                ", parentFolderId='" + parentFolderId + '\'' +
                 ", link='" + link + '\'' +
                 '}';
     }

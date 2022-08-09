@@ -2,6 +2,7 @@ package PoolC.Comect.repository;
 
 import PoolC.Comect.domain.data.Data;
 import PoolC.Comect.domain.data.Folder;
+import PoolC.Comect.domain.data.Link;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import org.bson.types.ObjectId;
@@ -12,19 +13,87 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public class CustomDataRepositoryImpl implements CustomDataRepository{
 
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    public void insertToFolder(ObjectId id, Folder folder){
-        UpdateResult result=mongoTemplate.updateFirst(
-                Query.query(Criteria.where("id").is(id)),
-                new Update().push("folders",folder),
-                Data.class
-        );
+    public void createFolder(ObjectId rootId,String path, Folder folder){
+
+        Query query=new Query().addCriteria(Criteria.where("_id").is(rootId));
+
+        Update update=new Update();
+
+        String []tokens=path.split("/");
+        String pushQuery="folders";
+        for(int i=0;i<tokens.length;++i) {
+            pushQuery += ".$[token" + String.valueOf(i) + "].folders";
+        }
+
+        update.push(pushQuery,folder);
+        for(int i=0;i< tokens.length;++i){
+            update.filterArray(Criteria.where("token"+String.valueOf(i)+".name").is(tokens[i]));
+        }
+
+        mongoTemplate.updateFirst(query,update,Data.class);
     }
 
+    public List<Folder> readFolder(ObjectId rootId, String path){
+        return null;
+    }
+
+    public void updateFolder(ObjectId rootId,String path,String key,String value){
+
+        Query query=new Query().addCriteria(Criteria.where("_id").is(rootId));
+
+        Update update=new Update();
+
+        String []tokens=path.split("/");
+        String pushQuery="";
+        for(int i=0;i<tokens.length;++i) {
+            pushQuery += "folders.$[token" + String.valueOf(i) + "].";
+        }
+        pushQuery+=key;
+
+        System.out.println(pushQuery);
+
+        update.set(pushQuery,value);
+        for(int i=0;i< tokens.length;++i){
+            update.filterArray(Criteria.where("token"+String.valueOf(i)+".name").is(tokens[i]));
+            System.out.println("token"+String.valueOf(i)+".name  "+tokens[i]);
+        }
+
+        mongoTemplate.updateFirst(query,update,Data.class);
+    }
+
+    public void deleteFolder(ObjectId rootId,String path){
+
+        Query query=new Query().addCriteria(Criteria.where("_id").is(rootId));
+
+        Update update=new Update();
+
+        String []tokens=path.split("/");
+        String pushQuery="";
+        for(int i=0;i<tokens.length-1;++i) {
+            pushQuery += "folders.$[token" + String.valueOf(i) + "].";
+        }
+
+        pushQuery+="folders";
+
+        System.out.println(pushQuery);
+        System.out.println(tokens[tokens.length-1]);
+
+        update.pull(pushQuery,new Folder("name",tokens[tokens.length-1]));
+        for(int i=0;i< tokens.length-1;++i){
+            update.filterArray(Criteria.where("token"+String.valueOf(i)+".name").is(tokens[i]));
+            System.out.println("token"+String.valueOf(i)+".name  "+tokens[i]);
+        }
+
+        mongoTemplate.updateFirst(query,update,Data.class);
+    }
 
 }

@@ -26,10 +26,6 @@ public class User {
     private String picture;
     private List<ObjectId> relations;
 
-    public void addRelation(Relation relation){
-        this.relations.add(relation.getId());
-    }
-
     public User(String userNickname, String email, ObjectId rootFolderId, String picture) {
         this.userNickname = userNickname;
         this.email = email;

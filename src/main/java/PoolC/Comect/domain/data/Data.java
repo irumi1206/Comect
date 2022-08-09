@@ -18,31 +18,19 @@ public class Data {
 
     @Id
     private ObjectId id;
-    private String folderName;
-    private String picture;
     private List<Folder> folders;
     private List<Link> links;
 
-    public Data(String folderName, String picture) {
-        this.folderName = folderName;
-        this.picture = picture;
+    public Data() {
+        this.id = new ObjectId();
         this.folders=new ArrayList<>();
         this.links=new ArrayList<>();
-    }
-
-    public void addFolder(Folder folder){
-        this.folders.add(folder);
-    }
-    public void addLink(Link link){
-        this.links.add(link);
     }
 
     @Override
     public String toString() {
         return "Data{" +
                 //"id='" + id + '\'' +
-                ", folderName='" + folderName + '\'' +
-                ", picture='" + picture + '\'' +
                 ", folders=" + folders +
                 ", links=" + links +
                 '}';

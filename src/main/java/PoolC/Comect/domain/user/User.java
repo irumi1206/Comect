@@ -25,13 +25,15 @@ public class User {
     private ObjectId rootFolderId;
     private String picture;
     private List<ObjectId> relations;
+    private String password;
 
-    public User(String userNickname, String email, ObjectId rootFolderId, String picture) {
+    public User(String userNickname, String email, ObjectId rootFolderId, String picture, String password) {
         this.userNickname = userNickname;
         this.email = email;
         this.rootFolderId = rootFolderId;
         this.picture = picture;
         this.relations=new ArrayList<>();
+        this.password = password;
     }
 
     @Override

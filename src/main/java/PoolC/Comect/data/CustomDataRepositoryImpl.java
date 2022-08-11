@@ -1,10 +1,7 @@
-package PoolC.Comect.repository;
+package PoolC.Comect.data;
 
 import PoolC.Comect.domain.data.Data;
 import PoolC.Comect.domain.data.Folder;
-import PoolC.Comect.domain.data.Link;
-import com.mongodb.client.result.DeleteResult;
-import com.mongodb.client.result.UpdateResult;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -14,10 +11,9 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public class CustomDataRepositoryImpl implements CustomDataRepository{
+public class CustomDataRepositoryImpl implements CustomDataRepository {
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -95,5 +91,21 @@ public class CustomDataRepositoryImpl implements CustomDataRepository{
 
         mongoTemplate.updateFirst(query,update,Data.class);
     }
+
+    @Override
+    public void createLink(ObjectId id, String path, Folder folder) {
+
+    }
+
+    @Override
+    public void deleteLink(ObjectId id, String path) {
+
+    }
+
+    @Override
+    public void updateLink(ObjectId id, String path, String name, String newName) {
+
+    }
+
 
 }

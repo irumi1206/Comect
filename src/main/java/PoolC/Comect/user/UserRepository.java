@@ -1,4 +1,4 @@
-package PoolC.Comect.repository;
+package PoolC.Comect.user;
 
 import PoolC.Comect.domain.user.User;
 import org.bson.types.ObjectId;
@@ -17,5 +17,6 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
     public Optional<User> findByEmail(String email);
 
     public List<User> findByUserNickname(String userNickName);
+
 
 }

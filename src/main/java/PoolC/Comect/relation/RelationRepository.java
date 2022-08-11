@@ -1,4 +1,4 @@
-package PoolC.Comect.repository;
+package PoolC.Comect.relation;
 
 import PoolC.Comect.domain.relation.Relation;
 import org.bson.types.ObjectId;

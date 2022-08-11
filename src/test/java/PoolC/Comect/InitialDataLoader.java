@@ -5,12 +5,10 @@ import PoolC.Comect.domain.data.Folder;
 import PoolC.Comect.domain.data.Link;
 import PoolC.Comect.domain.relation.Relation;
 import PoolC.Comect.domain.user.User;
-import PoolC.Comect.repository.DataRepository;
-import PoolC.Comect.repository.RelationRepository;
-import PoolC.Comect.repository.UserRepository;
-import org.bson.types.ObjectId;
+import PoolC.Comect.data.DataRepository;
+import PoolC.Comect.relation.RelationRepository;
+import PoolC.Comect.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -18,7 +16,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @Profile("InitialDataLoader")

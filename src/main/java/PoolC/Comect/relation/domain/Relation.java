@@ -1,5 +1,6 @@
-package PoolC.Comect.domain.relation;
+package PoolC.Comect.relation.domain;
 
+import PoolC.Comect.relation.domain.RelationType;
 import lombok.Generated;
 import lombok.Getter;
 import lombok.Setter;

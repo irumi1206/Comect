@@ -1,6 +1,7 @@
-package PoolC.Comect.data;
+package PoolC.Comect.data.service;
 
-import PoolC.Comect.domain.data.Folder;
+import PoolC.Comect.data.repository.DataRepository;
+import PoolC.Comect.data.domain.Folder;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;

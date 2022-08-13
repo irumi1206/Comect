@@ -1,9 +1,10 @@
-package PoolC.Comect.relation;
+package PoolC.Comect.relation.service;
 
-import PoolC.Comect.domain.relation.Relation;
-import PoolC.Comect.domain.relation.RelationType;
-import PoolC.Comect.domain.user.User;
-import PoolC.Comect.user.UserRepository;
+import PoolC.Comect.relation.domain.Relation;
+import PoolC.Comect.relation.domain.RelationType;
+import PoolC.Comect.user.domain.User;
+import PoolC.Comect.relation.repository.RelationRepository;
+import PoolC.Comect.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;

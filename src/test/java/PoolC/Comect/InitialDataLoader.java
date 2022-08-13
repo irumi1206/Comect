@@ -1,13 +1,13 @@
 package PoolC.Comect;
 
-import PoolC.Comect.domain.data.Data;
-import PoolC.Comect.domain.data.Folder;
-import PoolC.Comect.domain.data.Link;
-import PoolC.Comect.domain.relation.Relation;
-import PoolC.Comect.domain.user.User;
-import PoolC.Comect.data.DataRepository;
-import PoolC.Comect.relation.RelationRepository;
-import PoolC.Comect.user.UserRepository;
+import PoolC.Comect.data.domain.Data;
+import PoolC.Comect.data.domain.Folder;
+import PoolC.Comect.data.domain.Link;
+import PoolC.Comect.relation.domain.Relation;
+import PoolC.Comect.user.domain.User;
+import PoolC.Comect.data.repository.DataRepository;
+import PoolC.Comect.relation.repository.RelationRepository;
+import PoolC.Comect.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;

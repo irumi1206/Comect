@@ -1,6 +1,6 @@
-package PoolC.Comect.data;
+package PoolC.Comect.data.repository;
 
-import PoolC.Comect.domain.data.Folder;
+import PoolC.Comect.data.domain.Folder;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Repository;
 

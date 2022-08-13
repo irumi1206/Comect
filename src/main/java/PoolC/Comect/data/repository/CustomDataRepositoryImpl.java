@@ -1,7 +1,7 @@
-package PoolC.Comect.data;
+package PoolC.Comect.data.repository;
 
-import PoolC.Comect.domain.data.Data;
-import PoolC.Comect.domain.data.Folder;
+import PoolC.Comect.data.domain.Data;
+import PoolC.Comect.data.domain.Folder;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;

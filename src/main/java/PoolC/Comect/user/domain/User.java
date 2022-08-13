@@ -1,6 +1,5 @@
-package PoolC.Comect.domain.user;
+package PoolC.Comect.user.domain;
 
-import PoolC.Comect.domain.relation.Relation;
 import lombok.Generated;
 import lombok.Getter;
 import lombok.Setter;

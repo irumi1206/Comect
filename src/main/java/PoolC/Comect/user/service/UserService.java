@@ -1,8 +1,9 @@
-package PoolC.Comect.user;
+package PoolC.Comect.user.service;
 
-import PoolC.Comect.domain.data.Data;
-import PoolC.Comect.domain.user.User;
-import PoolC.Comect.data.DataRepository;
+import PoolC.Comect.data.domain.Data;
+import PoolC.Comect.user.domain.User;
+import PoolC.Comect.data.repository.DataRepository;
+import PoolC.Comect.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class UserService {
 
     //회원 가입
     @Transactional
-    public ObjectId join(String userNickname, String email, String picture, String password){
+    public ObjectId join(String email, String password,String userNickname,String picture){
         Data data=new Data();
         dataRepository.save(data);
         User user=new User(userNickname,email,data.getId(),picture, password);

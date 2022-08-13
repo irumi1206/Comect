@@ -1,6 +1,6 @@
-package PoolC.Comect.data;
+package PoolC.Comect.data.repository;
 
-import PoolC.Comect.domain.data.Data;
+import PoolC.Comect.data.domain.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;

@@ -1,6 +1,6 @@
-package PoolC.Comect.user;
+package PoolC.Comect.user.repository;
 
-import PoolC.Comect.domain.user.User;
+import PoolC.Comect.user.domain.User;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;

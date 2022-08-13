@@ -1,4 +1,4 @@
-package PoolC.Comect.domain.data;
+package PoolC.Comect.data.domain;
 
 import lombok.Generated;
 import lombok.Getter;

@@ -18,25 +18,46 @@ public class UserController {
 
     @PostMapping("/auth/signUp")
     public ResponseEntity<Void> createUser(@RequestBody CreateUserRequestDto request){
-        userService.join(request.getUserEmail(),request.getUserPassword(),request.getUserNickname(), request.getProfilePicture());
+        try{
+            userService.join(request.getUserEmail(),request.getUserPassword(),request.getUserNickname(), request.getProfilePicture());
+        }catch(IllegalStateException e){
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/auth/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto request){
-        //토큰 발급 추후 구현
-        return ResponseEntity.ok(new LoginResponseDto(request.getUserEmail()));
+        try{
+            User user = userService.findOne(request.getUserEmail());
+            LoginResponseDto loginResponseDto = new LoginResponseDto(request.getUserEmail());
+            if(user.getPassword().equals(request.getUserPassword())){
+                return ResponseEntity.ok(loginResponseDto);
+            }else{
+                return ResponseEntity.badRequest().build();
+            }
+        }catch(IllegalStateException e){
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PostMapping("/member/myInfo")
     public ResponseEntity<ReadUserResponseDto> readUser(@RequestBody ReadUserRequestDto request){
-        User user = userService.findOne(request.getUserEmail());
-        return ResponseEntity.ok(new ReadUserResponseDto(user));
+        try{
+            User user = userService.findOne(request.getUserEmail());
+            return ResponseEntity.ok(new ReadUserResponseDto(user));
+        }catch(IllegalStateException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PostMapping("/member/myInfoChange")
     public ResponseEntity<Void> updateUser(@RequestBody UpdateUserRequestDto request){
-        userService.update(request.getUserEmail(), request.getNewNickname(), request.getNewProfilePicture());
+        try{
+            userService.update(request.getUserEmail(), request.getNewNickname(), request.getNewProfilePicture());
+        }catch(IllegalStateException e){
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.ok().build();
     }
 

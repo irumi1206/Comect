@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -22,30 +24,50 @@ public class UserService {
     //회원 가입
     @Transactional
     public ObjectId join(String email, String password,String userNickname,String picture){
+        validateEmailUser(email);
+        validateDuplicateUser(email);
         Data data=new Data();
         dataRepository.save(data);
         User user=new User(userNickname,email,data.getId(),picture, password);
-        validateDuplicateUser(user);
         userRepository.save(user);
         return user.getId();
     }
 
-    private void validateDuplicateUser(User user){
-        Optional<User> findUsers = userRepository.findByEmail(user.getEmail());
+    private void validateDuplicateUser(String email){
+        Optional<User> findUsers = userRepository.findByEmail(email);
         if(!findUsers.isEmpty()){
             throw new IllegalStateException("이미 존재하는 이메일입니다");
         }
     }
 
+    private void validateEmailUser(String email){
+        String regx = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
+        Pattern pattern = Pattern.compile(regx);
+        Matcher matcher = pattern.matcher(email);
+        if(!matcher.matches()){
+            throw new IllegalStateException("형식에 맞지 않는 이메일입니다");
+        }
+    }
+
     @Transactional
     public void update(String email,String userNickname, String picture){
-        User user = userRepository.findByEmail(email).get();
-        user.setUserNickname(userNickname);
-        user.setPicture(picture);
-        userRepository.save(user);
+        Optional<User> userOption = userRepository.findByEmail(email);
+        if(userOption.isEmpty()){
+            throw new IllegalStateException("해당 이메일의 유저가 없습니다.");
+        }else {
+            User user = userOption.get();
+            user.setUserNickname(userNickname);
+            user.setPicture(picture);
+            userRepository.save(user);
+        }
     }
 
     public User findOne(String email){
-        return userRepository.findByEmail(email).get();
+        Optional<User> userOption = userRepository.findByEmail(email);
+        if(userOption.isEmpty()){
+            throw new IllegalStateException("해당 이메일의 유저가 없습니다.");
+        }
+        User user = userOption.get();
+        return user;
     }
 }

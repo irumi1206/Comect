@@ -70,4 +70,12 @@ public class UserService {
         User user = userOption.get();
         return user;
     }
+    public User findById(ObjectId id){
+        Optional<User> userOption = userRepository.findById(id);
+        if(userOption.isEmpty()){
+            throw new IllegalStateException("해당 아이디의 유저가 없습니다.");
+        }
+        User user = userOption.get();
+        return user;
+    }
 }

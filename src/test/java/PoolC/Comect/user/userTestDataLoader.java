@@ -43,6 +43,10 @@ public class userTestDataLoader implements CommandLineRunner {
         User user2 = new User("user2", "user2Email@naver.com", data2.getId(), "user2Picture", "5678");
         dataRepository.save(data2);
         userRepository.save(user2);
+        Data data3 = new Data();
+        User user3 = new User("user3", "user3Email@naver.com", data1.getId(), "user3Picture", "1234");
+        dataRepository.save(data3);
+        userRepository.save(user3);
 
         List<User> temp1=userRepository.findByUserNickname("user1");
         List<User> temp2=userRepository.findByUserNickname("user2");

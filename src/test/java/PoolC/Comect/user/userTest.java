@@ -56,10 +56,10 @@ public class userTest {
         final String baseUrl = "http://localhost:" + port + "/auth/signUp";
         URI uri = new URI(baseUrl);
         CreateUserRequestDto createUserRequestDto = new CreateUserRequestDto();
-        createUserRequestDto.setUserEmail("user3Email@naver.com");
-        createUserRequestDto.setUserNickname("user3");
+        createUserRequestDto.setUserEmail("user4Email@naver.com");
+        createUserRequestDto.setUserNickname("user4");
         createUserRequestDto.setUserPassword("1234");
-        createUserRequestDto.setProfilePicture("user3picture");
+        createUserRequestDto.setProfilePicture("user4picture");
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,createUserRequestDto,String.class);
         //then

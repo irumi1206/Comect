@@ -14,8 +14,8 @@ configurations {
 	}
 }
 
-bootJar {
-	destinationDirectory = file("./target")
+springBoot{
+	mainClass = "PoolC.Comect.ComectApplication"
 }
 
 repositories {
@@ -38,6 +38,3 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-jar{
-	enabled =false
-}

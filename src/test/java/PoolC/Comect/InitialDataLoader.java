@@ -50,11 +50,11 @@ public class InitialDataLoader implements CommandLineRunner {
     }
     void createUser(){
         Data data1=new Data();
-        User user1=new User("user1","user1Email",data1.getId(),"user1Picture");
+        User user1=new User("user1","user1Email",data1.getId(),"user1Picture","1234");
         dataRepository.save(data1);
         userRepository.save(user1);
         Data data2=new Data();
-        User user2=new User("user2","user2Email",data2.getId(),"user2Picture");
+        User user2=new User("user2","user2Email",data2.getId(),"user2Picture","5678");
         dataRepository.save(data2);
         userRepository.save(user2);
     }

@@ -27,13 +27,16 @@ public class RelationService {
         User user1 = userRepository.findById(id1).get();
         User user2 = userRepository.findById(id2).get();
         List<ObjectId> relations = user1.getRelations();
+        System.out.println(relations.size());
         for (ObjectId relation : relations) {
             Optional<Relation> relationOption = relationRepository.findById(relation);
             if(!relationOption.isEmpty()){
                 if(relationOption.get().getRelationId1().equals(id2)){
+                    System.out.println("이미 존재하는 요청입니다.");
                     throw new IllegalStateException("이미 존재하는 요청입니다.");
                 }
                 else if(relationOption.get().getRelationId2().equals(id2)){
+                    System.out.println("이미 존재하는 요청입니다.");
                     throw new IllegalStateException("이미 존재하는 요청입니다.");
                 }
             }
@@ -42,24 +45,30 @@ public class RelationService {
         user1.getRelations().add(relation.getId());
         user2.getRelations().add(relation.getId());
         relationRepository.save(relation);
+        userRepository.save(user1);
+        userRepository.save(user2);
     }
 
     @Transactional
-    public void acceptRelation(ObjectId id,ObjectId myId, RelationType relationType){
-        Optional<Relation> relationOption = relationRepository.findById(id);
+    public void acceptRelation(ObjectId relationId,ObjectId myId){
+        Optional<Relation> relationOption = relationRepository.findById(relationId);
         if(relationOption.isEmpty()){
             throw new IllegalStateException("해당 요청이 존재하지 않습니다.");
         }
         Relation relation = relationOption.get();
+        if(!relation.getRelationType().equals(RelationType.REQUEST)){
+            throw new IllegalStateException("이미 친구이거나 거절되었습니다.");
+        }
         if(myId.equals(relation.getRelationId2())){
-            relation.setRelationType(relationType);
+            relation.setRelationType(RelationType.BOTH);
+            relationRepository.save(relation);
         }else{
             throw new IllegalStateException("요청을 처리할 권한이 없습니다.");
         }
     }
 
     @Transactional
-    public void cancelRelation(ObjectId id, ObjectId myId){
+    public void rejectRelation(ObjectId id, ObjectId myId){
         Optional<Relation> relationOption = relationRepository.findById(id);
         if(relationOption.isEmpty()){
             throw new IllegalStateException("해당 요청이 존재하지 않습니다.");
@@ -67,10 +76,37 @@ public class RelationService {
         Relation relation = relationOption.get();
         if(myId.equals(relation.getRelationId1())){
             relation.setRelationType(RelationType.REJECTED);
+            relationRepository.save(relation);
         }else{
             throw new IllegalStateException("요청을 처리할 권한이 없습니다.");
         }
     }
+
+//    @Transactional
+//    public void deleteRelation(String userEmail, String friendEmail){
+//        User user = userRepository.findByEmail(userEmail).get();
+//        User friend = userRepository.findByEmail(friendEmail).get();
+//        ObjectId userId2 = friend.getId();
+//        List<ObjectId> relations = user.getRelations();
+//        ObjectId id;
+//        for (ObjectId relationId : relations) {
+//            Relation relation = relationRepository.findById(relationId).get();
+//            if(relation.getRelationId1().equals(userId2) ||relation.getRelationId2().equals(userId2)){
+//                id=relation.getId();
+//                break;
+//            }
+//        }
+//        Optional<Relation> relationOption = relationRepository.findById(id);
+//        if(relationOption.isEmpty()){
+//            throw new IllegalStateException("해당 요청이 존재하지 않습니다.");
+//        }
+//        Relation relation = relationOption.get();
+//        ObjectId user1Id = relation.getRelationId1();
+//        ObjectId user2Id = relation.getRelationId2();
+//        userRepository.findById(user1Id).get().getRelations().remove(relation.getId());
+//        userRepository.findById(user2Id).get().getRelations().remove(relation.getId());
+//        relationRepository.delete(relation);
+//    }
 
     public List<ObjectId> findFriends(List<ObjectId> relations,ObjectId myId){
         List<ObjectId> friendId = new ArrayList<>();
@@ -91,6 +127,9 @@ public class RelationService {
     }
     public List<ObjectId> findRequest(List<ObjectId> relations,ObjectId myId){
         List<ObjectId> friendId = new ArrayList<>();
+        if(relations.size()==0){
+            return friendId;
+        }
         for (ObjectId relationId : relations) {
             Optional<Relation> relationOption = relationRepository.findById(relationId);
             if(!relationOption.isEmpty()){

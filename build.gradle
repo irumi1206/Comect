@@ -16,6 +16,7 @@ configurations {
 
 springBoot{
 	mainClass = "PoolC.Comect.ComectApplication"
+
 }
 
 repositories {

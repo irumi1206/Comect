@@ -1,6 +1,14 @@
 package PoolC.Comect.user;
 
+import PoolC.Comect.data.domain.Data;
+import PoolC.Comect.data.repository.DataRepository;
+import PoolC.Comect.relation.domain.Relation;
+import PoolC.Comect.relation.domain.RelationType;
+import PoolC.Comect.relation.repository.RelationRepository;
+import PoolC.Comect.user.domain.User;
 import PoolC.Comect.user.dto.*;
+import PoolC.Comect.user.repository.UserRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +31,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,15 +46,50 @@ public class userTest {
     @Autowired
     private TestRestTemplate restTemplate;
     @Autowired
-    private MongoTemplate mongoTemplate;
+    private DataRepository dataRepository;
+    @Autowired
+    private RelationRepository relationRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    @BeforeEach
-    void before() throws Exception {
-        mongoTemplate.remove(new Query(),"data");
-        mongoTemplate.remove(new Query(),"relation");
-        mongoTemplate.remove(new Query(),"user");
-        userTestDataLoader userTestDataLoader = new userTestDataLoader();
-        userTestDataLoader.run();
+    @Before
+    public void before(){
+        dataRepository.deleteAll();
+        relationRepository.deleteAll();
+        userRepository.deleteAll();
+
+        Data data1 = new Data();
+        User user1 = new User("user1", "user1Email@naver.com", data1.getId(), "user1Picture", "1234");
+        dataRepository.save(data1);
+        userRepository.save(user1);
+        Data data2 = new Data();
+        User user2 = new User("user2", "user2Email@naver.com", data2.getId(), "user2Picture", "5678");
+        dataRepository.save(data2);
+        userRepository.save(user2);
+        Data data3 = new Data();
+        User user3 = new User("user3", "user3Email@naver.com", data1.getId(), "user3Picture", "1234");
+        dataRepository.save(data3);
+        userRepository.save(user3);
+        Data data4 = new Data();
+        User user4 = new User("user4", "user4Email@naver.com", data1.getId(), "user4Picture", "12345");
+        dataRepository.save(data4);
+        userRepository.save(user4);
+
+        List<User> temp1=userRepository.findByUserNickname("user1");
+        List<User> temp2=userRepository.findByUserNickname("user2");
+        Relation d=new Relation(temp1.get(0).getId(),temp2.get(0).getId());
+        List<User> temp4=userRepository.findByUserNickname("user4");
+        Relation d1=new Relation(temp1.get(0).getId(),temp4.get(0).getId());
+        d1.setRelationType(RelationType.BOTH);
+        relationRepository.save(d);
+        relationRepository.save(d1);
+        user1.getRelations().add(d.getId());
+        user1.getRelations().add(d1.getId());
+        user2.getRelations().add(d.getId());
+        user4.getRelations().add(d1.getId());
+        userRepository.save(user1);
+        userRepository.save(user2);
+        userRepository.save(user4);
     }
 
 
@@ -56,7 +100,7 @@ public class userTest {
         final String baseUrl = "http://localhost:" + port + "/auth/signUp";
         URI uri = new URI(baseUrl);
         CreateUserRequestDto createUserRequestDto = new CreateUserRequestDto();
-        createUserRequestDto.setUserEmail("user4Email@naver.com");
+        createUserRequestDto.setUserEmail("user5Email@naver.com");
         createUserRequestDto.setUserNickname("user4");
         createUserRequestDto.setUserPassword("1234");
         createUserRequestDto.setProfilePicture("user4picture");

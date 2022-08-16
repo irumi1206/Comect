@@ -1,10 +1,7 @@
 package PoolC.Comect.relation.controller;
 
 
-import PoolC.Comect.relation.dto.CreateRelationRequestDto;
-import PoolC.Comect.relation.dto.FriendInfo;
-import PoolC.Comect.relation.dto.ReadRelationRequestDto;
-import PoolC.Comect.relation.dto.ReadRelationResponseDto;
+import PoolC.Comect.relation.dto.*;
 import PoolC.Comect.relation.service.RelationService;
 import PoolC.Comect.user.domain.User;
 import PoolC.Comect.user.dto.CreateUserRequestDto;
@@ -20,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 @RestController
 @RequiredArgsConstructor
@@ -67,11 +65,44 @@ public class RelationController {
     public ResponseEntity<CreateRelationRequestDto> addRelation(@RequestBody CreateRelationRequestDto request){
         try{
             String userEmail = request.getUserEmail();
+            String friendEmail = request.getFriendEmail();
             User user = userService.findOne(userEmail);
-            relationService.createRelation(user.getId(),request.getFriendId());
+            User friend = userService.findOne(friendEmail);
+            relationService.createRelation(user.getId(),friend.getId());
+            return ResponseEntity.ok().build();
+        }catch(IllegalStateException e){
+            return ResponseEntity.badRequest().build();
+        }
+
+    }
+
+    @PostMapping("/member/accept")
+    public ResponseEntity<Void> acceptRelation(@RequestBody AcceptRelationRequestDto request){
+        try {
+            String userEmail = request.getUserEmail();
+            String relationId = request.getRelationId();
+            User user = userService.findOne(userEmail);
+            relationService.acceptRelation(new ObjectId(relationId), user.getId());
             return ResponseEntity.ok().build();
         }catch(IllegalStateException e){
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @PostMapping("/member/reject")
+    public ResponseEntity<Void> rejectRelation(@RequestBody RejectRelationRequestDto request){
+        String userEmail = request.getUserEmail();
+        String relationId = request.getRelationId();
+        User user = userService.findOne(userEmail);
+        relationService.rejectRelation(new ObjectId(relationId), user.getId());
+        return ResponseEntity.ok().build();
+    }
+
+//    @PostMapping("/member/delete")
+//    public ResponseEntity<Void> deleteRelation(@RequestBody DeleteFriendRequestDto request){
+//        String userEmail = request.getUserEmail();
+//        String friendEmail = request.getFriendEmail();
+//        relationService.deleteRelation(userEmail, friendEmail);
+//        return ResponseEntity.ok().build();
+//    }
 }

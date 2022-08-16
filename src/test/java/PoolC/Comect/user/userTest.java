@@ -172,7 +172,7 @@ public class userTest {
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,updateUserRequestDto,String.class);
         //then
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
@@ -199,7 +199,7 @@ public class userTest {
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,readUserRequestDto, String.class);
         //then
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
     @Test
     @DisplayName("테스트 08 : 로그인")
@@ -227,7 +227,7 @@ public class userTest {
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,loginRequestDto,String.class);
         //then
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
     @Test
     @DisplayName("테스트 10 : 로그인 실패, 비밀번호 틀림")

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -32,11 +33,9 @@ public class RelationService {
             Optional<Relation> relationOption = relationRepository.findById(relation);
             if(!relationOption.isEmpty()){
                 if(relationOption.get().getRelationId1().equals(id2)){
-                    System.out.println("이미 존재하는 요청입니다.");
                     throw new IllegalStateException("이미 존재하는 요청입니다.");
                 }
                 else if(relationOption.get().getRelationId2().equals(id2)){
-                    System.out.println("이미 존재하는 요청입니다.");
                     throw new IllegalStateException("이미 존재하는 요청입니다.");
                 }
             }
@@ -53,7 +52,7 @@ public class RelationService {
     public void acceptRelation(ObjectId relationId,ObjectId myId){
         Optional<Relation> relationOption = relationRepository.findById(relationId);
         if(relationOption.isEmpty()){
-            throw new IllegalStateException("해당 요청이 존재하지 않습니다.");
+            throw new NoSuchElementException("해당 요청이 존재하지 않습니다.");
         }
         Relation relation = relationOption.get();
         if(!relation.getRelationType().equals(RelationType.REQUEST)){
@@ -71,7 +70,7 @@ public class RelationService {
     public void rejectRelation(ObjectId id, ObjectId myId){
         Optional<Relation> relationOption = relationRepository.findById(id);
         if(relationOption.isEmpty()){
-            throw new IllegalStateException("해당 요청이 존재하지 않습니다.");
+            throw new NoSuchElementException("해당 요청이 존재하지 않습니다.");
         }
         Relation relation = relationOption.get();
         if(myId.equals(relation.getRelationId1())){

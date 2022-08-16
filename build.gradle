@@ -14,8 +14,8 @@ configurations {
 	}
 }
 
-bootJar {
-	destinationDirectory = file("./target")
+jar{
+	enabled=false
 }
 
 repositories {

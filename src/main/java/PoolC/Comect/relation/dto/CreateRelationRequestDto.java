@@ -6,5 +6,5 @@ import org.bson.types.ObjectId;
 @Data
 public class CreateRelationRequestDto {
     private String userEmail;
-    private ObjectId friendId;
+    private String friendEmail;
 }

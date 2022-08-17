@@ -28,7 +28,6 @@ public class RelationController {
 
     @PostMapping("/member/find")
     public ResponseEntity<ReadRelationResponseDto> findRelation(@RequestBody ReadRelationRequestDto request){
-        try{
             User user = userService.findOne(request.getUserEmail());
             ReadRelationResponseDto readRelationResponseDto = new ReadRelationResponseDto();
             List<ObjectId> requests = relationService.findRequest(user.getRelations(), user.getId());
@@ -56,37 +55,25 @@ public class RelationController {
             readRelationResponseDto.setNumberOfFriends(friendsList.size());
             readRelationResponseDto.setNumberOfRequest(requestList.size());
             return ResponseEntity.ok(readRelationResponseDto);
-        }catch(IllegalStateException e){
-            return ResponseEntity.badRequest().build();
-        }
     }
 
     @PostMapping("/member/add")
     public ResponseEntity<CreateRelationRequestDto> addRelation(@RequestBody CreateRelationRequestDto request){
-        try{
             String userEmail = request.getUserEmail();
             String friendEmail = request.getFriendEmail();
             User user = userService.findOne(userEmail);
             User friend = userService.findOne(friendEmail);
             relationService.createRelation(user.getId(),friend.getId());
             return ResponseEntity.ok().build();
-        }catch(IllegalStateException e){
-            return ResponseEntity.badRequest().build();
-        }
-
     }
 
     @PostMapping("/member/accept")
     public ResponseEntity<Void> acceptRelation(@RequestBody AcceptRelationRequestDto request){
-        try {
             String userEmail = request.getUserEmail();
             String relationId = request.getRelationId();
             User user = userService.findOne(userEmail);
             relationService.acceptRelation(new ObjectId(relationId), user.getId());
             return ResponseEntity.ok().build();
-        }catch(IllegalStateException e){
-            return ResponseEntity.badRequest().build();
-        }
     }
 
     @PostMapping("/member/reject")

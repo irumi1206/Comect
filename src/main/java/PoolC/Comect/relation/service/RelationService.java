@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -24,19 +26,25 @@ public class RelationService {
 
     @Transactional
     public void createRelation(ObjectId id1, ObjectId id2){
-        User user1 = userRepository.findById(id1).get();
-        User user2 = userRepository.findById(id2).get();
+        Optional<User> user1Option = userRepository.findById(id1);
+        Optional<User> user2Option = userRepository.findById(id2);
+        if(user1Option.isEmpty()){
+            throw new NullPointerException("해당 아이디의 유저가 존재하지 않습니다.");
+        }
+        if(user2Option.isEmpty()){
+            throw new NullPointerException("해당 아이디의 유저가 존재하지 않습니다.");
+        }
+        User user1 = user1Option.get();
+        User user2 = user2Option.get();
         List<ObjectId> relations = user1.getRelations();
         System.out.println(relations.size());
         for (ObjectId relation : relations) {
             Optional<Relation> relationOption = relationRepository.findById(relation);
             if(!relationOption.isEmpty()){
                 if(relationOption.get().getRelationId1().equals(id2)){
-                    System.out.println("이미 존재하는 요청입니다.");
                     throw new IllegalStateException("이미 존재하는 요청입니다.");
                 }
                 else if(relationOption.get().getRelationId2().equals(id2)){
-                    System.out.println("이미 존재하는 요청입니다.");
                     throw new IllegalStateException("이미 존재하는 요청입니다.");
                 }
             }
@@ -53,7 +61,7 @@ public class RelationService {
     public void acceptRelation(ObjectId relationId,ObjectId myId){
         Optional<Relation> relationOption = relationRepository.findById(relationId);
         if(relationOption.isEmpty()){
-            throw new IllegalStateException("해당 요청이 존재하지 않습니다.");
+            throw new NullPointerException("해당 요청이 존재하지 않습니다.");
         }
         Relation relation = relationOption.get();
         if(!relation.getRelationType().equals(RelationType.REQUEST)){
@@ -71,10 +79,10 @@ public class RelationService {
     public void rejectRelation(ObjectId id, ObjectId myId){
         Optional<Relation> relationOption = relationRepository.findById(id);
         if(relationOption.isEmpty()){
-            throw new IllegalStateException("해당 요청이 존재하지 않습니다.");
+            throw new NullPointerException("해당 요청이 존재하지 않습니다.");
         }
         Relation relation = relationOption.get();
-        if(myId.equals(relation.getRelationId1())){
+        if(myId.equals(relation.getRelationId2())){
             relation.setRelationType(RelationType.REJECTED);
             relationRepository.save(relation);
         }else{
@@ -145,4 +153,5 @@ public class RelationService {
         }
         return friendId;
     }
+
 }

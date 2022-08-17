@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class RejectRelationRequestDto {
     private String userEmail;
-    private String relationId;
+    private String friendId;
 }

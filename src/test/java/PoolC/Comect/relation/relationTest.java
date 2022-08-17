@@ -171,9 +171,10 @@ public class relationTest {
         URI uri = new URI(baseUrl);
         AcceptRelationRequestDto acceptRelationRequestDto = new AcceptRelationRequestDto();
         String userEmail = "user2Email@naver.com";
-        User user = userService.findOne(userEmail);
+        String friendEmail = "user1Email@naver.com";
+        User friend = userService.findOne(friendEmail);
         acceptRelationRequestDto.setUserEmail(userEmail);
-        acceptRelationRequestDto.setRelationId(user.getRelations().get(0).toHexString());
+        acceptRelationRequestDto.setFriendId(friend.getId().toHexString());
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,acceptRelationRequestDto,String.class);
         //then
@@ -188,9 +189,10 @@ public class relationTest {
         URI uri = new URI(baseUrl);
         AcceptRelationRequestDto acceptRelationRequestDto = new AcceptRelationRequestDto();
         String userEmail = "user1Email@naver.com";
-        User user = userService.findOne(userEmail);
+        String friendEmail = "user2Email@naver.com";
+        User friend = userService.findOne(friendEmail);
         acceptRelationRequestDto.setUserEmail(userEmail);
-        acceptRelationRequestDto.setRelationId(user.getRelations().get(0).toHexString());
+        acceptRelationRequestDto.setFriendId(friend.getId().toHexString());
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,acceptRelationRequestDto,String.class);
         //then
@@ -205,9 +207,10 @@ public class relationTest {
         URI uri = new URI(baseUrl);
         AcceptRelationRequestDto acceptRelationRequestDto = new AcceptRelationRequestDto();
         String userEmail = "user4Email@naver.com";
-        User user = userService.findOne(userEmail);
+        String friendEmail = "user1Email@naver.com";
+        User friend = userService.findOne(friendEmail);
         acceptRelationRequestDto.setUserEmail(userEmail);
-        acceptRelationRequestDto.setRelationId(user.getRelations().get(0).toHexString());
+        acceptRelationRequestDto.setFriendId(friend.getId().toHexString());
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,acceptRelationRequestDto,String.class);
         //then
@@ -215,39 +218,40 @@ public class relationTest {
     }
 
     @Test
-    @DisplayName("테스트 08 : 친구 수락, 없는 유저")
+    @DisplayName("테스트 08 : 친구 수락, 없는 사용자")
     public void friendAccept4() throws URISyntaxException {
         //given
         final String baseUrl = "http://localhost:" + port + "/member/accept";
         URI uri = new URI(baseUrl);
         AcceptRelationRequestDto acceptRelationRequestDto = new AcceptRelationRequestDto();
-        String userEmail = "user2Email@naver.com";
-        String userEmail1 = "user5Email@naver.com";
-        User user = userService.findOne(userEmail);
-        acceptRelationRequestDto.setUserEmail(userEmail1);
-        acceptRelationRequestDto.setRelationId(user.getRelations().get(0).toHexString());
+        String userEmail = "user5Email@naver.com";
+        String friendEmail = "user2Email@naver.com";
+        User friend = userService.findOne(friendEmail);
+        acceptRelationRequestDto.setUserEmail(userEmail);
+        acceptRelationRequestDto.setFriendId(friend.getId().toHexString());
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,acceptRelationRequestDto,String.class);
         //then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
-    @Test
-    @DisplayName("테스트 09 : 친구 수락, 없는 요청")
-    public void friendAccept5() throws URISyntaxException {
-        //given
-        final String baseUrl = "http://localhost:" + port + "/member/accept";
-        URI uri = new URI(baseUrl);
-        AcceptRelationRequestDto acceptRelationRequestDto = new AcceptRelationRequestDto();
-        String userEmail = "user2Email@naver.com";
-        User user = userService.findOne(userEmail);
-        acceptRelationRequestDto.setUserEmail(userEmail);
-        acceptRelationRequestDto.setRelationId("62fb65146db1947f98356363");
-        //when
-        ResponseEntity<String> result = this.restTemplate.postForEntity(uri,acceptRelationRequestDto,String.class);
-        //then
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-    }
+//    @Test
+//    @DisplayName("테스트 09 : 친구 수락, 없는 요청")
+//    public void friendAccept5() throws URISyntaxException {
+//        //given
+//        final String baseUrl = "http://localhost:" + port + "/member/accept";
+//        URI uri = new URI(baseUrl);
+//        AcceptRelationRequestDto acceptRelationRequestDto = new AcceptRelationRequestDto();
+//        String userEmail = "user2Email@naver.com";
+//        String friendEmail = "user1Email@naver.com";
+//        User friend = userService.findOne(friendEmail);
+//        acceptRelationRequestDto.setUserEmail(userEmail);
+//        acceptRelationRequestDto.setFriendId(friend.getId().toHexString());
+//        //when
+//        ResponseEntity<String> result = this.restTemplate.postForEntity(uri,acceptRelationRequestDto,String.class);
+//        //then
+//        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+//    }
 
     @Test
     @DisplayName("테스트 10 : 친구 거절")
@@ -257,9 +261,10 @@ public class relationTest {
         URI uri = new URI(baseUrl);
         AcceptRelationRequestDto acceptRelationRequestDto = new AcceptRelationRequestDto();
         String userEmail = "user2Email@naver.com";
-        User user = userService.findOne(userEmail);
+        String friendEmail = "user1Email@naver.com";
+        User friend = userService.findOne(friendEmail);
         acceptRelationRequestDto.setUserEmail(userEmail);
-        acceptRelationRequestDto.setRelationId(user.getRelations().get(0).toHexString());
+        acceptRelationRequestDto.setFriendId(friend.getId().toHexString());
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,acceptRelationRequestDto,String.class);
         //then
@@ -274,9 +279,10 @@ public class relationTest {
         URI uri = new URI(baseUrl);
         AcceptRelationRequestDto acceptRelationRequestDto = new AcceptRelationRequestDto();
         String userEmail = "user1Email@naver.com";
-        User user = userService.findOne(userEmail);
+        String friendEmail = "user2Email@naver.com";
+        User friend = userService.findOne(friendEmail);
         acceptRelationRequestDto.setUserEmail(userEmail);
-        acceptRelationRequestDto.setRelationId(user.getRelations().get(0).toHexString());
+        acceptRelationRequestDto.setFriendId(friend.getId().toHexString());
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,acceptRelationRequestDto,String.class);
         //then
@@ -284,16 +290,17 @@ public class relationTest {
     }
 
     @Test
-    @DisplayName("테스트 12 : 친구 거절, 없는 요청")
+    @DisplayName("테스트 12 : 친구 거절, 없는 사용자")
     public void friendReject3() throws URISyntaxException{
         //given
         final String baseUrl = "http://localhost:" + port + "/member/reject";
         URI uri = new URI(baseUrl);
         AcceptRelationRequestDto acceptRelationRequestDto = new AcceptRelationRequestDto();
-        String userEmail = "user2Email@naver.com";
-        User user = userService.findOne(userEmail);
+        String userEmail = "user5Email@naver.com";
+        String friendEmail = "user1Email@naver.com";
+        User friend = userService.findOne(friendEmail);
         acceptRelationRequestDto.setUserEmail(userEmail);
-        acceptRelationRequestDto.setRelationId("62fb65146db1947f98356363");
+        acceptRelationRequestDto.setFriendId(friend.getId().toHexString());
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,acceptRelationRequestDto,String.class);
         //then

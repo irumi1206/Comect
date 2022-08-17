@@ -35,7 +35,7 @@ public class RelationController {
             for (ObjectId friendsId : requests) {
                 FriendInfo friendInfo = new FriendInfo();
                 User friend = userService.findById(friendsId);
-                friendInfo.setId(friendsId);
+                friendInfo.setId(friendsId.toHexString());
                 friendInfo.setNickname(friend.getUserNickname());
                 friendInfo.setProfilePicture(friend.getPicture());
                 requestList.add(friendInfo);
@@ -45,7 +45,7 @@ public class RelationController {
             for (ObjectId friendsId : friends) {
                 FriendInfo friendInfo = new FriendInfo();
                 User friend = userService.findById(friendsId);
-                friendInfo.setId(friendsId);
+                friendInfo.setId(friendsId.toHexString());
                 friendInfo.setNickname(friend.getUserNickname());
                 friendInfo.setProfilePicture(friend.getPicture());
                 friendsList.add(friendInfo);
@@ -70,18 +70,18 @@ public class RelationController {
     @PostMapping("/member/accept")
     public ResponseEntity<Void> acceptRelation(@RequestBody AcceptRelationRequestDto request){
             String userEmail = request.getUserEmail();
-            String relationId = request.getRelationId();
+            String friendId = request.getFriendId();
             User user = userService.findOne(userEmail);
-            relationService.acceptRelation(new ObjectId(relationId), user.getId());
+            relationService.acceptRelation(user.getId(),new ObjectId(friendId));
             return ResponseEntity.ok().build();
     }
 
     @PostMapping("/member/reject")
     public ResponseEntity<Void> rejectRelation(@RequestBody RejectRelationRequestDto request){
         String userEmail = request.getUserEmail();
-        String relationId = request.getRelationId();
+        String friendId = request.getFriendId();
         User user = userService.findOne(userEmail);
-        relationService.rejectRelation(new ObjectId(relationId), user.getId());
+        relationService.rejectRelation(user.getId(),new ObjectId(friendId));
         return ResponseEntity.ok().build();
     }
 

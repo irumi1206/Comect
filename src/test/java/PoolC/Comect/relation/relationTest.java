@@ -130,7 +130,7 @@ public class relationTest {
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,readRelationRequestDto,String.class);
         //then
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
@@ -229,7 +229,7 @@ public class relationTest {
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,acceptRelationRequestDto,String.class);
         //then
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
@@ -246,14 +246,14 @@ public class relationTest {
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,acceptRelationRequestDto,String.class);
         //then
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
     @DisplayName("테스트 10 : 친구 거절")
     public void friendReject1() throws URISyntaxException{
         //given
-        final String baseUrl = "http://localhost:" + port + "/member/accept";
+        final String baseUrl = "http://localhost:" + port + "/member/reject";
         URI uri = new URI(baseUrl);
         AcceptRelationRequestDto acceptRelationRequestDto = new AcceptRelationRequestDto();
         String userEmail = "user2Email@naver.com";
@@ -264,5 +264,39 @@ public class relationTest {
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,acceptRelationRequestDto,String.class);
         //then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @DisplayName("테스트 11 : 친구 거절, 내가 신청한 요청")
+    public void friendReject2() throws URISyntaxException{
+        //given
+        final String baseUrl = "http://localhost:" + port + "/member/reject";
+        URI uri = new URI(baseUrl);
+        AcceptRelationRequestDto acceptRelationRequestDto = new AcceptRelationRequestDto();
+        String userEmail = "user1Email@naver.com";
+        User user = userService.findOne(userEmail);
+        acceptRelationRequestDto.setUserEmail(userEmail);
+        acceptRelationRequestDto.setRelationId(user.getRelations().get(0).toHexString());
+        //when
+        ResponseEntity<String> result = this.restTemplate.postForEntity(uri,acceptRelationRequestDto,String.class);
+        //then
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    @DisplayName("테스트 12 : 친구 거절, 없는 요청")
+    public void friendReject3() throws URISyntaxException{
+        //given
+        final String baseUrl = "http://localhost:" + port + "/member/reject";
+        URI uri = new URI(baseUrl);
+        AcceptRelationRequestDto acceptRelationRequestDto = new AcceptRelationRequestDto();
+        String userEmail = "user2Email@naver.com";
+        User user = userService.findOne(userEmail);
+        acceptRelationRequestDto.setUserEmail(userEmail);
+        acceptRelationRequestDto.setRelationId("62fb65146db1947f98356363");
+        //when
+        ResponseEntity<String> result = this.restTemplate.postForEntity(uri,acceptRelationRequestDto,String.class);
+        //then
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }

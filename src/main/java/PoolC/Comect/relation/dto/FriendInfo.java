@@ -5,7 +5,7 @@ import org.bson.types.ObjectId;
 
 @Data
 public class FriendInfo {
-    private ObjectId id;
+    private String id;
     private String nickname;
     private String profilePicture;
 }

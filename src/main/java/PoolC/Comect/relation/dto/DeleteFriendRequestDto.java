@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class DeleteFriendRequestDto {
     private String userEmail;
-    private String friendEmail;
+    private String friendId;
 }

@@ -1,5 +1,6 @@
 package PoolC.Comect.data.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.types.ObjectId;
@@ -28,7 +29,7 @@ public class Data {
     @Override
     public String toString() {
         return "Data{" +
-                //"id='" + id + '\'' +
+                "id=" + id +
                 ", folders=" + folders +
                 ", links=" + links +
                 '}';

@@ -9,11 +9,13 @@ public class FolderMoveRequestDto {
     private String userEmail;
     private String originalPath;
     private String modifiedPath;
+    private String modifiedFolderName;
 
     @Builder
-    public FolderMoveRequestDto(String userEmail, String originalPath, String modifiedPath){
+    public FolderMoveRequestDto(String userEmail, String originalPath, String modifiedPath, String modifiedFolderName){
         this.userEmail=userEmail;
         this.originalPath=originalPath;
         this.modifiedPath=modifiedPath;
+        this.modifiedFolderName=modifiedFolderName;
     }
 }

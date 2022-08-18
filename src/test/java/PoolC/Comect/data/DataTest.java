@@ -670,6 +670,141 @@ public class DataTest {
 
     }
 
+    @Test
+    @DisplayName("테스트 24 : 폴더 이동 성공")
+    public void 폴더이동성공() throws URISyntaxException{
+        //given
+        String baseUrl="http://localhost:" + port + "/folder/move";
+        URI uri =new URI(baseUrl);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("JSON","true");
+
+        String userEmail="user1Email@email.com";
+        String originalPath="folder1/folder4";
+        String modifiedPath="folder2";
+        FolderMoveRequestDto folderMoveRequestDto= FolderMoveRequestDto.builder()
+                .userEmail(userEmail)
+                .originalPath(originalPath)
+                .modifiedPath(modifiedPath)
+                .build();
+
+        //when
+        HttpEntity<FolderMoveRequestDto> request = new HttpEntity<>(folderMoveRequestDto,headers);
+        ResponseEntity<String> result = restTemplate.postForEntity(uri,request,String.class);
+
+        //then
+        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    }
+
+    @Test
+    @DisplayName("테스트 24 : 폴더 이동 실패, 이메일에 해당하는 회원이 없음")
+    public void 폴더이동실패1() throws URISyntaxException{
+        //given
+        String baseUrl="http://localhost:" + port + "/folder/move";
+        URI uri =new URI(baseUrl);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("JSON","true");
+
+        String userEmail="user4Email@email.com";
+        String originalPath="folder1/folder4";
+        String modifiedPath="folder2";
+        FolderMoveRequestDto folderMoveRequestDto= FolderMoveRequestDto.builder()
+                .userEmail(userEmail)
+                .originalPath(originalPath)
+                .modifiedPath(modifiedPath)
+                .build();
+
+        //when
+        HttpEntity<FolderMoveRequestDto> request = new HttpEntity<>(folderMoveRequestDto,headers);
+        ResponseEntity<String> result = restTemplate.postForEntity(uri,request,String.class);
+
+        //then
+        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+    }
+
+    @Test
+    @DisplayName("테스트 24 : 폴더 이동 실패, 이메일 형식이 맞지 않음")
+    public void 폴더이동실패2() throws URISyntaxException{
+        //given
+        String baseUrl="http://localhost:" + port + "/folder/move";
+        URI uri =new URI(baseUrl);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("JSON","true");
+
+        String userEmail="user1Email";
+        String originalPath="folder1/folder4";
+        String modifiedPath="folder2";
+        FolderMoveRequestDto folderMoveRequestDto= FolderMoveRequestDto.builder()
+                .userEmail(userEmail)
+                .originalPath(originalPath)
+                .modifiedPath(modifiedPath)
+                .build();
+
+        //when
+        HttpEntity<FolderMoveRequestDto> request = new HttpEntity<>(folderMoveRequestDto,headers);
+        ResponseEntity<String> result = restTemplate.postForEntity(uri,request,String.class);
+
+        //then
+        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+    }
+
+    @Test
+    @DisplayName("테스트 24 : 폴더 이동 실패, 유효하지 않은 본래 경로")
+    public void 폴더이동실패3() throws URISyntaxException{
+        //given
+        String baseUrl="http://localhost:" + port + "/folder/move";
+        URI uri =new URI(baseUrl);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("JSON","true");
+
+        String userEmail="user1Email@email.com";
+        String originalPath="folder4";
+        String modifiedPath="folder2";
+        FolderMoveRequestDto folderMoveRequestDto= FolderMoveRequestDto.builder()
+                .userEmail(userEmail)
+                .originalPath(originalPath)
+                .modifiedPath(modifiedPath)
+                .build();
+
+        //when
+        HttpEntity<FolderMoveRequestDto> request = new HttpEntity<>(folderMoveRequestDto,headers);
+        ResponseEntity<String> result = restTemplate.postForEntity(uri,request,String.class);
+
+        //then
+        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+    }
+
+    @Test
+    @DisplayName("테스트 24 : 폴더 이동 실패, 유효하지 않는 도착 경로")
+    public void 폴더이동실패4() throws URISyntaxException{
+        //given
+        String baseUrl="http://localhost:" + port + "/folder/move";
+        URI uri =new URI(baseUrl);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("JSON","true");
+
+        String userEmail="user1Email@email.com";
+        String originalPath="folder1/folder4";
+        String modifiedPath="folder5";
+        FolderMoveRequestDto folderMoveRequestDto= FolderMoveRequestDto.builder()
+                .userEmail(userEmail)
+                .originalPath(originalPath)
+                .modifiedPath(modifiedPath)
+                .build();
+
+        //when
+        HttpEntity<FolderMoveRequestDto> request = new HttpEntity<>(folderMoveRequestDto,headers);
+        ResponseEntity<String> result = restTemplate.postForEntity(uri,request,String.class);
+
+        //then
+        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+    }
+
 
 
 }

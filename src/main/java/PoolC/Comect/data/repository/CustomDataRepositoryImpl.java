@@ -139,6 +139,47 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
                 .collect(Collectors.toList());
     }
 
+    public Folder folderRead(ObjectId rootId, String path){
+
+        Query query=new Query().addCriteria(Criteria.where("_id").is(rootId));
+
+        Data data=mongoTemplate.findOne(query,Data.class,"data");
+
+        if(path.length()==0) path="/";
+
+        String []tokens=path.split("/");
+        if(tokens.length==0) throw new IllegalStateException("경로가 유효하지 않습니다 루트 폴더는 읽을수 없습니다");
+
+        Folder folder=new Folder("tempFolder");
+
+        boolean flagFirst=false;
+
+        for(int i=0;i<data.getFolders().size();++i){
+            if(data.getFolders().get(i).getName().equals(tokens[0])){
+                flagFirst=true;
+                folder=data.getFolders().get(i);
+                break;
+            }
+        }
+
+        if(!flagFirst) throw new IllegalStateException("경로가 유효하지 않습니다");
+
+
+        for(int i=1;i<tokens.length;++i){
+            boolean flag=false;
+            for(int j=0;j<folder.getFolders().size();++j){
+                if(folder.getFolders().get(i).getName().equals(tokens[i])) {
+                    folder = folder.getFolders().get(i);
+                    flag=true;
+                    break;
+                }
+            }
+            if(!flag) throw new IllegalStateException("경로가 유효하지 않습니다");
+        }
+
+        return folder;
+    }
+
     public void folderUpdate(ObjectId rootId, String path, String folderName){
 
         Query query=new Query().addCriteria(Criteria.where("_id").is(rootId));

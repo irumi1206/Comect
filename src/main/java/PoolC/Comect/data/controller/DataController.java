@@ -67,5 +67,14 @@ public class DataController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("folder/move")
+    public ResponseEntity<Void> folderMove(@RequestBody FolderMoveRequestDto folderMoveRequestDto){
+        String userEmail=folderMoveRequestDto.getUserEmail();
+        String originalPath=folderMoveRequestDto.getOriginalPath();
+        String modifiedPath=folderMoveRequestDto.getModifiedPath();
+        dataService.folderMove(userEmail,originalPath,modifiedPath);
+        return ResponseEntity.ok().build();
+    }
+
 
 }

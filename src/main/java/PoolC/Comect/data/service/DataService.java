@@ -61,6 +61,15 @@ public class DataService {
         dataRepository.folderDelete(user.getRootFolderId(),path);
     }
 
+    @Transactional
+    public void folderMove(String userEmail, String originalPath, String modifiedPath){
+        validateEmail(userEmail);
+        User user = getUserByEmail(userEmail);
+        Folder folder=dataRepository.folderRead(user.getRootFolderId(),originalPath);
+        dataRepository.folderDelete(user.getRootFolderId(),originalPath);
+        dataRepository.folderCreate(user.getRootFolderId(),modifiedPath,folder);
+    }
+
     private User getUserByEmail(String userEmail){
         Optional<User> user = userRepository.findByEmail(userEmail);
         return user.orElseThrow(() ->new IllegalStateException("존재하지 않은 유저입니다"));

@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class LoginResponseDto {
 
-    private String userId;
+    private String userEmail;
 
-    public LoginResponseDto(String userId) {
-        this.userId = userId;
+    public LoginResponseDto(String userEmail) {
+        this.userEmail = userEmail;
     }
 }

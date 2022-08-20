@@ -11,6 +11,7 @@ import PoolC.Comect.user.domain.User;
 import PoolC.Comect.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,7 +27,7 @@ public class DataController {
     private final DataService dataService;
     private final UserRepository userRepository;
 
-    @PostMapping("/folder/create")
+    @PostMapping(value="/folder/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> folderCreate(@RequestBody FolderCreateRequestDto folderCreateRequestDto)throws IllegalAccessException{
 //        String userEmail = folderCreateRequestDto.getUserEmail();
 //        String path = folderCreateRequestDto.getPath();

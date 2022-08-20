@@ -1,10 +1,14 @@
 package PoolC.Comect.data.controller;
 
+import PoolC.Comect.data.domain.Data;
 import PoolC.Comect.data.domain.Folder;
 import PoolC.Comect.data.domain.Link;
 import PoolC.Comect.data.dto.*;
+import PoolC.Comect.data.repository.DataRepository;
 import PoolC.Comect.data.service.DataService;
 import PoolC.Comect.relation.dto.ReadRelationResponseDto;
+import PoolC.Comect.user.domain.User;
+import PoolC.Comect.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,13 +22,19 @@ import java.util.List;
 public class DataController {
 
     private final DataService dataService;
+    private final UserRepository userRepository;
 
     @PostMapping("/folder/create")
     public ResponseEntity<Void> folderCreate(@RequestBody FolderCreateRequestDto folderCreateRequestDto)throws IllegalAccessException{
-        String userEmail = folderCreateRequestDto.getUserEmail();
-        String path = folderCreateRequestDto.getPath();
-        String folderName = folderCreateRequestDto.getFolderName();
-        dataService.folderCreate(userEmail,path,folderName);
+//        String userEmail = folderCreateRequestDto.getUserEmail();
+//        String path = folderCreateRequestDto.getPath();
+//        String folderName = folderCreateRequestDto.getFolderName();
+//        dataService.folderCreate(userEmail,path,folderName);
+        Data user1Data = new Data();
+        User user1 = new User("user1", "user1Email@email.com", user1Data.getId(), "user1Picture", "user1");
+        //dataRepository.save(user1Data);
+        userRepository.save(user1);
+
         return ResponseEntity.ok().build();
     }
 

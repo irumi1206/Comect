@@ -13,18 +13,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/folder")
 public class DataController {
 
     private final DataService dataService;
     private final UserRepository userRepository;
 
-    @PostMapping("/folder/create")
+    @PostMapping("/create")
     public ResponseEntity<Void> folderCreate(@RequestBody FolderCreateRequestDto folderCreateRequestDto)throws IllegalAccessException{
 //        String userEmail = folderCreateRequestDto.getUserEmail();
 //        String path = folderCreateRequestDto.getPath();

@@ -27,7 +27,7 @@ public class DataController {
     private final DataService dataService;
     private final UserRepository userRepository;
 
-    @PostMapping(value="/folder/create", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/folder/create")
     public ResponseEntity<Void> folderCreate(@RequestBody FolderCreateRequestDto folderCreateRequestDto)throws IllegalAccessException{
 //        String userEmail = folderCreateRequestDto.getUserEmail();
 //        String path = folderCreateRequestDto.getPath();

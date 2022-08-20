@@ -27,7 +27,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/folder/create")
+    @PostMapping("/auth/create")
     public ResponseEntity<Void> folderCreate(@RequestBody FolderCreateRequestDto folderCreateRequestDto)throws IllegalAccessException{
 //        String userEmail = folderCreateRequestDto.getUserEmail();
 //        String path = folderCreateRequestDto.getPath();

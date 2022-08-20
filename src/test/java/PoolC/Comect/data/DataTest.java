@@ -127,7 +127,7 @@ public class DataTest {
         ResponseEntity<String> result = restTemplate.postForEntity(uri,request,String.class);
 
         //then
-        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
 
     }
 
@@ -258,7 +258,7 @@ public class DataTest {
         ResponseEntity<String> result = restTemplate.postForEntity(uri,request,String.class);
 
         //then
-        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         System.out.println(result.getBody());
     }
 
@@ -383,7 +383,7 @@ public class DataTest {
         ResponseEntity<String> result = restTemplate.postForEntity(uri,request,String.class);
 
         //then
-        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         System.out.println(result.getBody());
     }
 
@@ -473,7 +473,7 @@ public class DataTest {
         HttpHeaders headers = new HttpHeaders();
         headers.set("JSON","true");
 
-        String userEmail="user2Email@email.com";
+        String userEmail="user4Email@email.com";
         String path="folder1";
         String folderName="newFolder1";
         FolderUpdateRequestDto folderUpdateRequestDto= FolderUpdateRequestDto.builder()
@@ -487,7 +487,7 @@ public class DataTest {
         ResponseEntity<String> result = restTemplate.postForEntity(uri,request,String.class);
 
         //then
-        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
 
     }
 
@@ -616,7 +616,7 @@ public class DataTest {
         ResponseEntity<String> result = restTemplate.postForEntity(uri,request,String.class);
 
         //then
-        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
 
     }
 
@@ -720,7 +720,7 @@ public class DataTest {
         ResponseEntity<String> result = restTemplate.postForEntity(uri,request,String.class);
 
         //then
-        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
 
     }
 

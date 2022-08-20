@@ -20,7 +20,7 @@ public class DataController {
     private final DataService dataService;
 
     @PostMapping("/folder/create")
-    public ResponseEntity<Void> folderCreate(@RequestBody FolderCreateRequestDto folderCreateRequestDto){
+    public ResponseEntity<Void> folderCreate(@RequestBody FolderCreateRequestDto folderCreateRequestDto)throws IllegalAccessException{
         String userEmail = folderCreateRequestDto.getUserEmail();
         String path = folderCreateRequestDto.getPath();
         String folderName = folderCreateRequestDto.getFolderName();
@@ -29,7 +29,7 @@ public class DataController {
     }
 
     @PostMapping("/folder/read")
-    public ResponseEntity<FolderReadResponseDto> folderRead(@RequestBody FolderReadRequestDto folderReadRequestDto){
+    public ResponseEntity<FolderReadResponseDto> folderRead(@RequestBody FolderReadRequestDto folderReadRequestDto) throws IllegalAccessException{
         String userEmail=folderReadRequestDto.getUserEmail();
         String path=folderReadRequestDto.getPath();
         List<String> folderNames= dataService.folderReadFolder(userEmail,path);
@@ -41,7 +41,7 @@ public class DataController {
     }
 
     @PostMapping("folder/readFolder")
-    public ResponseEntity<FolderReadFolderResponseDto> folderReadFolder(@RequestBody FolderReadFolderRequestDto folderReadFolderRequestDto){
+    public ResponseEntity<FolderReadFolderResponseDto> folderReadFolder(@RequestBody FolderReadFolderRequestDto folderReadFolderRequestDto) throws IllegalAccessException{
         String userEmail = folderReadFolderRequestDto.getUserEmail();
         String path=folderReadFolderRequestDto.getPath();
         List<String> folderNames = dataService.folderReadFolder(userEmail,path);
@@ -51,7 +51,7 @@ public class DataController {
     }
 
     @PostMapping("folder/update")
-    public ResponseEntity<Void> folderUpdate(@RequestBody FolderUpdateRequestDto folderUpdateRequestDto){
+    public ResponseEntity<Void> folderUpdate(@RequestBody FolderUpdateRequestDto folderUpdateRequestDto) throws IllegalAccessException{
         String userEmail = folderUpdateRequestDto.getUserEmail();
         String path = folderUpdateRequestDto.getPath();
         String folderName = folderUpdateRequestDto.getFolderName();
@@ -60,7 +60,7 @@ public class DataController {
     }
 
     @PostMapping("folder/delete")
-    public ResponseEntity<Void> folderDelete(@RequestBody FolderDeleteRequestDto folderDeleteRequestDto){
+    public ResponseEntity<Void> folderDelete(@RequestBody FolderDeleteRequestDto folderDeleteRequestDto) throws IllegalAccessException{
         String userEmail = folderDeleteRequestDto.getUserEmail();
         String path = folderDeleteRequestDto.getPath();
         dataService.folderDelete(userEmail,path);
@@ -68,7 +68,7 @@ public class DataController {
     }
 
     @PostMapping("folder/move")
-    public ResponseEntity<Void> folderMove(@RequestBody FolderMoveRequestDto folderMoveRequestDto){
+    public ResponseEntity<Void> folderMove(@RequestBody FolderMoveRequestDto folderMoveRequestDto) throws IllegalAccessException{
         String userEmail=folderMoveRequestDto.getUserEmail();
         String originalPath=folderMoveRequestDto.getOriginalPath();
         String modifiedPath=folderMoveRequestDto.getModifiedPath();

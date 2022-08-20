@@ -1,5 +1,6 @@
 package PoolC.Comect.user.controller;
 
+import PoolC.Comect.data.dto.FolderCreateRequestDto;
 import PoolC.Comect.user.domain.User;
 import PoolC.Comect.user.dto.*;
 import PoolC.Comect.user.service.UserService;
@@ -23,6 +24,20 @@ public class UserController {
     public ResponseEntity<Void> createUser(@RequestBody CreateUserRequestDto request) throws InterruptedException {
         userService.join(request.getUserEmail(),request.getUserPassword(),request.getUserNickname(), request.getProfilePicture());
         log.trace("signup success");
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/folder/create")
+    public ResponseEntity<Void> folderCreate(@RequestBody FolderCreateRequestDto folderCreateRequestDto)throws IllegalAccessException{
+//        String userEmail = folderCreateRequestDto.getUserEmail();
+//        String path = folderCreateRequestDto.getPath();
+//        String folderName = folderCreateRequestDto.getFolderName();
+//        dataService.folderCreate(userEmail,path,folderName);
+//        Data user1Data = new Data();
+//        User user1 = new User("user1", "user1Email@email.com", user1Data.getId(), "user1Picture", "user1");
+//        //dataRepository.save(user1Data);
+//        userRepository.save(user1);
+        log.trace("folder create success");
         return ResponseEntity.ok().build();
     }
 

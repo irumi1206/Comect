@@ -27,8 +27,7 @@ public class RelationController {
     private final UserService userService;
 
     @PostMapping("/member/find")
-    public ResponseEntity<ReadRelationResponseDto> findRelation(@RequestBody ReadRelationRequestDto request){
-        try{
+    public ResponseEntity<ReadRelationResponseDto> findRelation(@RequestBody ReadRelationRequestDto request) throws InterruptedException {
             User user = userService.findOne(request.getUserEmail());
             ReadRelationResponseDto readRelationResponseDto = new ReadRelationResponseDto();
             List<ObjectId> requests = relationService.findRequest(user.getRelations(), user.getId());
@@ -36,7 +35,7 @@ public class RelationController {
             for (ObjectId friendsId : requests) {
                 FriendInfo friendInfo = new FriendInfo();
                 User friend = userService.findById(friendsId);
-                friendInfo.setId(friendsId);
+                friendInfo.setId(friendsId.toHexString());
                 friendInfo.setNickname(friend.getUserNickname());
                 friendInfo.setProfilePicture(friend.getPicture());
                 requestList.add(friendInfo);
@@ -46,7 +45,7 @@ public class RelationController {
             for (ObjectId friendsId : friends) {
                 FriendInfo friendInfo = new FriendInfo();
                 User friend = userService.findById(friendsId);
-                friendInfo.setId(friendsId);
+                friendInfo.setId(friendsId.toHexString());
                 friendInfo.setNickname(friend.getUserNickname());
                 friendInfo.setProfilePicture(friend.getPicture());
                 friendsList.add(friendInfo);
@@ -56,45 +55,38 @@ public class RelationController {
             readRelationResponseDto.setNumberOfFriends(friendsList.size());
             readRelationResponseDto.setNumberOfRequest(requestList.size());
             return ResponseEntity.ok(readRelationResponseDto);
-        }catch(IllegalStateException e){
-            return ResponseEntity.badRequest().build();
-        }
     }
 
     @PostMapping("/member/add")
-    public ResponseEntity<CreateRelationRequestDto> addRelation(@RequestBody CreateRelationRequestDto request){
-        try{
+    public ResponseEntity<CreateRelationRequestDto> addRelation(@RequestBody CreateRelationRequestDto request) throws InterruptedException {
             String userEmail = request.getUserEmail();
             String friendEmail = request.getFriendEmail();
             User user = userService.findOne(userEmail);
-            User friend = userService.findOne(friendEmail);
-            relationService.createRelation(user.getId(),friend.getId());
-            return ResponseEntity.ok().build();
-        }catch(IllegalStateException e){
-            return ResponseEntity.badRequest().build();
+        User friend = null;
+        try {
+            friend = userService.findOne(friendEmail);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
-
+        relationService.createRelation(user.getId(),friend.getId());
+            return ResponseEntity.ok().build();
     }
 
     @PostMapping("/member/accept")
-    public ResponseEntity<Void> acceptRelation(@RequestBody AcceptRelationRequestDto request){
-        try {
+    public ResponseEntity<Void> acceptRelation(@RequestBody AcceptRelationRequestDto request) throws InterruptedException {
             String userEmail = request.getUserEmail();
-            String relationId = request.getRelationId();
+            String friendId = request.getFriendId();
             User user = userService.findOne(userEmail);
-            relationService.acceptRelation(new ObjectId(relationId), user.getId());
+            relationService.acceptRelation(user.getId(),new ObjectId(friendId));
             return ResponseEntity.ok().build();
-        }catch(IllegalStateException e){
-            return ResponseEntity.badRequest().build();
-        }
     }
 
     @PostMapping("/member/reject")
-    public ResponseEntity<Void> rejectRelation(@RequestBody RejectRelationRequestDto request){
+    public ResponseEntity<Void> rejectRelation(@RequestBody RejectRelationRequestDto request) throws InterruptedException {
         String userEmail = request.getUserEmail();
-        String relationId = request.getRelationId();
+        String friendId = request.getFriendId();
         User user = userService.findOne(userEmail);
-        relationService.rejectRelation(new ObjectId(relationId), user.getId());
+        relationService.rejectRelation(user.getId(),new ObjectId(friendId));
         return ResponseEntity.ok().build();
     }
 

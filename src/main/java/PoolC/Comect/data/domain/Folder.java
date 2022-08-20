@@ -13,13 +13,11 @@ import java.util.List;
 public class Folder {
 
     private String name;
-    private String picture;
     private List<Folder> folders;
     private List<Link> links;
 
-    public Folder(String name, String picture) {
+    public Folder(String name) {
         this.name = name;
-        this.picture = picture;
         folders=new ArrayList<>();
         links=new ArrayList<>();
     }
@@ -28,7 +26,6 @@ public class Folder {
     public String toString() {
         return "Folder{" +
                 ", name='" + name + '\'' +
-                ", picture='" + picture + '\'' +
                 ", folders=" + folders +
                 ", links=" + links +
                 '}';

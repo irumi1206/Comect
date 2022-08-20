@@ -24,25 +24,25 @@ public class UserController {
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto request){
-            User user = userService.findOne(request.getUserEmail());
-            LoginResponseDto loginResponseDto = new LoginResponseDto(request.getUserEmail());
-            if(user.getPassword().equals(request.getUserPassword())){
-                return ResponseEntity.ok(loginResponseDto);
-            }else{
-                return ResponseEntity.badRequest().build();
-            }
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto request) throws InterruptedException {
+        User user = userService.findOne(request.getUserEmail());
+        LoginResponseDto loginResponseDto = new LoginResponseDto(request.getUserEmail());
+        if(user.getPassword().equals(request.getUserPassword())){
+            return ResponseEntity.ok(loginResponseDto);
+        }else{
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PostMapping("/member/myInfo")
-    public ResponseEntity<ReadUserResponseDto> readUser(@RequestBody ReadUserRequestDto request){
-            User user = userService.findOne(request.getUserEmail());
-            return ResponseEntity.ok(new ReadUserResponseDto(user));
+    public ResponseEntity<ReadUserResponseDto> readUser(@RequestBody ReadUserRequestDto request) throws InterruptedException {
+        User user = userService.findOne(request.getUserEmail());
+        return ResponseEntity.ok(new ReadUserResponseDto(user));
     }
 
     @PostMapping("/member/myInfoChange")
     public ResponseEntity<Void> updateUser(@RequestBody UpdateUserRequestDto request){
-            userService.update(request.getUserEmail(), request.getNewNickname(), request.getNewProfilePicture());
+        userService.update(request.getUserEmail(), request.getNewNickname(), request.getNewProfilePicture());
         return ResponseEntity.ok().build();
     }
 

@@ -54,7 +54,7 @@ public class UserService {
     public void update(String email,String userNickname, String picture){
         Optional<User> userOption = userRepository.findByEmail(email);
         if(userOption.isEmpty()){
-            throw new NoSuchElementException("해당 이메일의 유저가 없습니다.");
+            throw new NullPointerException("해당 이메일의 유저가 없습니다.");
         }else {
             User user = userOption.get();
             user.setUserNickname(userNickname);
@@ -63,10 +63,11 @@ public class UserService {
         }
     }
 
-    public User findOne(String email){
+    public User findOne(String email) throws InterruptedException {
+        validateEmailUser(email);
         Optional<User> userOption = userRepository.findByEmail(email);
         if(userOption.isEmpty()){
-            throw new NoSuchElementException("해당 이메일의 유저가 없습니다.");
+            throw new NullPointerException("해당 이메일의 유저가 없습니다.");
         }
         User user = userOption.get();
         return user;
@@ -74,7 +75,7 @@ public class UserService {
     public User findById(ObjectId id){
         Optional<User> userOption = userRepository.findById(id);
         if(userOption.isEmpty()){
-            throw new NoSuchElementException("해당 아이디의 유저가 없습니다.");
+            throw new NullPointerException("해당 아이디의 유저가 없습니다.");
         }
         User user = userOption.get();
         return user;

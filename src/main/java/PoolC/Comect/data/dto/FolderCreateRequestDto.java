@@ -5,18 +5,15 @@ import lombok.Data;
 
 @Data
 public class FolderCreateRequestDto {
+
     private String userEmail;
     private String path;
     private String folderName;
-    private String folderPicture;
-
-
 
     @Builder
-    public FolderCreateRequestDto(String userEmail, String path, String folderName, String folderPicture){
+    public FolderCreateRequestDto(String userEmail, String path, String folderName){
         this.userEmail=userEmail;
         this.path=path;
         this.folderName=folderName;
-        this.folderPicture=folderPicture;
     }
 }

@@ -1,62 +1,87 @@
 package PoolC.Comect.data.service;
 
+import PoolC.Comect.data.domain.Link;
 import PoolC.Comect.data.repository.DataRepository;
 import PoolC.Comect.data.domain.Folder;
+import PoolC.Comect.user.domain.User;
+import PoolC.Comect.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class DataService {
+
     private final DataRepository dataRepository;
-
+    private final UserRepository userRepository;
 
     @Transactional
-    public void createFolder( ObjectId id, String path, String name, String picture){
-        Folder folder = new Folder(name, picture);
-        dataRepository.createFolder(id, path, folder);
+    public void folderCreate(String userEmail, String path, String folderName){
+        validateEmail(userEmail);
+        User user = getUserByEmail(userEmail);
+        Folder folder = new Folder(folderName);
+        dataRepository.folderCreate(user.getRootFolderId(), path, folder);
     }
 
     @Transactional
-    public void deleteFolder(ObjectId id, String path){
-        dataRepository.deleteFolder(id, path);
+    public List<Link> folderReadLink(String userEmail, String path){
+        validateEmail(userEmail);
+        User user = getUserByEmail(userEmail);
+        List<Link> links = dataRepository.folderReadLink(user.getRootFolderId(),path);
+        return links;
     }
 
     @Transactional
-    public void updateFolderName(ObjectId id,String path, String newName){
-        dataRepository.updateFolder(id,path,"name",newName);
+    public List<String> folderReadFolder(String userEmail, String path){
+        validateEmail(userEmail);
+        User user = getUserByEmail(userEmail);
+        List<String> folderNames=dataRepository.folderReadFolder(user.getRootFolderId(),path);
+        return folderNames;
     }
 
     @Transactional
-    public void updateFolderPicture(ObjectId id,String path, String newPicture){
-        dataRepository.updateFolder(id,path,"picture",newPicture);
+    public void folderUpdate(String userEmail, String path, String folderName){
+        validateEmail(userEmail);
+        User user = getUserByEmail(userEmail);
+        dataRepository.folderUpdate(user.getRootFolderId(),path,folderName);
     }
 
     @Transactional
-    public void createLink( ObjectId id, String path, String name, String picture, String link){
-        Folder folder = new Folder(name, picture);
-        dataRepository.createLink(id, path, folder);
+    public void folderDelete(String userEmail, String path){
+        validateEmail(userEmail);
+        User user = getUserByEmail(userEmail);
+        dataRepository.folderDelete(user.getRootFolderId(),path);
     }
 
     @Transactional
-    public void deleteLink(ObjectId id, String path){
-        dataRepository.deleteLink(id, path);
+    public void folderMove(String userEmail, String originalPath, String modifiedPath){
+        validateEmail(userEmail);
+        User user = getUserByEmail(userEmail);
+        Folder folder=dataRepository.folderRead(user.getRootFolderId(),originalPath);
+        dataRepository.folderDelete(user.getRootFolderId(),originalPath);
+        dataRepository.folderCreate(user.getRootFolderId(),modifiedPath,folder);
     }
 
-    @Transactional
-    public void updateLinkName(ObjectId id,String path, String newName){
-        dataRepository.updateLink(id,path,"name",newName);
+    private User getUserByEmail(String userEmail){
+        Optional<User> user = userRepository.findByEmail(userEmail);
+        return user.orElseThrow(() ->new IllegalStateException("존재하지 않은 유저입니다"));
     }
 
-    @Transactional
-    public void updateLinkPicture(ObjectId id,String path, String newPicture){
-        dataRepository.updateLink(id,path,"picture",newPicture);
+    private void validateEmail(String userEmail){
+        String regx = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
+        Pattern pattern = Pattern.compile(regx);
+        Matcher matcher = pattern.matcher(userEmail);
+        if(!matcher.matches()){
+            throw new IllegalStateException("형식에 맞지 않는 이메일입니다");
+        }
     }
-    @Transactional
-    public void updateLinkLink(ObjectId id,String path, String newLink){
-        dataRepository.updateLink(id,path,"link",newLink);
-    }
+
 }

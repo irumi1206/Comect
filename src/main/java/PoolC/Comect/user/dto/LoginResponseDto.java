@@ -7,7 +7,7 @@ public class LoginResponseDto {
 
     private String userEmail;
 
-    public LoginResponseDto(String userId) {
-        this.userEmail = userId;
+    public LoginResponseDto(String userEmail) {
+        this.userEmail = userEmail;
     }
 }

@@ -27,7 +27,7 @@ public class RelationController {
     private final UserService userService;
 
     @PostMapping("/member/find")
-    public ResponseEntity<ReadRelationResponseDto> findRelation(@RequestBody ReadRelationRequestDto request){
+    public ResponseEntity<ReadRelationResponseDto> findRelation(@RequestBody ReadRelationRequestDto request) throws InterruptedException {
             User user = userService.findOne(request.getUserEmail());
             ReadRelationResponseDto readRelationResponseDto = new ReadRelationResponseDto();
             List<ObjectId> requests = relationService.findRequest(user.getRelations(), user.getId());
@@ -58,17 +58,22 @@ public class RelationController {
     }
 
     @PostMapping("/member/add")
-    public ResponseEntity<CreateRelationRequestDto> addRelation(@RequestBody CreateRelationRequestDto request){
+    public ResponseEntity<CreateRelationRequestDto> addRelation(@RequestBody CreateRelationRequestDto request) throws InterruptedException {
             String userEmail = request.getUserEmail();
             String friendEmail = request.getFriendEmail();
             User user = userService.findOne(userEmail);
-            User friend = userService.findOne(friendEmail);
-            relationService.createRelation(user.getId(),friend.getId());
+        User friend = null;
+        try {
+            friend = userService.findOne(friendEmail);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        relationService.createRelation(user.getId(),friend.getId());
             return ResponseEntity.ok().build();
     }
 
     @PostMapping("/member/accept")
-    public ResponseEntity<Void> acceptRelation(@RequestBody AcceptRelationRequestDto request){
+    public ResponseEntity<Void> acceptRelation(@RequestBody AcceptRelationRequestDto request) throws InterruptedException {
             String userEmail = request.getUserEmail();
             String friendId = request.getFriendId();
             User user = userService.findOne(userEmail);
@@ -77,7 +82,7 @@ public class RelationController {
     }
 
     @PostMapping("/member/reject")
-    public ResponseEntity<Void> rejectRelation(@RequestBody RejectRelationRequestDto request){
+    public ResponseEntity<Void> rejectRelation(@RequestBody RejectRelationRequestDto request) throws InterruptedException {
         String userEmail = request.getUserEmail();
         String friendId = request.getFriendId();
         User user = userService.findOne(userEmail);

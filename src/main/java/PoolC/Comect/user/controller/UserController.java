@@ -18,13 +18,13 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/auth/signUp")
-    public ResponseEntity<Void> createUser(@RequestBody CreateUserRequestDto request){
+    public ResponseEntity<Void> createUser(@RequestBody CreateUserRequestDto request) throws InterruptedException {
         userService.join(request.getUserEmail(),request.getUserPassword(),request.getUserNickname(), request.getProfilePicture());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto request){
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto request) throws InterruptedException {
         User user = userService.findOne(request.getUserEmail());
         LoginResponseDto loginResponseDto = new LoginResponseDto(request.getUserEmail());
         if(user.getPassword().equals(request.getUserPassword())){
@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping("/member/myInfo")
-    public ResponseEntity<ReadUserResponseDto> readUser(@RequestBody ReadUserRequestDto request){
+    public ResponseEntity<ReadUserResponseDto> readUser(@RequestBody ReadUserRequestDto request) throws InterruptedException {
         User user = userService.findOne(request.getUserEmail());
         return ResponseEntity.ok(new ReadUserResponseDto(user));
     }

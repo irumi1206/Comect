@@ -199,7 +199,7 @@ public class userTest {
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,readUserRequestDto, String.class);
         //then
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
     @Test
     @DisplayName("테스트 08 : 로그인")

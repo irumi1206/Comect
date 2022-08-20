@@ -165,7 +165,7 @@ public class relationTest {
 
     @Test
     @DisplayName("테스트 05 : 친구 수락")
-    public void friendAccept1() throws URISyntaxException {
+    public void friendAccept1() throws URISyntaxException, InterruptedException {
         //given
         final String baseUrl = "http://localhost:" + port + "/member/accept";
         URI uri = new URI(baseUrl);
@@ -183,7 +183,7 @@ public class relationTest {
 
     @Test
     @DisplayName("테스트 06 : 친구 수락, 내가 요청한 친구")
-    public void friendAccept2() throws URISyntaxException {
+    public void friendAccept2() throws URISyntaxException, InterruptedException {
         //given
         final String baseUrl = "http://localhost:" + port + "/member/accept";
         URI uri = new URI(baseUrl);
@@ -201,7 +201,7 @@ public class relationTest {
 
     @Test
     @DisplayName("테스트 07 : 친구 수락, 이미 수락한 친구")
-    public void friendAccept3() throws URISyntaxException {
+    public void friendAccept3() throws URISyntaxException, InterruptedException {
         //given
         final String baseUrl = "http://localhost:" + port + "/member/accept";
         URI uri = new URI(baseUrl);
@@ -219,7 +219,7 @@ public class relationTest {
 
     @Test
     @DisplayName("테스트 08 : 친구 수락, 없는 사용자")
-    public void friendAccept4() throws URISyntaxException {
+    public void friendAccept4() throws URISyntaxException, InterruptedException {
         //given
         final String baseUrl = "http://localhost:" + port + "/member/accept";
         URI uri = new URI(baseUrl);
@@ -235,27 +235,27 @@ public class relationTest {
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
-//    @Test
-//    @DisplayName("테스트 09 : 친구 수락, 없는 요청")
-//    public void friendAccept5() throws URISyntaxException {
-//        //given
-//        final String baseUrl = "http://localhost:" + port + "/member/accept";
-//        URI uri = new URI(baseUrl);
-//        AcceptRelationRequestDto acceptRelationRequestDto = new AcceptRelationRequestDto();
-//        String userEmail = "user2Email@naver.com";
-//        String friendEmail = "user1Email@naver.com";
-//        User friend = userService.findOne(friendEmail);
-//        acceptRelationRequestDto.setUserEmail(userEmail);
-//        acceptRelationRequestDto.setFriendId(friend.getId().toHexString());
-//        //when
-//        ResponseEntity<String> result = this.restTemplate.postForEntity(uri,acceptRelationRequestDto,String.class);
-//        //then
-//        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-//    }
+    @Test
+    @DisplayName("테스트 09 : 친구 수락, 없는 요청")
+    public void friendAccept5() throws URISyntaxException, InterruptedException {
+        //given
+        final String baseUrl = "http://localhost:" + port + "/member/accept";
+        URI uri = new URI(baseUrl);
+        AcceptRelationRequestDto acceptRelationRequestDto = new AcceptRelationRequestDto();
+        String userEmail = "user5Email@naver.com";
+        String friendEmail = "user1Email@naver.com";
+        User friend = userService.findOne(friendEmail);
+        acceptRelationRequestDto.setUserEmail(userEmail);
+        acceptRelationRequestDto.setFriendId(friend.getId().toHexString());
+        //when
+        ResponseEntity<String> result = this.restTemplate.postForEntity(uri,acceptRelationRequestDto,String.class);
+        //then
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
 
     @Test
     @DisplayName("테스트 10 : 친구 거절")
-    public void friendReject1() throws URISyntaxException{
+    public void friendReject1() throws URISyntaxException, InterruptedException {
         //given
         final String baseUrl = "http://localhost:" + port + "/member/reject";
         URI uri = new URI(baseUrl);
@@ -273,7 +273,7 @@ public class relationTest {
 
     @Test
     @DisplayName("테스트 11 : 친구 거절, 내가 신청한 요청")
-    public void friendReject2() throws URISyntaxException{
+    public void friendReject2() throws URISyntaxException, InterruptedException {
         //given
         final String baseUrl = "http://localhost:" + port + "/member/reject";
         URI uri = new URI(baseUrl);
@@ -291,7 +291,7 @@ public class relationTest {
 
     @Test
     @DisplayName("테스트 12 : 친구 거절, 없는 사용자")
-    public void friendReject3() throws URISyntaxException{
+    public void friendReject3() throws URISyntaxException, InterruptedException {
         //given
         final String baseUrl = "http://localhost:" + port + "/member/reject";
         URI uri = new URI(baseUrl);

@@ -9,6 +9,7 @@ import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,7 +24,7 @@ public class UserService {
 
     //회원 가입
     @Transactional
-    public ObjectId join(String email, String password,String userNickname,String picture){
+    public ObjectId join(String email, String password,String userNickname,String picture) throws InterruptedException {
         validateEmailUser(email);
         validateDuplicateUser(email);
         Data data=new Data();
@@ -33,19 +34,19 @@ public class UserService {
         return user.getId();
     }
 
-    private void validateDuplicateUser(String email){
+    private void validateDuplicateUser(String email) throws InterruptedException {
         Optional<User> findUsers = userRepository.findByEmail(email);
         if(!findUsers.isEmpty()){
-            throw new IllegalStateException("이미 존재하는 이메일입니다");
+            throw new InterruptedException("이미 존재하는 이메일입니다");
         }
     }
 
-    private void validateEmailUser(String email){
+    private void validateEmailUser(String email) throws InterruptedException {
         String regx = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
         Pattern pattern = Pattern.compile(regx);
         Matcher matcher = pattern.matcher(email);
         if(!matcher.matches()){
-            throw new IllegalStateException("형식에 맞지 않는 이메일입니다");
+            throw new InterruptedException("형식에 맞지 않는 이메일입니다");
         }
     }
 
@@ -62,7 +63,7 @@ public class UserService {
         }
     }
 
-    public User findOne(String email){
+    public User findOne(String email) throws InterruptedException {
         validateEmailUser(email);
         Optional<User> userOption = userRepository.findByEmail(email);
         if(userOption.isEmpty()){

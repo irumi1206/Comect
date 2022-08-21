@@ -81,7 +81,7 @@ public class DataService {
         Pattern pattern = Pattern.compile(regx);
         Matcher matcher = pattern.matcher(userEmail);
         if(!matcher.matches()){
-            new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         }
     }
 

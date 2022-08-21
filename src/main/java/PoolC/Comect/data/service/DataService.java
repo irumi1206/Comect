@@ -1,6 +1,7 @@
 package PoolC.Comect.data.service;
 
 import PoolC.Comect.common.CustomException;
+import PoolC.Comect.common.ErrorCode;
 import PoolC.Comect.data.domain.Link;
 import PoolC.Comect.data.repository.DataRepository;
 import PoolC.Comect.data.domain.Folder;
@@ -72,7 +73,7 @@ public class DataService {
 
     private User getUserByEmail(String userEmail){
         Optional<User> user = userRepository.findByEmail(userEmail);
-        return user.orElseThrow(()->new RuntimeException("이메일이 존재하지 않습니다"));
+        return user.orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
     private void validateEmail(String userEmail){
@@ -80,7 +81,7 @@ public class DataService {
         Pattern pattern = Pattern.compile(regx);
         Matcher matcher = pattern.matcher(userEmail);
         if(!matcher.matches()){
-            throw new RuntimeException("형식에 맞지 않는 이메일입니다");
+            new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         }
     }
 

@@ -1,8 +1,10 @@
 package PoolC.Comect.common;
 
-public class CustomException extends RuntimeException{
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-    public CustomException(String errorMessage){
-        super(errorMessage);
-    }
+@Getter
+@AllArgsConstructor
+public class CustomException extends RuntimeException{
+    private final ErrorCode errorCode;
 }

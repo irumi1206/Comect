@@ -1,6 +1,7 @@
 package PoolC.Comect.data.repository;
 
 import PoolC.Comect.common.CustomException;
+import PoolC.Comect.common.ErrorCode;
 import PoolC.Comect.data.domain.Data;
 import PoolC.Comect.data.domain.Folder;
 import PoolC.Comect.data.domain.Link;
@@ -44,7 +45,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
         UpdateResult updateResult=mongoTemplate.updateFirst(query,update,Data.class);
 
         if(updateResult.getModifiedCount()==0) {
-            throw new RuntimeException("유효하지 않는 경로입니다");
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         }
     }
 
@@ -73,7 +74,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
             }
         }
 
-        if(!flagFirst) throw new RuntimeException("유효하지 않는 경로입니다");
+        if(!flagFirst) throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
 
 
         for(int i=1;i<tokens.length;++i){
@@ -85,7 +86,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
                     break;
                 }
             }
-            if(!flag) throw new RuntimeException("유효하지 않는 경로입니다");
+            if(!flag) throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         }
 
         return folder.getLinks();
@@ -118,7 +119,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
             }
         }
 
-        if(!flagFirst) throw new RuntimeException("유효하지 않는 경로입니다");
+        if(!flagFirst) throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
 
 
         for(int i=1;i<tokens.length;++i){
@@ -130,7 +131,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
                     break;
                 }
             }
-            if(!flag) throw new RuntimeException("유효하지 않는 경로입니다");
+            if(!flag) throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         }
 
         return folder.getFolders().stream()
@@ -147,7 +148,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
         if(path.length()==0) path="/";
 
         String []tokens=path.split("/");
-        if(tokens.length==0) throw new RuntimeException("유효하지 않는 경로입니다");
+        if(tokens.length==0) throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
 
         Folder folder=new Folder("tempFolder");
 
@@ -161,7 +162,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
             }
         }
 
-        if(!flagFirst) throw new RuntimeException("유효하지 않는 경로입니다");
+        if(!flagFirst) throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
 
 
         for(int i=1;i<tokens.length;++i){
@@ -173,7 +174,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
                     break;
                 }
             }
-            if(!flag) throw new RuntimeException("유효하지 않는 경로입니다");
+            if(!flag) throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         }
 
         return folder;
@@ -200,7 +201,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
         UpdateResult updateResult = mongoTemplate.updateFirst(query,update,Data.class);
 
         if(updateResult.getModifiedCount()==0) {
-            throw new RuntimeException("유효하지 않는 경로입니다");
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         }
     }
 
@@ -209,7 +210,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
         Query query=new Query().addCriteria(Criteria.where("_id").is(rootId));
         Update update=new Update();
 
-        if(path.length()==0) throw new RuntimeException("유효하지 않는 경로입니다");
+        if(path.length()==0) throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
 
         String []tokens=path.split("/");
         String pushQuery="";
@@ -227,7 +228,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
         UpdateResult updateResult = mongoTemplate.updateFirst(query,update,Data.class);
 
         if(updateResult.getModifiedCount()==0) {
-            throw new RuntimeException("유효하지 않는 경로입니다");
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         }
     }
 

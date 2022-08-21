@@ -1,5 +1,6 @@
 package PoolC.Comect.data.repository;
 
+import PoolC.Comect.common.NotFoundException;
 import PoolC.Comect.data.domain.Data;
 import PoolC.Comect.data.domain.Folder;
 import PoolC.Comect.data.domain.Link;
@@ -45,7 +46,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
         UpdateResult updateResult=mongoTemplate.updateFirst(query,update,Data.class);
 
         if(updateResult.getModifiedCount()==0) {
-            throw new IllegalStateException("경로가 유효하지 않음");
+            throw new NotFoundException("경로가 유효하지 않음");
         }
     }
 
@@ -74,7 +75,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
             }
         }
 
-        if(!flagFirst) throw new IllegalStateException("경로가 유효하지 않습니다");
+        if(!flagFirst) throw new NotFoundException("경로가 유효하지 않습니다");
 
 
         for(int i=1;i<tokens.length;++i){
@@ -86,7 +87,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
                     break;
                 }
             }
-            if(!flag) throw new IllegalStateException("경로가 유효하지 않습니다");
+            if(!flag) throw new NotFoundException("경로가 유효하지 않습니다");
         }
 
         return folder.getLinks();
@@ -119,7 +120,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
             }
         }
 
-        if(!flagFirst) throw new IllegalStateException("경로가 유효하지 않습니다");
+        if(!flagFirst) throw new NotFoundException("경로가 유효하지 않습니다");
 
 
         for(int i=1;i<tokens.length;++i){
@@ -131,7 +132,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
                     break;
                 }
             }
-            if(!flag) throw new IllegalStateException("경로가 유효하지 않습니다");
+            if(!flag) throw new NotFoundException("경로가 유효하지 않습니다");
         }
 
         return folder.getFolders().stream()
@@ -148,7 +149,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
         if(path.length()==0) path="/";
 
         String []tokens=path.split("/");
-        if(tokens.length==0) throw new IllegalStateException("경로가 유효하지 않습니다 루트 폴더는 읽을수 없습니다");
+        if(tokens.length==0) throw new NotFoundException("경로가 유효하지 않습니다 루트 폴더는 읽을수 없습니다");
 
         Folder folder=new Folder("tempFolder");
 
@@ -162,7 +163,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
             }
         }
 
-        if(!flagFirst) throw new IllegalStateException("경로가 유효하지 않습니다");
+        if(!flagFirst) throw new NotFoundException("경로가 유효하지 않습니다");
 
 
         for(int i=1;i<tokens.length;++i){
@@ -174,7 +175,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
                     break;
                 }
             }
-            if(!flag) throw new IllegalStateException("경로가 유효하지 않습니다");
+            if(!flag) throw new NotFoundException("경로가 유효하지 않습니다");
         }
 
         return folder;
@@ -201,7 +202,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
         UpdateResult updateResult = mongoTemplate.updateFirst(query,update,Data.class);
 
         if(updateResult.getModifiedCount()==0) {
-            throw new IllegalStateException("경로가 유효하지 않음");
+            throw new NotFoundException("경로가 유효하지 않음");
         }
     }
 
@@ -210,7 +211,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
         Query query=new Query().addCriteria(Criteria.where("_id").is(rootId));
         Update update=new Update();
 
-        if(path.length()==0) throw new IllegalStateException("루트폴더를 삭제할수 없습니다");
+        if(path.length()==0) throw new NotFoundException("루트폴더를 삭제할수 없습니다");
 
         String []tokens=path.split("/");
         String pushQuery="";
@@ -228,7 +229,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
         UpdateResult updateResult = mongoTemplate.updateFirst(query,update,Data.class);
 
         if(updateResult.getModifiedCount()==0) {
-            throw new IllegalStateException("경로가 유효하지 않음");
+            throw new NotFoundException("경로가 유효하지 않음");
         }
     }
 

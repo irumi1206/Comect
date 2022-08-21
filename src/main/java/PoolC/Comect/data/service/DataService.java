@@ -1,5 +1,6 @@
 package PoolC.Comect.data.service;
 
+import PoolC.Comect.common.NotFoundException;
 import PoolC.Comect.data.domain.Link;
 import PoolC.Comect.data.repository.DataRepository;
 import PoolC.Comect.data.domain.Folder;
@@ -24,7 +25,7 @@ public class DataService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void folderCreate(String userEmail, String path, String folderName) throws IllegalAccessException{
+    public void folderCreate(String userEmail, String path, String folderName){
         validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
         Folder folder = new Folder(folderName);
@@ -32,7 +33,7 @@ public class DataService {
     }
 
     @Transactional
-    public List<Link> folderReadLink(String userEmail, String path) throws IllegalAccessException{
+    public List<Link> folderReadLink(String userEmail, String path){
         validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
         List<Link> links = dataRepository.folderReadLink(user.getRootFolderId(),path);
@@ -40,7 +41,7 @@ public class DataService {
     }
 
     @Transactional
-    public List<String> folderReadFolder(String userEmail, String path) throws IllegalAccessException{
+    public List<String> folderReadFolder(String userEmail, String path){
         validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
         List<String> folderNames=dataRepository.folderReadFolder(user.getRootFolderId(),path);
@@ -48,7 +49,7 @@ public class DataService {
     }
 
     @Transactional
-    public void folderUpdate(String userEmail, String path, String folderName) throws IllegalAccessException{
+    public void folderUpdate(String userEmail, String path, String folderName){
         validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
         dataRepository.folderUpdate(user.getRootFolderId(),path,folderName);
@@ -62,7 +63,7 @@ public class DataService {
     }
 
     @Transactional
-    public void folderMove(String userEmail, String originalPath, String modifiedPath) throws IllegalAccessException{
+    public void folderMove(String userEmail, String originalPath, String modifiedPath){
         validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
         Folder folder=dataRepository.folderRead(user.getRootFolderId(),originalPath);
@@ -70,9 +71,9 @@ public class DataService {
         dataRepository.folderCreate(user.getRootFolderId(),modifiedPath,folder);
     }
 
-    private User getUserByEmail(String userEmail) throws IllegalAccessException{
+    private User getUserByEmail(String userEmail){
         Optional<User> user = userRepository.findByEmail(userEmail);
-        return user.orElseThrow(() ->new IllegalAccessException("존재하지 않은 유저입니다"));
+        return user.orElseThrow(() ->new NotFoundException("존재하지 않은 유저입니다"));
     }
 
     private void validateEmail(String userEmail){

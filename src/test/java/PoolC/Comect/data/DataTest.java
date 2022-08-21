@@ -258,7 +258,7 @@ public class DataTest {
         ResponseEntity<String> result = restTemplate.postForEntity(uri,request,String.class);
 
         //then
-        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         System.out.println(result.getBody());
     }
 
@@ -383,7 +383,7 @@ public class DataTest {
         ResponseEntity<String> result = restTemplate.postForEntity(uri,request,String.class);
 
         //then
-        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         System.out.println(result.getBody());
     }
 
@@ -487,7 +487,7 @@ public class DataTest {
         ResponseEntity<String> result = restTemplate.postForEntity(uri,request,String.class);
 
         //then
-        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
     }
 
@@ -616,7 +616,7 @@ public class DataTest {
         ResponseEntity<String> result = restTemplate.postForEntity(uri,request,String.class);
 
         //then
-        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
     }
 
@@ -720,7 +720,7 @@ public class DataTest {
         ResponseEntity<String> result = restTemplate.postForEntity(uri,request,String.class);
 
         //then
-        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
     }
 

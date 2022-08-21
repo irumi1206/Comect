@@ -55,7 +55,7 @@ public class DataService {
     }
 
     @Transactional
-    public void folderDelete(String userEmail, String path) throws IllegalAccessException{
+    public void folderDelete(String userEmail, String path){
         validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
         dataRepository.folderDelete(user.getRootFolderId(),path);
@@ -72,7 +72,7 @@ public class DataService {
 
     private User getUserByEmail(String userEmail){
         Optional<User> user = userRepository.findByEmail(userEmail);
-        return user.orElseThrow(() ->new CustomException("존재하지 않은 유저입니다"));
+        return user.orElseThrow(()->new RuntimeException("이메일이 존재하지 않습니다"));
     }
 
     private void validateEmail(String userEmail){
@@ -80,7 +80,7 @@ public class DataService {
         Pattern pattern = Pattern.compile(regx);
         Matcher matcher = pattern.matcher(userEmail);
         if(!matcher.matches()){
-            throw new CustomException("형식에 맞지 않는 이메일입니다");
+            throw new RuntimeException("형식에 맞지 않는 이메일입니다");
         }
     }
 

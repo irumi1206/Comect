@@ -16,6 +16,11 @@ public class ExceptionHandler {
                 .body(Collections.singletonMap("message", e.getMessage()));
     }
 
+    @org.springframework.web.bind.annotation.ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<?> runtimeHandler(RuntimeException e){
+        return ResponseEntity.status(400).build();
+    }
+
     @org.springframework.web.bind.annotation.ExceptionHandler(IllegalStateException.class)
     public ResponseEntity IllegalStateHandler(IllegalStateException e){
         return ResponseEntity.status(400).build();

@@ -36,53 +36,53 @@ public class DataController {
         return ResponseEntity.ok().build();
     }
 
-//    @PostMapping("/folder/read")
-//    public ResponseEntity<FolderReadResponseDto> folderRead(@RequestBody FolderReadRequestDto folderReadRequestDto) throws IllegalAccessException{
-//        String userEmail=folderReadRequestDto.getUserEmail();
-//        String path=folderReadRequestDto.getPath();
-//        List<String> folderNames= dataService.folderReadFolder(userEmail,path);
-//        List<Link> links=dataService.folderReadLink(userEmail,path);
-//        return ResponseEntity.ok().body(FolderReadResponseDto.builder()
-//                .folderNames(folderNames)
-//                .links(links)
-//                .build());
-//    }
-//
-//    @PostMapping("folder/readFolder")
-//    public ResponseEntity<FolderReadFolderResponseDto> folderReadFolder(@RequestBody FolderReadFolderRequestDto folderReadFolderRequestDto) throws IllegalAccessException{
-//        String userEmail = folderReadFolderRequestDto.getUserEmail();
-//        String path=folderReadFolderRequestDto.getPath();
-//        List<String> folderNames = dataService.folderReadFolder(userEmail,path);
-//        return ResponseEntity.ok().body(FolderReadFolderResponseDto.builder()
-//                .folderNames(folderNames)
-//                .build());
-//    }
-//
-//    @PostMapping("folder/update")
-//    public ResponseEntity<Void> folderUpdate(@RequestBody FolderUpdateRequestDto folderUpdateRequestDto) throws IllegalAccessException{
-//        String userEmail = folderUpdateRequestDto.getUserEmail();
-//        String path = folderUpdateRequestDto.getPath();
-//        String folderName = folderUpdateRequestDto.getFolderName();
-//        dataService.folderUpdate(userEmail,path,folderName);
-//        return ResponseEntity.ok().build();
-//    }
-//
-//    @PostMapping("folder/delete")
-//    public ResponseEntity<Void> folderDelete(@RequestBody FolderDeleteRequestDto folderDeleteRequestDto) throws IllegalAccessException{
-//        String userEmail = folderDeleteRequestDto.getUserEmail();
-//        String path = folderDeleteRequestDto.getPath();
-//        dataService.folderDelete(userEmail,path);
-//        return ResponseEntity.ok().build();
-//    }
-//
-//    @PostMapping("folder/move")
-//    public ResponseEntity<Void> folderMove(@RequestBody FolderMoveRequestDto folderMoveRequestDto) throws IllegalAccessException{
-//        String userEmail=folderMoveRequestDto.getUserEmail();
-//        String originalPath=folderMoveRequestDto.getOriginalPath();
-//        String modifiedPath=folderMoveRequestDto.getModifiedPath();
-//        dataService.folderMove(userEmail,originalPath,modifiedPath);
-//        return ResponseEntity.ok().build();
-//    }
+    @PostMapping("/folder/read")
+    public ResponseEntity<FolderReadResponseDto> folderRead(@RequestBody FolderReadRequestDto folderReadRequestDto){
+        String userEmail=folderReadRequestDto.getUserEmail();
+        String path=folderReadRequestDto.getPath();
+        List<String> folderNames= dataService.folderReadFolder(userEmail,path);
+        List<Link> links=dataService.folderReadLink(userEmail,path);
+        return ResponseEntity.ok().body(FolderReadResponseDto.builder()
+                .folderNames(folderNames)
+                .links(links)
+                .build());
+    }
+
+    @PostMapping("folder/readFolder")
+    public ResponseEntity<FolderReadFolderResponseDto> folderReadFolder(@RequestBody FolderReadFolderRequestDto folderReadFolderRequestDto){
+        String userEmail = folderReadFolderRequestDto.getUserEmail();
+        String path=folderReadFolderRequestDto.getPath();
+        List<String> folderNames = dataService.folderReadFolder(userEmail,path);
+        return ResponseEntity.ok().body(FolderReadFolderResponseDto.builder()
+                .folderNames(folderNames)
+                .build());
+    }
+
+    @PostMapping("folder/update")
+    public ResponseEntity<Void> folderUpdate(@RequestBody FolderUpdateRequestDto folderUpdateRequestDto){
+        String userEmail = folderUpdateRequestDto.getUserEmail();
+        String path = folderUpdateRequestDto.getPath();
+        String folderName = folderUpdateRequestDto.getFolderName();
+        dataService.folderUpdate(userEmail,path,folderName);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("folder/delete")
+    public ResponseEntity<Void> folderDelete(@RequestBody FolderDeleteRequestDto folderDeleteRequestDto){
+        String userEmail = folderDeleteRequestDto.getUserEmail();
+        String path = folderDeleteRequestDto.getPath();
+        dataService.folderDelete(userEmail,path);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("folder/move")
+    public ResponseEntity<Void> folderMove(@RequestBody FolderMoveRequestDto folderMoveRequestDto){
+        String userEmail=folderMoveRequestDto.getUserEmail();
+        String originalPath=folderMoveRequestDto.getOriginalPath();
+        String modifiedPath=folderMoveRequestDto.getModifiedPath();
+        dataService.folderMove(userEmail,originalPath,modifiedPath);
+        return ResponseEntity.ok().build();
+    }
 
 
 }

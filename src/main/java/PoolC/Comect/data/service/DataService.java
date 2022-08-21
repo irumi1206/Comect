@@ -1,13 +1,12 @@
 package PoolC.Comect.data.service;
 
-import PoolC.Comect.common.NotFoundException;
+import PoolC.Comect.common.CustomException;
 import PoolC.Comect.data.domain.Link;
 import PoolC.Comect.data.repository.DataRepository;
 import PoolC.Comect.data.domain.Folder;
 import PoolC.Comect.user.domain.User;
 import PoolC.Comect.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -73,7 +72,7 @@ public class DataService {
 
     private User getUserByEmail(String userEmail){
         Optional<User> user = userRepository.findByEmail(userEmail);
-        return user.orElseThrow(() ->new NotFoundException("존재하지 않은 유저입니다"));
+        return user.orElseThrow(() ->new CustomException("존재하지 않은 유저입니다"));
     }
 
     private void validateEmail(String userEmail){
@@ -81,7 +80,7 @@ public class DataService {
         Pattern pattern = Pattern.compile(regx);
         Matcher matcher = pattern.matcher(userEmail);
         if(!matcher.matches()){
-            throw new IllegalStateException("형식에 맞지 않는 이메일입니다");
+            throw new CustomException("형식에 맞지 않는 이메일입니다");
         }
     }
 

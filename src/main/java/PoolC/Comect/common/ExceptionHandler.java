@@ -1,14 +1,19 @@
 package PoolC.Comect.common;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.Collections;
+import java.util.Map;
 
 @RestControllerAdvice
 public class ExceptionHandler {
 
-    @org.springframework.web.bind.annotation.ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<Void> NotFoundHandler(NotFoundException e){
-        return ResponseEntity.status(400).build();
+    @org.springframework.web.bind.annotation.ExceptionHandler({CustomException.class})
+    public ResponseEntity<Map<String, String>> unauthorizedHandler(Exception e) {
+        return ResponseEntity.status(400)
+                .body(Collections.singletonMap("message", e.getMessage()));
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(IllegalStateException.class)

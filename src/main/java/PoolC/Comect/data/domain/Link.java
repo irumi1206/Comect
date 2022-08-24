@@ -17,16 +17,19 @@ public class Link {
     @Id
     private ObjectId id;
 
-    private String name;
-    private String picture;
+    private String title;
+    private String image;
     private String url;
     private List<String> keywords;
+    private String isPublic;
 
-    public Link(String name, String picture, String url) {
-        this.name = name;
-        this.picture = picture;
+    public Link(String title, String image, String url,List<String> keywords, String isPublic) {
+        this.id=new ObjectId();
+        this.title = title;
+        this.image = image;
         this.url = url;
-        this.keywords=new ArrayList<>();
+        this.keywords=keywords;
+        this.isPublic=isPublic;
     }
 
     public void addKeyword(String keyword){
@@ -37,10 +40,11 @@ public class Link {
     public String toString() {
         return "Link{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
-                ", picture='" + picture + '\'' +
+                ", title='" + title + '\'' +
+                ", image='" + image + '\'' +
                 ", url='" + url + '\'' +
                 ", keywords=" + keywords +
+                ", isPublic='" + isPublic + '\'' +
                 '}';
     }
 }

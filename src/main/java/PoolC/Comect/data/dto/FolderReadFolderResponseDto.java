@@ -8,11 +8,11 @@ import java.util.List;
 @Data
 public class FolderReadFolderResponseDto {
 
-    private List<String> folderNames;
+    private List<FolderInfo> folderInfos;
 
     @Builder
-    public FolderReadFolderResponseDto(List<String> folderNames){
-        this.folderNames=folderNames;
+    public FolderReadFolderResponseDto(List<FolderInfo> folderInfos){
+        this.folderInfos=folderInfos;
     }
 
 }

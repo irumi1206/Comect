@@ -45,7 +45,38 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
         UpdateResult updateResult=mongoTemplate.updateFirst(query,update,Data.class);
 
         if(updateResult.getModifiedCount()==0) {
-            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+            throw new CustomException(ErrorCode.PATH_NOT_VALID);
+        }
+    }
+
+    public void linkCreate(ObjectId rootId,String path, Link link){
+
+        Query query=new Query().addCriteria(Criteria.where("_id").is(rootId));
+        Update update=new Update();
+
+        if(path.length()==0) path="/";
+
+        String []tokens=path.split("/");
+        String pushQuery="";
+
+        for(int i=0;i<tokens.length;++i) {
+            if(i==0) pushQuery += "folders.$[token" + String.valueOf(i) + "]";
+            else pushQuery += ".folders.$[token" + String.valueOf(i) + "]";
+        }
+
+        pushQuery+=".links";
+        System.out.println(pushQuery);
+        update.push(pushQuery,link);
+        for(int i=0;i< tokens.length;++i){
+            update.filterArray(Criteria.where("token"+String.valueOf(i)+".name").is(tokens[i]));
+        }
+
+        UpdateResult updateResult=mongoTemplate.updateFirst(query,update,Data.class);
+        System.out.println(updateResult);
+
+        if(updateResult.getModifiedCount()==0) {
+            System.out.println(updateResult);
+            throw new CustomException(ErrorCode.PATH_NOT_VALID);
         }
     }
 
@@ -74,25 +105,25 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
             }
         }
 
-        if(!flagFirst) throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        if(!flagFirst) throw new CustomException(ErrorCode.PATH_NOT_VALID);
 
 
         for(int i=1;i<tokens.length;++i){
             boolean flag=false;
             for(int j=0;j<folder.getFolders().size();++j){
-                if(folder.getFolders().get(i).getName().equals(tokens[i])) {
-                    folder = folder.getFolders().get(i);
+                if(folder.getFolders().get(j).getName().equals(tokens[i])) {
+                    folder = folder.getFolders().get(j);
                     flag=true;
                     break;
                 }
             }
-            if(!flag) throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+            if(!flag) throw new CustomException(ErrorCode.PATH_NOT_VALID);
         }
 
         return folder.getLinks();
     }
 
-    public List<String> folderReadFolder(ObjectId rootId, String path){
+    public List<String> folderReadFolderName(ObjectId rootId, String path){
 
         Query query=new Query().addCriteria(Criteria.where("_id").is(rootId));
 
@@ -119,19 +150,26 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
             }
         }
 
-        if(!flagFirst) throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        System.out.println(folder);
 
+        if(!flagFirst) throw new CustomException(ErrorCode.PATH_NOT_VALID);
+
+        System.out.println("sdf");
 
         for(int i=1;i<tokens.length;++i){
             boolean flag=false;
             for(int j=0;j<folder.getFolders().size();++j){
-                if(folder.getFolders().get(i).getName().equals(tokens[i])) {
-                    folder = folder.getFolders().get(i);
+                System.out.println(folder.getFolders().get(j).getName());
+                System.out.println(tokens[i]);
+                if(folder.getFolders().get(j).getName().equals(tokens[i])) {
+                    System.out.println("equal");
+                    folder = folder.getFolders().get(j);
+                    System.out.println(folder);
                     flag=true;
                     break;
                 }
             }
-            if(!flag) throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+            if(!flag) throw new CustomException(ErrorCode.PATH_NOT_VALID);
         }
 
         return folder.getFolders().stream()
@@ -148,7 +186,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
         if(path.length()==0) path="/";
 
         String []tokens=path.split("/");
-        if(tokens.length==0) throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        if(tokens.length==0) throw new CustomException(ErrorCode.PATH_NOT_VALID);
 
         Folder folder=new Folder("tempFolder");
 
@@ -162,22 +200,63 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
             }
         }
 
-        if(!flagFirst) throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        if(!flagFirst) throw new CustomException(ErrorCode.PATH_NOT_VALID);
 
 
         for(int i=1;i<tokens.length;++i){
             boolean flag=false;
             for(int j=0;j<folder.getFolders().size();++j){
-                if(folder.getFolders().get(i).getName().equals(tokens[i])) {
-                    folder = folder.getFolders().get(i);
+                if(folder.getFolders().get(j).getName().equals(tokens[i])) {
+                    folder = folder.getFolders().get(j);
                     flag=true;
                     break;
                 }
             }
-            if(!flag) throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+            if(!flag) throw new CustomException(ErrorCode.PATH_NOT_VALID);
         }
 
         return folder;
+    }
+
+    public int checkPath(ObjectId rootId, String path){
+
+        Query query=new Query().addCriteria(Criteria.where("_id").is(rootId));
+
+        Data data=mongoTemplate.findOne(query,Data.class,"data");
+
+        if(path.length()==0) path="/";
+
+        String []tokens=path.split("/");
+        if(tokens.length==0) return 0;
+
+        Folder folder=new Folder("tempFolder");
+
+        boolean flagFirst=false;
+
+        for(int i=0;i<data.getFolders().size();++i){
+            if(data.getFolders().get(i).getName().equals(tokens[0])){
+                flagFirst=true;
+                folder=data.getFolders().get(i);
+                break;
+            }
+        }
+
+        if(!flagFirst) return 1;
+
+
+        for(int i=1;i<tokens.length;++i){
+            boolean flag=false;
+            for(int j=0;j<folder.getFolders().size();++j){
+                if(folder.getFolders().get(j).getName().equals(tokens[i])) {
+                    folder = folder.getFolders().get(j);
+                    flag=true;
+                    break;
+                }
+            }
+            if(!flag) return 1;
+        }
+
+        return 0;
     }
 
     public void folderUpdate(ObjectId rootId, String path, String folderName){
@@ -201,7 +280,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
         UpdateResult updateResult = mongoTemplate.updateFirst(query,update,Data.class);
 
         if(updateResult.getModifiedCount()==0) {
-            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+            throw new CustomException(ErrorCode.PATH_NOT_VALID);
         }
     }
 
@@ -210,7 +289,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
         Query query=new Query().addCriteria(Criteria.where("_id").is(rootId));
         Update update=new Update();
 
-        if(path.length()==0) throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        if(path.length()==0) throw new CustomException(ErrorCode.PATH_NOT_VALID);
 
         String []tokens=path.split("/");
         String pushQuery="";
@@ -228,7 +307,7 @@ public class CustomDataRepositoryImpl implements CustomDataRepository {
         UpdateResult updateResult = mongoTemplate.updateFirst(query,update,Data.class);
 
         if(updateResult.getModifiedCount()==0) {
-            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+            throw new CustomException(ErrorCode.PATH_NOT_VALID);
         }
     }
 

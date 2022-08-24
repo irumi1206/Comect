@@ -3,6 +3,8 @@ package PoolC.Comect.data.service;
 import PoolC.Comect.common.CustomException;
 import PoolC.Comect.common.ErrorCode;
 import PoolC.Comect.data.domain.Link;
+import PoolC.Comect.data.dto.FolderInfo;
+import PoolC.Comect.data.dto.LinkInfo;
 import PoolC.Comect.data.repository.DataRepository;
 import PoolC.Comect.data.domain.Folder;
 import PoolC.Comect.user.domain.User;
@@ -33,19 +35,34 @@ public class DataService {
     }
 
     @Transactional
-    public List<Link> folderReadLink(String userEmail, String path){
+    public int folderCheckPath(String userEmail, String path){
         validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
-        List<Link> links = dataRepository.folderReadLink(user.getRootFolderId(),path);
-        return links;
+        return dataRepository.checkPath(user.getRootFolderId(), path);
     }
 
     @Transactional
-    public List<String> folderReadFolder(String userEmail, String path){
+    public void linkCreate(String userEmail, String path, String linkTitle, String linkImage, String linkUrl, List<String> keywords, String isPublic){
         validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
-        List<String> folderNames=dataRepository.folderReadFolder(user.getRootFolderId(),path);
-        return folderNames;
+        Link link=new Link(linkTitle,linkImage,linkUrl,keywords,isPublic);
+        dataRepository.linkCreate(user.getRootFolderId(), path, link);
+    }
+
+    @Transactional
+    public List<LinkInfo> folderReadLink(String userEmail, String path){
+        validateEmail(userEmail);
+        User user = getUserByEmail(userEmail);
+        List<LinkInfo> linkInfos = LinkInfo.toLinkInfo(dataRepository.folderReadLink(user.getRootFolderId(),path));
+        return linkInfos;
+    }
+
+    @Transactional
+    public List<FolderInfo> folderReadFolder(String userEmail, String path){
+        validateEmail(userEmail);
+        User user = getUserByEmail(userEmail);
+        List<FolderInfo> folderInfos=FolderInfo.toFolderInfo(dataRepository.folderReadFolderName(user.getRootFolderId(),path));
+        return folderInfos;
     }
 
     @Transactional
@@ -73,7 +90,7 @@ public class DataService {
 
     private User getUserByEmail(String userEmail){
         Optional<User> user = userRepository.findByEmail(userEmail);
-        return user.orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        return user.orElseThrow(()->new CustomException(ErrorCode.EMAIL_NOT_FOUND));
     }
 
     private void validateEmail(String userEmail){
@@ -81,7 +98,7 @@ public class DataService {
         Pattern pattern = Pattern.compile(regx);
         Matcher matcher = pattern.matcher(userEmail);
         if(!matcher.matches()){
-            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+            throw new CustomException(ErrorCode.EMAIL_NOT_VALID);
         }
     }
 

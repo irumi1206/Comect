@@ -9,12 +9,12 @@ import java.util.List;
 @Data
 public class FolderReadResponseDto {
 
-    private List<String> folderNames;
-    private List<Link> links;
+    private List<FolderInfo> folderInfos;
+    private List<LinkInfo> linkInfos;
 
     @Builder
-    public FolderReadResponseDto(List<String> folderNames, List<Link> links){
-        this.folderNames=folderNames;
-        this.links=links;
+    public FolderReadResponseDto(List<FolderInfo> folderInfos, List<LinkInfo> linkInfos){
+        this.folderInfos=folderInfos;
+        this.linkInfos=linkInfos;
     }
 }

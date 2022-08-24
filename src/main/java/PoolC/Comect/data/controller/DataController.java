@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.swing.*;
 import java.util.List;
 
 @RestController
@@ -36,26 +37,38 @@ public class DataController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/folder/checkPath")
+    public ResponseEntity<FolderCheckPathResponseDto> folderCheckPath(@RequestBody FolderCheckPathRequestDto folderCheckPathRequestDto){
+        String userEmail = folderCheckPathRequestDto.getUserEmail();
+        String path = folderCheckPathRequestDto.getPath();
+        int checkValid = dataService.folderCheckPath(userEmail,path);
+        FolderCheckPathResponseDto folderCheckPathResponseDto=FolderCheckPathResponseDto.builder()
+                .valid(checkValid)
+                .build();
+        return ResponseEntity.ok().body(folderCheckPathResponseDto);
+    }
+
     @PostMapping("/folder/read")
     public ResponseEntity<FolderReadResponseDto> folderRead(@RequestBody FolderReadRequestDto folderReadRequestDto){
         String userEmail=folderReadRequestDto.getUserEmail();
         String path=folderReadRequestDto.getPath();
-        List<String> folderNames= dataService.folderReadFolder(userEmail,path);
-        List<Link> links=dataService.folderReadLink(userEmail,path);
+        List<FolderInfo> folderInfos= dataService.folderReadFolder(userEmail,path);
+        System.out.println(dataService.folderReadLink(userEmail,path));
+        List<LinkInfo> linkInfos=dataService.folderReadLink(userEmail,path);
         return ResponseEntity.ok().body(FolderReadResponseDto.builder()
-                .folderNames(folderNames)
-                .links(links)
+                .folderInfos(folderInfos)
+                .linkInfos(linkInfos)
                 .build());
     }
 
-    @PostMapping("folder/readFolder")
+    @PostMapping(value = "folder/readFolder")
     public ResponseEntity<FolderReadFolderResponseDto> folderReadFolder(@RequestBody FolderReadFolderRequestDto folderReadFolderRequestDto){
         String userEmail = folderReadFolderRequestDto.getUserEmail();
         String path=folderReadFolderRequestDto.getPath();
-        List<String> folderNames = dataService.folderReadFolder(userEmail,path);
-        return ResponseEntity.ok().body(FolderReadFolderResponseDto.builder()
-                .folderNames(folderNames)
-                .build());
+        List<FolderInfo> folderInfos = dataService.folderReadFolder(userEmail,path);
+        FolderReadFolderResponseDto folderReadFolderResponseDto = FolderReadFolderResponseDto.builder().folderInfos(folderInfos).build();
+        System.out.println(folderReadFolderResponseDto);
+        return ResponseEntity.ok().body(folderReadFolderResponseDto);
     }
 
     @PostMapping("folder/update")
@@ -81,6 +94,19 @@ public class DataController {
         String originalPath=folderMoveRequestDto.getOriginalPath();
         String modifiedPath=folderMoveRequestDto.getModifiedPath();
         dataService.folderMove(userEmail,originalPath,modifiedPath);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/link/create")
+    public ResponseEntity<Void> linkCreate(@RequestBody LinkCreateRequestDto linkCreateRequestDto){
+        String userEmail = linkCreateRequestDto.getUserEmail();
+        String path = linkCreateRequestDto.getPath();
+        String linkTitle = linkCreateRequestDto.getLinkTitle();
+        String linkImage = linkCreateRequestDto.getLinkImage();
+        String linkUrl = linkCreateRequestDto.getLinkUrl();
+        List<String> keywords = linkCreateRequestDto.getKeywords();
+        String isPublic = linkCreateRequestDto.getIsPublic();
+        dataService.linkCreate(userEmail,path,linkTitle,linkImage,linkUrl,keywords,isPublic);
         return ResponseEntity.ok().build();
     }
 

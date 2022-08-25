@@ -27,7 +27,6 @@ public class FolderService {
     private final FolderRepository folderRepository;
     private final UserRepository userRepository;
 
-    @Transactional
     public void folderCreate(String userEmail, String path, String folderName){
         validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
@@ -35,7 +34,6 @@ public class FolderService {
         folderRepository.folderCreate(user.getRootFolderId(), path, folder);
     }
 
-    @Transactional
     public Folder folderRead(String userEmail, String path){
         validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
@@ -43,21 +41,18 @@ public class FolderService {
         return folder;
     }
 
-    @Transactional
     public void folderUpdate(String userEmail, String path, String folderName){
         validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
         folderRepository.folderUpdate(user.getRootFolderId(),path,folderName);
     }
 
-    @Transactional
     public void folderDelete(String userEmail, String path){
         validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
         folderRepository.folderDelete(user.getRootFolderId(),path);
     }
 
-    @Transactional
     public void folderMove(String userEmail, List<String> originalPaths, String modifiedPath){
         validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
@@ -68,14 +63,12 @@ public class FolderService {
         }
     }
 
-    @Transactional
     public boolean folderCheckPath(String userEmail, String path){
         validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
         return folderRepository.checkPathFolder(user.getRootFolderId(), path);
     }
 
-    @Transactional
     public void linkCreate(String userEmail, String path, String name, String url, String imageUrl, List<String> keywords, String isPublic){
         validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
@@ -83,7 +76,6 @@ public class FolderService {
         folderRepository.linkCreate(user.getRootFolderId(), path, link);
     }
 
-    @Transactional
     public void linkUpdate(String id,String email,String path,String name,String url,String imageUrl,List<String> keywords,String isPublic){
         validateEmail(email);
         User user = getUserByEmail(email);
@@ -91,7 +83,6 @@ public class FolderService {
         folderRepository.linkUpdate(user.getRootFolderId(), path,new ObjectId(id), link);
     }
 
-    @Transactional
     public void linkDelete(String email,String path,String id){
         validateEmail(email);
         User user = getUserByEmail(email);

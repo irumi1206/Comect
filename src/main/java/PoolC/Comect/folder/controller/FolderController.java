@@ -71,7 +71,7 @@ public class FolderController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping(value="folder/path")
+    @PutMapping(value="/folder/path")
     public ResponseEntity<Void> folderMove(@RequestBody FolderMoveRequestDto folderMoveRequestDto){
         String email=folderMoveRequestDto.getEmail();
         List<String> originalPaths=folderMoveRequestDto.getOriginalPaths();

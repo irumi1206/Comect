@@ -6,7 +6,7 @@ HELP.md
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-build
+/build/
 comect.tar
 ### STS ###
 .apt_generated

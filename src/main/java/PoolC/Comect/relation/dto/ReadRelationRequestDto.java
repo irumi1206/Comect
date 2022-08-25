@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class ReadRelationRequestDto {
-    private String userEmail;
+    private String email;
 }

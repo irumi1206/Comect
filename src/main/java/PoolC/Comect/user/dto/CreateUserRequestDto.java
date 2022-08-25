@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class CreateUserRequestDto {
-    private String userEmail;
-    private String userPassword;
-    private String userNickname;
-    private String profilePicture;
+    private String email;
+    private String password;
+    private String nickname;
+    private String imageUrl;
 }

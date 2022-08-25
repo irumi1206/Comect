@@ -19,31 +19,33 @@ public class User {
     @Generated
     private ObjectId id;
 
-    private String userNickname;
+    private String nickname;
     private String email;
     private ObjectId rootFolderId;
-    private String picture;
+    private String imageUrl;
     private List<ObjectId> relations;
     private String password;
 
-    public User(String userNickname, String email, ObjectId rootFolderId, String picture, String password) {
-        this.userNickname = userNickname;
+    public User(String nickname, String email, ObjectId rootFolderId, String imageUrl, String password) {
+        this.id=new ObjectId();
+        this.nickname = nickname;
         this.email = email;
         this.rootFolderId = rootFolderId;
-        this.picture = picture;
-        this.relations=new ArrayList<>();
+        this.imageUrl = imageUrl;
         this.password = password;
+        this.relations=new ArrayList<>();
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "id='" + id + '\'' +
-                ", userNickname='" + userNickname + '\'' +
+                "id=" + id +
+                ", nickname='" + nickname + '\'' +
                 ", email='" + email + '\'' +
-                ", rootFolderId='" + rootFolderId + '\'' +
-                ", picture='" + picture + '\'' +
+                ", rootFolderId=" + rootFolderId +
+                ", imageUrl='" + imageUrl + '\'' +
                 ", relations=" + relations +
+                ", password='" + password + '\'' +
                 '}';
     }
 }

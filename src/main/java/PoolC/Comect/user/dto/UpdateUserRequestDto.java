@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class UpdateUserRequestDto {
-    private String userEmail;
+    private String email;
     private String newNickname;
-    private String newProfilePicture;
+    private String newImageUrl;
 }

@@ -1,5 +1,8 @@
 package PoolC.Comect.relation.service;
 
+import PoolC.Comect.common.CustomException;
+import PoolC.Comect.common.ErrorCode;
+import PoolC.Comect.relation.domain.FriendInfo;
 import PoolC.Comect.relation.domain.Relation;
 import PoolC.Comect.relation.domain.RelationType;
 import PoolC.Comect.user.domain.User;
@@ -7,6 +10,8 @@ import PoolC.Comect.relation.repository.RelationRepository;
 import PoolC.Comect.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,147 +29,191 @@ public class RelationService {
     private final RelationRepository relationRepository;
 
     @Transactional
-    public void createRelation(ObjectId id1, ObjectId id2){
-        Optional<User> user1Option = userRepository.findById(id1);
-        Optional<User> user2Option = userRepository.findById(id2);
-        if(user1Option.isEmpty()){
-            throw new NullPointerException("해당 아이디의 유저가 존재하지 않습니다.");
+    public void createRelation(String email, String friendNickname){
+        Optional<User> meOption = userRepository.findByEmail(email);
+        Optional<User> friendOption = userRepository.findByNickname(friendNickname);
+        if(meOption.isEmpty()){
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         }
-        if(user2Option.isEmpty()){
-            throw new NullPointerException("해당 아이디의 유저가 존재하지 않습니다.");
+        if(friendOption.isEmpty()){
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         }
-        User user1 = user1Option.get();
-        User user2 = user2Option.get();
-        List<ObjectId> relations = user1.getRelations();
+        User me = meOption.get();
+        User friend = friendOption.get();
+        List<ObjectId> relations = me.getRelations();
         for (ObjectId relation : relations) {
             Optional<Relation> relationOption = relationRepository.findById(relation);
             if(!relationOption.isEmpty()){
-                if(relationOption.get().getRelationId1().equals(id2)){
-                    throw new IllegalStateException("이미 존재하는 요청입니다.");
-                }
-                else if(relationOption.get().getRelationId2().equals(id2)){
-                    throw new IllegalStateException("이미 존재하는 요청입니다.");
+                if(relationOption.get().getSenderId().equals(friend.getId())||relationOption.get().getReceiverId().equals(friend.getId())) {
+                    throw new CustomException(ErrorCode.REQUEST_EXIST);
                 }
             }
         }
-        Relation relation = new Relation(id1, id2);
+        Relation relation = new Relation(me.getId(), friend.getId());
         relationRepository.save(relation);
-        user1.getRelations().add(relation.getId());
-        user2.getRelations().add(relation.getId());
-        userRepository.save(user1);
-        userRepository.save(user2);
+        me.getRelations().add(relation.getId());
+        friend.getRelations().add(relation.getId());
+        userRepository.save(me);
+        userRepository.save(friend);
+    }
+
+    //request 찾기, 내가 받은 request만 뜸
+    public Relation findRequest(String email, String friendNickname){
+        Optional<User> meOption = userRepository.findByEmail(email);
+        Optional<User> friendOption = userRepository.findByNickname(friendNickname);
+        if(meOption.isEmpty()){
+            throw new CustomException(ErrorCode.EMAIL_NOT_FOUND);
+        }
+        if(friendOption.isEmpty()){
+            throw new CustomException(ErrorCode.EMAIL_NOT_FOUND);
+        }
+        User me = meOption.get();
+        User friend = friendOption.get();
+
+        for(ObjectId relationId:me.getRelations()){
+            Optional<Relation> relationOption = relationRepository.findById(relationId);
+            if(!relationOption.isEmpty()){
+                Relation relation = relationOption.get();
+                if(relation.getReceiverId().equals(me.getId())&&relation.getSenderId().equals(friend.getId())){
+                    return relation;
+                }
+            }
+        }
+        throw new CustomException(ErrorCode.REQUEST_NOT_FOUND);
+    }
+
+    //relation 찾기, 내가 보낸 것과 받은것 모두 포함
+    public Relation findRelation(ObjectId myId, ObjectId friendId){
+        Optional<User> meOption = userRepository.findById(myId);
+        Optional<User> friendOption = userRepository.findById(friendId);
+        if(meOption.isEmpty()){
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        }
+        if(friendOption.isEmpty()){
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        }
+        User me = meOption.get();
+        User friend = friendOption.get();
+
+        for(ObjectId relationId:me.getRelations()){
+            Optional<Relation> relationOption = relationRepository.findById(relationId);
+            if(!relationOption.isEmpty()){
+                Relation relation = relationOption.get();
+                if(relation.getReceiverId().equals(me.getId())&&relation.getSenderId().equals(friend.getId())){
+                    return relation;
+                }else if(relation.getSenderId().equals(me.getId())&&relation.getReceiverId().equals(friend.getId())){
+                    return relation;
+                }
+            }
+        }
+        throw new CustomException(ErrorCode.REQUEST_NOT_FOUND);
     }
 
     @Transactional
-    public void acceptRelation(ObjectId myId, ObjectId friendId){
-
-        Relation relation = findOne(myId, friendId);
-        if(!relation.getRelationType().equals(RelationType.REQUEST)){
-            throw new IllegalStateException("이미 친구이거나 거절되었습니다.");
-        }
-        if(myId.equals(relation.getRelationId2())){
+    public void acceptRelation(String email,String friendNickname){
+        Relation relation = findRequest(email,friendNickname);
+        if(relation.getRelationType().equals(RelationType.REQUEST)){
             relation.setRelationType(RelationType.BOTH);
             relationRepository.save(relation);
         }else{
-            throw new IllegalStateException("요청을 처리할 권한이 없습니다.");
+            throw new CustomException(ErrorCode.REQUEST_NOT_FOUND);
         }
     }
 
     @Transactional
-    public void rejectRelation(ObjectId myId,ObjectId friendId){
-        Relation relation = findOne(myId, friendId);
-
-        if(myId.equals(relation.getRelationId2())){
+    public void rejectRelation(String email,String friendNickname){
+        Relation relation = findRequest(email,friendNickname);
+        if(relation.getRelationType().equals(RelationType.REQUEST)){
             relation.setRelationType(RelationType.REJECTED);
             relationRepository.save(relation);
         }else{
-            throw new IllegalStateException("요청을 처리할 권한이 없습니다.");
+            throw new CustomException(ErrorCode.REQUEST_NOT_FOUND);
         }
     }
 
-//    @Transactional
-//    public void deleteRelation(String userEmail, String friendEmail){
-//        User user = userRepository.findByEmail(userEmail).get();
-//        User friend = userRepository.findByEmail(friendEmail).get();
-//        ObjectId userId2 = friend.getId();
-//        List<ObjectId> relations = user.getRelations();
-//        ObjectId id;
-//        for (ObjectId relationId : relations) {
-//            Relation relation = relationRepository.findById(relationId).get();
-//            if(relation.getRelationId1().equals(userId2) ||relation.getRelationId2().equals(userId2)){
-//                id=relation.getId();
-//                break;
-//            }
-//        }
-//        Optional<Relation> relationOption = relationRepository.findById(id);
-//        if(relationOption.isEmpty()){
-//            throw new IllegalStateException("해당 요청이 존재하지 않습니다.");
-//        }
-//        Relation relation = relationOption.get();
-//        ObjectId user1Id = relation.getRelationId1();
-//        ObjectId user2Id = relation.getRelationId2();
-//        userRepository.findById(user1Id).get().getRelations().remove(relation.getId());
-//        userRepository.findById(user2Id).get().getRelations().remove(relation.getId());
-//        relationRepository.delete(relation);
-//    }
+    @Transactional
+    public void deleteRelation(String email, String friendNickname){
+        Optional<User> meOption = userRepository.findByEmail(email);
+        Optional<User> friendOption = userRepository.findByNickname(friendNickname);
+        if(meOption.isEmpty()){
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        }
+        if(friendOption.isEmpty()){
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        }
+        User me = meOption.get();
+        User friend = friendOption.get();
 
-    public List<ObjectId> findFriends(List<ObjectId> relations,ObjectId myId){
+        Relation relation = findRelation(me.getId(),friend.getId());
+        if(!relation.getRelationType().equals(RelationType.DELETED)) {
+            relation.setRelationType(RelationType.DELETED);
+        }else{
+            throw new CustomException(ErrorCode.REQUEST_NOT_FOUND);
+        }
+
+        userRepository.save(me);
+        userRepository.save(friend);
+        relationRepository.save(relation);
+    }
+
+    public List<ObjectId> findFriendIds(String email){
+        Optional<User> userOption = userRepository.findByEmail(email);
+        if(userOption.isEmpty()){
+            throw new CustomException(ErrorCode.EMAIL_NOT_FOUND);
+        }
+        User user = userOption.get();
+        List<ObjectId> relations = user.getRelations();
         List<ObjectId> friendId = new ArrayList<>();
         for (ObjectId relationId : relations) {
             Optional<Relation> relationOption = relationRepository.findById(relationId);
             if(!relationOption.isEmpty()){
                 Relation relation = relationOption.get();
                 if(relation.getRelationType().equals(RelationType.BOTH)){
-                    if(relation.getRelationId2().equals(myId)){
-                        friendId.add(relation.getRelationId1());
+                    if(relation.getSenderId().equals(user.getId())){
+                        friendId.add(relation.getReceiverId());
                     }else{
-                        friendId.add(relation.getRelationId2());
+                        friendId.add(relation.getSenderId());
                     }
                 }
             }
         }
         return friendId;
     }
-    public List<ObjectId> findRequest(List<ObjectId> relations,ObjectId myId){
-        List<ObjectId> friendId = new ArrayList<>();
-        if(relations.size()==0){
-            return friendId;
+
+    public List<FriendInfo> listToInfo(List<ObjectId> ids){
+        List<FriendInfo> friendInfos=new ArrayList<>();
+        for(ObjectId friendId:ids){
+            Optional<User> userOption = userRepository.findById(friendId);
+            if(!userOption.isEmpty()){
+                User user = userOption.get();
+                FriendInfo friendInfo = new FriendInfo(user.getEmail(),user.getNickname(),user.getImageUrl());
+                friendInfos.add(friendInfo);
+            }
         }
+        return friendInfos;
+    }
+
+    public List<ObjectId> findRequestIds(String email){
+        Optional<User> userOption = userRepository.findByEmail(email);
+        if(userOption.isEmpty()){
+            throw new CustomException(ErrorCode.EMAIL_NOT_FOUND);
+        }
+        User user = userOption.get();
+        List<ObjectId> relations = user.getRelations();
+        List<ObjectId> requestId = new ArrayList<>();
         for (ObjectId relationId : relations) {
             Optional<Relation> relationOption = relationRepository.findById(relationId);
             if(!relationOption.isEmpty()){
                 Relation relation = relationOption.get();
                 if(relation.getRelationType().equals(RelationType.REQUEST)){
-                    if(relation.getRelationId2().equals(myId)){
-                        friendId.add(relation.getRelationId1());
-                    }else{
-                        friendId.add(relation.getRelationId2());
+                    if(relation.getReceiverId().equals(user.getId())){
+                        requestId.add(relation.getSenderId());
                     }
                 }
             }
         }
-        return friendId;
+        return requestId;
     }
 
-    public Relation findOne(ObjectId user1Id, ObjectId user2Id){
-        System.out.println("user1Id = " + user1Id + ", user2Id = " + user2Id);
-        Optional<User> user1Option = userRepository.findById(user1Id);
-        if(user1Option.isEmpty()){
-            throw new NullPointerException("해당 아이디의 유저가 없습니다.");
-        }
-        Optional<User> user2Option = userRepository.findById(user2Id);
-        if(user2Option.isEmpty()){
-            throw new NullPointerException("해당 아이디의 유저가 없습니다.");
-        }
 
-        List<Relation> relations = relationRepository.findAll();
-        for (Relation relation : relations) {
-            if(relation.getRelationId1().equals(user1Id) && relation.getRelationId2().equals(user2Id)){
-                return relation;
-            }else if(relation.getRelationId1().equals(user2Id) && relation.getRelationId2().equals(user1Id)){
-                return relation;
-            }
-        }
-        throw new NullPointerException("해당 조건을 만족하는 relation이 없습니다.");
-    }
 }

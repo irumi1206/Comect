@@ -15,23 +15,25 @@ public class Relation {
     @Id
     @Generated
     private ObjectId id;
-    private RelationType relationType;
-    private ObjectId relationId1;
-    private ObjectId relationId2;
 
-    public Relation(ObjectId relationId1, ObjectId relationId2) {
-        this.relationId1 = relationId1;
-        this.relationId2 = relationId2;
+    private RelationType relationType;
+    private ObjectId senderId;
+    private ObjectId receiverId;
+
+    public Relation(ObjectId senderId, ObjectId receiverId) {
+        this.id = new ObjectId();
+        this.senderId = senderId;
+        this.receiverId = receiverId;
         this.relationType=RelationType.REQUEST;
     }
 
     @Override
     public String toString() {
         return "Relation{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", relationType=" + relationType +
-                ", relationId1='" + relationId1 + '\'' +
-                ", relationId2='" + relationId2 + '\'' +
+                ", senderId=" + senderId +
+                ", receiverId=" + receiverId +
                 '}';
     }
 }

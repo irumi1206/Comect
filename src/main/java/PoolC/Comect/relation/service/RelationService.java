@@ -30,24 +30,15 @@ public class RelationService {
 
     @Transactional
     public void createRelation(String email, String friendNickname){
-        Optional<User> meOption = userRepository.findByEmail(email);
-        Optional<User> friendOption = userRepository.findByNickname(friendNickname);
-        if(meOption.isEmpty()){
-            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
-        }
-        if(friendOption.isEmpty()){
-            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
-        }
-        User me = meOption.get();
-        User friend = friendOption.get();
+        User me = userRepository.findByEmail(email).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        User friend = userRepository.findByNickname(friendNickname).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND) );
         List<ObjectId> relations = me.getRelations();
-        for (ObjectId relation : relations) {
-            Optional<Relation> relationOption = relationRepository.findById(relation);
-            if(!relationOption.isEmpty()){
-                if(relationOption.get().getSenderId().equals(friend.getId())||relationOption.get().getReceiverId().equals(friend.getId())) {
+        for (ObjectId relationId : relations) {
+            relationRepository.findById(relationId).ifPresent((relation)->{
+                if(relation.getSenderId().equals(friend.getId())||relation.getReceiverId().equals(friend.getId())) {
                     throw new CustomException(ErrorCode.REQUEST_EXIST);
                 }
-            }
+            });
         }
         Relation relation = new Relation(me.getId(), friend.getId());
         relationRepository.save(relation);
@@ -59,16 +50,8 @@ public class RelationService {
 
     //request 찾기, 내가 받은 request만 뜸
     public Relation findRequest(String email, String friendNickname){
-        Optional<User> meOption = userRepository.findByEmail(email);
-        Optional<User> friendOption = userRepository.findByNickname(friendNickname);
-        if(meOption.isEmpty()){
-            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
-        }
-        if(friendOption.isEmpty()){
-            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
-        }
-        User me = meOption.get();
-        User friend = friendOption.get();
+        User me = userRepository.findByEmail(email).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        User friend = userRepository.findByNickname(friendNickname).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND) );
 
         for(ObjectId relationId:me.getRelations()){
             Optional<Relation> relationOption = relationRepository.findById(relationId);
@@ -84,16 +67,8 @@ public class RelationService {
 
     //relation 찾기, 내가 보낸 것과 받은것 모두 포함
     public Relation findRelation(ObjectId myId, ObjectId friendId){
-        Optional<User> meOption = userRepository.findById(myId);
-        Optional<User> friendOption = userRepository.findById(friendId);
-        if(meOption.isEmpty()){
-            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
-        }
-        if(friendOption.isEmpty()){
-            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
-        }
-        User me = meOption.get();
-        User friend = friendOption.get();
+        User me = userRepository.findById(myId).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        User friend = userRepository.findById(friendId).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         for(ObjectId relationId:me.getRelations()){
             Optional<Relation> relationOption = relationRepository.findById(relationId);
@@ -133,41 +108,26 @@ public class RelationService {
 
     @Transactional
     public void deleteRelation(String email, String friendNickname){
-        Optional<User> meOption = userRepository.findByEmail(email);
-        Optional<User> friendOption = userRepository.findByNickname(friendNickname);
-        if(meOption.isEmpty()){
-            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
-        }
-        if(friendOption.isEmpty()){
-            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
-        }
-        User me = meOption.get();
-        User friend = friendOption.get();
+        User me = userRepository.findByEmail(email).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        User friend = userRepository.findByNickname(friendNickname).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND) );
 
         Relation relation = findRelation(me.getId(),friend.getId());
         if(!relation.getRelationType().equals(RelationType.DELETED)) {
             relation.setRelationType(RelationType.DELETED);
+            userRepository.save(me);
+            userRepository.save(friend);
+            relationRepository.save(relation);
         }else{
             throw new CustomException(ErrorCode.REQUEST_NOT_FOUND);
         }
-
-        userRepository.save(me);
-        userRepository.save(friend);
-        relationRepository.save(relation);
     }
 
     public List<ObjectId> findFriendIds(String email){
-        Optional<User> userOption = userRepository.findByEmail(email);
-        if(userOption.isEmpty()){
-            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
-        }
-        User user = userOption.get();
+        User user = userRepository.findByEmail(email).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
         List<ObjectId> relations = user.getRelations();
         List<ObjectId> friendId = new ArrayList<>();
         for (ObjectId relationId : relations) {
-            Optional<Relation> relationOption = relationRepository.findById(relationId);
-            if(!relationOption.isEmpty()){
-                Relation relation = relationOption.get();
+            relationRepository.findById(relationId).ifPresent((relation)->{
                 if(relation.getRelationType().equals(RelationType.BOTH)){
                     if(relation.getSenderId().equals(user.getId())){
                         friendId.add(relation.getReceiverId());
@@ -175,7 +135,7 @@ public class RelationService {
                         friendId.add(relation.getSenderId());
                     }
                 }
-            }
+            });
         }
         return friendId;
     }
@@ -183,34 +143,24 @@ public class RelationService {
     public List<FriendInfo> listToInfo(List<ObjectId> ids){
         List<FriendInfo> friendInfos=new ArrayList<>();
         for(ObjectId friendId:ids){
-            Optional<User> userOption = userRepository.findById(friendId);
-            if(!userOption.isEmpty()){
-                User user = userOption.get();
+            userRepository.findById(friendId).ifPresent((user)->{
                 FriendInfo friendInfo = new FriendInfo(user.getEmail(),user.getNickname(),user.getImageUrl());
                 friendInfos.add(friendInfo);
-            }
+            });
         }
         return friendInfos;
     }
 
     public List<ObjectId> findRequestIds(String email){
-        Optional<User> userOption = userRepository.findByEmail(email);
-        if(userOption.isEmpty()){
-            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
-        }
-        User user = userOption.get();
+        User user = userRepository.findByEmail(email).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
         List<ObjectId> relations = user.getRelations();
         List<ObjectId> requestId = new ArrayList<>();
         for (ObjectId relationId : relations) {
-            Optional<Relation> relationOption = relationRepository.findById(relationId);
-            if(!relationOption.isEmpty()){
-                Relation relation = relationOption.get();
-                if(relation.getRelationType().equals(RelationType.REQUEST)){
-                    if(relation.getReceiverId().equals(user.getId())){
-                        requestId.add(relation.getSenderId());
-                    }
+            relationRepository.findById(relationId).ifPresent((relation)->{
+                if(relation.getRelationType().equals(RelationType.REQUEST)&&relation.getReceiverId().equals(user.getId())){
+                    requestId.add(relation.getSenderId());
                 }
-            }
+            });
         }
         return requestId;
     }

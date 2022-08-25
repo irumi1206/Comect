@@ -38,27 +38,36 @@ public class UserService {
 
     public void login(String email, String password){
         validateEmailUser(email);
-        Optional<User> userOption = userRepository.findByEmail(email);
-        if(userOption.isEmpty()){
-            throw new CustomException(ErrorCode.LOGIN_FAIL);
-        }
-        User user = userOption.get();
+        User user = userRepository.findByEmail(email).orElseThrow(()->new CustomException(ErrorCode.LOGIN_FAIL));
         if(!user.getPassword().equals(password)) {
             throw new CustomException(ErrorCode.LOGIN_FAIL);
         }
     }
 
+    public void update(String email,String userNickname, String picture){
+        validateEmailUser(email);
+        User user = userRepository.findByEmail(email).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        user.setNickname(userNickname);
+        user.setImageUrl(picture);
+        userRepository.save(user);
+    }
+
+    public User findOne(String email){
+        validateEmailUser(email);
+        User user = userRepository.findByEmail(email).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        return user;
+    }
+
+
     private void validateDuplicateUser(String email){
-        Optional<User> findUsers = userRepository.findByEmail(email);
-        if(!findUsers.isEmpty()){
+        if(!userRepository.findByEmail(email).isEmpty()){
             throw new CustomException(ErrorCode.EMAIL_EXISTS);
         }
     }
 
     //나중에 닉네임 중복 조회 서비스에서 사용
     private void validateDuplicateNickname(String nickname){
-        Optional<User> findUsers = userRepository.findByNickname(nickname);
-        if(!findUsers.isEmpty()){
+        if(!userRepository.findByNickname(nickname).isEmpty()){
             throw new CustomException(ErrorCode.EMAIL_EXISTS);
         }
     }
@@ -75,28 +84,4 @@ public class UserService {
     private void validatePassword(String password){
 
     }
-
-    public void update(String email,String userNickname, String picture){
-        validateEmailUser(email);
-        Optional<User> userOption = userRepository.findByEmail(email);
-        if(userOption.isEmpty()){
-            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
-        }else {
-            User user = userOption.get();
-            user.setNickname(userNickname);
-            user.setImageUrl(picture);
-            userRepository.save(user);
-        }
-    }
-
-    public User findOne(String email){
-        validateEmailUser(email);
-        Optional<User> userOption = userRepository.findByEmail(email);
-        if(userOption.isEmpty()){
-            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
-        }
-        User user = userOption.get();
-        return user;
-    }
-
 }

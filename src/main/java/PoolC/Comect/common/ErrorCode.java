@@ -4,9 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+import java.util.function.Supplier;
+
 @Getter
 @AllArgsConstructor
-public enum ErrorCode {
+public enum ErrorCode{
 
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "이메일이 존재하지 않음"),
     EMAIL_NOT_VALID(HttpStatus.BAD_REQUEST,"이메일 형식이 잘못됨"),

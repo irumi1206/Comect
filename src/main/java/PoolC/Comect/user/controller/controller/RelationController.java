@@ -1,4 +1,4 @@
-package PoolC.Comect.relation.controller;
+package PoolC.Comect.user.controller.controller;
 
 
 import PoolC.Comect.relation.domain.FriendInfo;

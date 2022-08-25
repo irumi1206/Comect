@@ -62,10 +62,10 @@ public class RelationService {
         Optional<User> meOption = userRepository.findByEmail(email);
         Optional<User> friendOption = userRepository.findByNickname(friendNickname);
         if(meOption.isEmpty()){
-            throw new CustomException(ErrorCode.EMAIL_NOT_FOUND);
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         }
         if(friendOption.isEmpty()){
-            throw new CustomException(ErrorCode.EMAIL_NOT_FOUND);
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         }
         User me = meOption.get();
         User friend = friendOption.get();
@@ -159,7 +159,7 @@ public class RelationService {
     public List<ObjectId> findFriendIds(String email){
         Optional<User> userOption = userRepository.findByEmail(email);
         if(userOption.isEmpty()){
-            throw new CustomException(ErrorCode.EMAIL_NOT_FOUND);
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         }
         User user = userOption.get();
         List<ObjectId> relations = user.getRelations();
@@ -196,7 +196,7 @@ public class RelationService {
     public List<ObjectId> findRequestIds(String email){
         Optional<User> userOption = userRepository.findByEmail(email);
         if(userOption.isEmpty()){
-            throw new CustomException(ErrorCode.EMAIL_NOT_FOUND);
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         }
         User user = userOption.get();
         List<ObjectId> relations = user.getRelations();

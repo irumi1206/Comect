@@ -2,16 +2,15 @@ package PoolC.Comect.user.service;
 
 import PoolC.Comect.common.CustomException;
 import PoolC.Comect.common.ErrorCode;
-import PoolC.Comect.data.domain.Data;
+import PoolC.Comect.folder.domain.Folder;
+import PoolC.Comect.folder.repository.FolderRepository;
 import PoolC.Comect.user.domain.User;
-import PoolC.Comect.data.repository.DataRepository;
 import PoolC.Comect.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,7 +21,7 @@ import java.util.regex.Pattern;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final DataRepository dataRepository;
+    private final FolderRepository folderRepository;
 
     //회원 가입
     @Transactional
@@ -30,9 +29,9 @@ public class UserService {
         validateEmailUser(email);
         validateDuplicateUser(email);
         validatePassword(password);
-        Data data=new Data();
-        dataRepository.save(data);
-        User user=new User(nickname,email,data.getId(),imageUrl, password);
+        Folder folder=new Folder("");
+        folderRepository.save(folder);
+        User user=new User(nickname,email,folder.get_id(),imageUrl, password);
         userRepository.save(user);
         return user.getId();
     }
@@ -41,7 +40,7 @@ public class UserService {
         validateEmailUser(email);
         Optional<User> userOption = userRepository.findByEmail(email);
         if(userOption.isEmpty()){
-            throw new CustomException(ErrorCode.EMAIL_NOT_FOUND);
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         }
         User user = userOption.get();
         if(!user.getPassword().equals(password)) {
@@ -95,7 +94,7 @@ public class UserService {
         validateEmailUser(email);
         Optional<User> userOption = userRepository.findByEmail(email);
         if(userOption.isEmpty()){
-            throw new CustomException(ErrorCode.EMAIL_NOT_FOUND);
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         }
         User user = userOption.get();
         return user;

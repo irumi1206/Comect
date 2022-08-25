@@ -1,15 +1,13 @@
 package PoolC.Comect.relation;
 
-import PoolC.Comect.data.domain.Data;
-import PoolC.Comect.data.dto.FolderDeleteRequestDto;
-import PoolC.Comect.data.repository.DataRepository;
+import PoolC.Comect.folder.domain.Folder;
+import PoolC.Comect.folder.repository.FolderRepository;
 import PoolC.Comect.relation.domain.Relation;
 import PoolC.Comect.relation.domain.RelationType;
 import PoolC.Comect.relation.dto.*;
 import PoolC.Comect.relation.repository.RelationRepository;
 import PoolC.Comect.user.domain.User;
 import PoolC.Comect.user.repository.UserRepository;
-import PoolC.Comect.user.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,12 +23,9 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -45,7 +40,7 @@ public class relationTest {
     @Autowired
     private TestRestTemplate restTemplate;
     @Autowired
-    private DataRepository dataRepository;
+    private FolderRepository folderRepository;
     @Autowired
     private RelationRepository relationRepository;
     @Autowired
@@ -56,25 +51,25 @@ public class relationTest {
 
     @Before
     public void before(){
-        dataRepository.deleteAll();
+        folderRepository.deleteAll();
         relationRepository.deleteAll();
         userRepository.deleteAll();
 
-        Data data1 = new Data();
-        User user1 = new User("user1", "user1Email@naver.com", data1.getId(), "user1Picture", "1234");
-        dataRepository.save(data1);
+        Folder folder1 = new Folder("");
+        User user1 = new User("user1", "user1Email@naver.com", folder1.get_id(), "user1Picture", "1234");
+        folderRepository.save(folder1);
         userRepository.save(user1);
-        Data data2 = new Data();
-        User user2 = new User("user2", "user2Email@naver.com", data2.getId(), "user2Picture", "5678");
-        dataRepository.save(data2);
+        Folder data2 = new Folder("");
+        User user2 = new User("user2", "user2Email@naver.com", data2.get_id(), "user2Picture", "5678");
+        folderRepository.save(data2);
         userRepository.save(user2);
-        Data data3 = new Data();
-        User user3 = new User("user3", "user3Email@naver.com", data1.getId(), "user3Picture", "1234");
-        dataRepository.save(data3);
+        Folder data3 = new Folder("");
+        User user3 = new User("user3", "user3Email@naver.com", data3.get_id(), "user3Picture", "1234");
+        folderRepository.save(data3);
         userRepository.save(user3);
-        Data data4 = new Data();
-        User user4 = new User("user4", "user4Email@naver.com", data1.getId(), "user4Picture", "12345");
-        dataRepository.save(data4);
+        Folder data4 = new Folder("");
+        User user4 = new User("user4", "user4Email@naver.com", data4.get_id(), "user4Picture", "12345");
+        folderRepository.save(data4);
         userRepository.save(user4);
 
         User temp1 = userRepository.findByNickname("user1").get();
@@ -132,7 +127,7 @@ public class relationTest {
         //when
         ResponseEntity<String> result = this.restTemplate.getForEntity(uri,String.class);
         //then
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     @Test
@@ -232,7 +227,7 @@ public class relationTest {
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,acceptRelationRequestDto,String.class);
         //then
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     @Test
@@ -247,7 +242,7 @@ public class relationTest {
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,acceptRelationRequestDto,String.class);
         //then
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     @Test
@@ -304,7 +299,7 @@ public class relationTest {
         HttpEntity<RejectRelationRequestDto> request = new HttpEntity<>(rejectRelationRequestDto,headers);
         ResponseEntity<String> result = this.restTemplate.exchange(uri, HttpMethod.DELETE,request,String.class);
         //then
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
     @Test
     @DisplayName("테스트 13 : 친구 삭제")

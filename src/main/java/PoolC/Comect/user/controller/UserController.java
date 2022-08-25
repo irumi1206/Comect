@@ -1,14 +1,11 @@
 package PoolC.Comect.user.controller;
 
-import PoolC.Comect.data.dto.FolderCreateRequestDto;
 import PoolC.Comect.user.domain.User;
 import PoolC.Comect.user.dto.*;
 import PoolC.Comect.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

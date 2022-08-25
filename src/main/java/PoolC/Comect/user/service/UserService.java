@@ -40,7 +40,7 @@ public class UserService {
         validateEmailUser(email);
         Optional<User> userOption = userRepository.findByEmail(email);
         if(userOption.isEmpty()){
-            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+            throw new CustomException(ErrorCode.LOGIN_FAIL);
         }
         User user = userOption.get();
         if(!user.getPassword().equals(password)) {
@@ -76,7 +76,6 @@ public class UserService {
 
     }
 
-    @Transactional
     public void update(String email,String userNickname, String picture){
         validateEmailUser(email);
         Optional<User> userOption = userRepository.findByEmail(email);

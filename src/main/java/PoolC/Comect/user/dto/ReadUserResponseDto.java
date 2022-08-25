@@ -7,10 +7,10 @@ import lombok.Data;
 public class ReadUserResponseDto {
 
     private String nickname;
-    private String profilePicture;
+    private String imageUrl;
 
     public ReadUserResponseDto(User user){
-        this.nickname=user.getUserNickname();
-        this.profilePicture=user.getPicture();
+        this.nickname=user.getNickname();
+        this.imageUrl=user.getImageUrl();
     }
 }

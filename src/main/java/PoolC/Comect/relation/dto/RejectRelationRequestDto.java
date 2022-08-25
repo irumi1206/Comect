@@ -4,6 +4,10 @@ import lombok.Data;
 
 @Data
 public class RejectRelationRequestDto {
-    private String userEmail;
-    private String friendId;
+    private String email;
+    private String friendNickname;
+
+    public static Object builder() {
+        return null;
+    }
 }

@@ -5,6 +5,6 @@ import org.bson.types.ObjectId;
 
 @Data
 public class CreateRelationRequestDto {
-    private String userEmail;
-    private String friendEmail;
+    private String email;
+    private String friendNickname;
 }

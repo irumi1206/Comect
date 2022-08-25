@@ -1,23 +1,18 @@
 package PoolC.Comect.relation.controller;
 
 
+import PoolC.Comect.relation.domain.FriendInfo;
 import PoolC.Comect.relation.dto.*;
 import PoolC.Comect.relation.service.RelationService;
 import PoolC.Comect.user.domain.User;
-import PoolC.Comect.user.dto.CreateUserRequestDto;
 import PoolC.Comect.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,75 +21,41 @@ public class RelationController {
     private final RelationService relationService;
     private final UserService userService;
 
-    @PostMapping("/member/find")
-    public ResponseEntity<ReadRelationResponseDto> findRelation(@RequestBody ReadRelationRequestDto request) throws InterruptedException {
-            User user = userService.findOne(request.getUserEmail());
-            ReadRelationResponseDto readRelationResponseDto = new ReadRelationResponseDto();
-            List<ObjectId> requests = relationService.findRequest(user.getRelations(), user.getId());
-            List<FriendInfo> requestList = new ArrayList<>();
-            for (ObjectId friendsId : requests) {
-                FriendInfo friendInfo = new FriendInfo();
-                User friend = userService.findById(friendsId);
-                friendInfo.setId(friendsId.toHexString());
-                friendInfo.setNickname(friend.getUserNickname());
-                friendInfo.setProfilePicture(friend.getPicture());
-                requestList.add(friendInfo);
-            }
-            List<ObjectId> friends = relationService.findFriends(user.getRelations(), user.getId());
-            List<FriendInfo> friendsList = new ArrayList<>();
-            for (ObjectId friendsId : friends) {
-                FriendInfo friendInfo = new FriendInfo();
-                User friend = userService.findById(friendsId);
-                friendInfo.setId(friendsId.toHexString());
-                friendInfo.setNickname(friend.getUserNickname());
-                friendInfo.setProfilePicture(friend.getPicture());
-                friendsList.add(friendInfo);
-            }
-            readRelationResponseDto.setRequest(requestList);
-            readRelationResponseDto.setFriends(friendsList);
-            readRelationResponseDto.setNumberOfFriends(friendsList.size());
-            readRelationResponseDto.setNumberOfRequest(requestList.size());
-            return ResponseEntity.ok(readRelationResponseDto);
+    @GetMapping("/friend")
+    public ResponseEntity<ReadRelationResponseDto> findRelation(@ModelAttribute ReadRelationRequestDto request){
+        List<ObjectId> requestList = relationService.findRequestIds(request.getEmail());
+        List<ObjectId> friendsList = relationService.findFriendIds(request.getEmail());
+        List<FriendInfo> requestFriendsList = relationService.listToInfo(requestList);
+        List<FriendInfo> acceptedFriendsList = relationService.listToInfo(friendsList);
+        ReadRelationResponseDto readRelationResponseDto = new ReadRelationResponseDto();
+        readRelationResponseDto.setNumberOfFriend(friendsList.size());
+        readRelationResponseDto.setNumberOfRequest(requestList.size());
+        readRelationResponseDto.setRequest(requestFriendsList);
+        readRelationResponseDto.setFriends(acceptedFriendsList);
+        return ResponseEntity.ok(readRelationResponseDto);
     }
 
-    @PostMapping("/member/add")
-    public ResponseEntity<CreateRelationRequestDto> addRelation(@RequestBody CreateRelationRequestDto request) throws InterruptedException {
-            String userEmail = request.getUserEmail();
-            String friendEmail = request.getFriendEmail();
-            User user = userService.findOne(userEmail);
-        User friend = null;
-        try {
-            friend = userService.findOne(friendEmail);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        relationService.createRelation(user.getId(),friend.getId());
-            return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/member/accept")
-    public ResponseEntity<Void> acceptRelation(@RequestBody AcceptRelationRequestDto request) throws InterruptedException {
-            String userEmail = request.getUserEmail();
-            String friendId = request.getFriendId();
-            User user = userService.findOne(userEmail);
-            relationService.acceptRelation(user.getId(),new ObjectId(friendId));
-            return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/member/reject")
-    public ResponseEntity<Void> rejectRelation(@RequestBody RejectRelationRequestDto request) throws InterruptedException {
-        String userEmail = request.getUserEmail();
-        String friendId = request.getFriendId();
-        User user = userService.findOne(userEmail);
-        relationService.rejectRelation(user.getId(),new ObjectId(friendId));
+    @PostMapping("/friend")
+    public ResponseEntity<CreateRelationRequestDto> addRelation(@RequestBody CreateRelationRequestDto request){
+        relationService.createRelation(request.getEmail(), request.getFriendNickname());
         return ResponseEntity.ok().build();
     }
 
-//    @PostMapping("/member/delete")
-//    public ResponseEntity<Void> deleteRelation(@RequestBody DeleteFriendRequestDto request){
-//        String userEmail = request.getUserEmail();
-//        String friendEmail = request.getFriendEmail();
-//        relationService.deleteRelation(userEmail, friendEmail);
-//        return ResponseEntity.ok().build();
-//    }
+    @PostMapping("/friend/request")
+    public ResponseEntity<Void> acceptRelation(@RequestBody AcceptRelationRequestDto request){
+        relationService.acceptRelation(request.getEmail(), request.getFriendNickname());
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/friend/request")
+    public ResponseEntity<Void> rejectRelation(@RequestBody RejectRelationRequestDto request){
+        relationService.rejectRelation(request.getEmail(), request.getFriendNickname());
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/friend")
+    public ResponseEntity<Void> deleteRelation(@RequestBody DeleteFriendRequestDto request){
+        relationService.deleteRelation(request.getEmail(), request.getFriendNickname());
+        return ResponseEntity.ok().build();
+    }
 }

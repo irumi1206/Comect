@@ -9,10 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,33 +18,29 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/auth/signUp")
-    public ResponseEntity<Void> createUser(@RequestBody CreateUserRequestDto request) throws InterruptedException {
-        userService.join(request.getUserEmail(),request.getUserPassword(),request.getUserNickname(), request.getProfilePicture());
+    @PostMapping("/member")
+    public ResponseEntity<Void> createUser(@RequestBody CreateUserRequestDto request){
+        userService.join(request.getEmail(),request.getPassword(),request.getNickname(), request.getImageUrl());
         log.trace("signup success");
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/auth/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto request) throws InterruptedException {
-        User user = userService.findOne(request.getUserEmail());
-        LoginResponseDto loginResponseDto = new LoginResponseDto(request.getUserEmail());
-        if(user.getPassword().equals(request.getUserPassword())){
-            return ResponseEntity.ok(loginResponseDto);
-        }else{
-            return ResponseEntity.badRequest().build();
-        }
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto request){
+        userService.login(request.getEmail(), request.getPassword());
+        LoginResponseDto loginResponseDto = new LoginResponseDto(request.getEmail());
+        return ResponseEntity.ok(loginResponseDto);
     }
 
-    @PostMapping("/member/myInfo")
-    public ResponseEntity<ReadUserResponseDto> readUser(@RequestBody ReadUserRequestDto request) throws InterruptedException {
-        User user = userService.findOne(request.getUserEmail());
+    @GetMapping("/my")
+    public ResponseEntity<ReadUserResponseDto> readUser(@ModelAttribute ReadUserRequestDto request){
+        User user = userService.findOne(request.getEmail());
         return ResponseEntity.ok(new ReadUserResponseDto(user));
     }
 
-    @PostMapping("/member/myInfoChange")
+    @PutMapping("/my")
     public ResponseEntity<Void> updateUser(@RequestBody UpdateUserRequestDto request){
-        userService.update(request.getUserEmail(), request.getNewNickname(), request.getNewProfilePicture());
+        userService.update(request.getEmail(), request.getNewNickname(), request.getNewImageUrl());
         return ResponseEntity.ok().build();
     }
 

@@ -47,12 +47,16 @@ public class FolderService {
         folderRepository.folderUpdate(user.getRootFolderId(),path,folderName);
     }
 
-    public void folderDelete(String userEmail, String path){
+    @Transactional
+    public void folderDelete(String userEmail, List<String> paths){
         validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
-        folderRepository.folderDelete(user.getRootFolderId(),path);
+        for(String path:paths) {
+            folderRepository.folderDelete(user.getRootFolderId(), path);
+        }
     }
 
+    @Transactional
     public void folderMove(String userEmail, List<String> originalPaths, String modifiedPath){
         validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
@@ -83,10 +87,26 @@ public class FolderService {
         folderRepository.linkUpdate(user.getRootFolderId(), path,new ObjectId(id), link);
     }
 
-    public void linkDelete(String email,String path,String id){
+    @Transactional
+    public void linkDelete(String email,List<String> paths,List<String> ids){
         validateEmail(email);
         User user = getUserByEmail(email);
-        folderRepository.linkDelete(user.getRootFolderId(), path,new ObjectId(id));
+        for(int i=0;i<paths.size();++i){
+            folderRepository.linkDelete(user.getRootFolderId(), paths.get(i),new ObjectId(ids.get(i)));
+        }
+    }
+
+    @Transactional
+    public void linkMove(String userEmail, List<String> originalPaths, List<String> originalIds,String modifiedPath){
+        validateEmail(userEmail);
+        User user = getUserByEmail(userEmail);
+        for(int i=0;i<originalPaths.size();++i){
+            String originalPath=originalPaths.get(i);
+            String originalId=originalIds.get(i);
+            Link link=folderRepository.linkRead(user.getRootFolderId(),originalPath,new ObjectId(originalId));
+            folderRepository.linkDelete(user.getRootFolderId(),originalPath,new ObjectId(originalId));
+            folderRepository.linkCreate(user.getRootFolderId(),modifiedPath,link);
+        }
     }
 
     private User getUserByEmail(String userEmail){

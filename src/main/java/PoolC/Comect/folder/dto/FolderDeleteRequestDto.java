@@ -3,16 +3,18 @@ package PoolC.Comect.folder.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class FolderDeleteRequestDto {
 
     private String email;
-    private String path;
+    private List<String> paths;
 
     @Builder
-    public FolderDeleteRequestDto(String email, String path){
+    public FolderDeleteRequestDto(String email, List<String> paths){
         this.email=email;
-        this.path=path;
+        this.paths=paths;
     }
 
 }

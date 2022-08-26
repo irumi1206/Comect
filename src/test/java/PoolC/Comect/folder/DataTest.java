@@ -241,9 +241,11 @@ public class DataTest {
         String baseUrl="http://localhost:" + port + "/folder";
         String email="user1Email@email.com";
         String path="";
+        String showLink="true";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl)
                 .queryParam("email", email)
-                .queryParam("path",path);
+                .queryParam("path",path)
+                .queryParam("showLink",showLink);
 
         //when
         HttpEntity<Void> request=new HttpEntity<>(headers);
@@ -270,9 +272,11 @@ public class DataTest {
         String baseUrl="http://localhost:" + port + "/folder";
         String email="user1Email@email.com";
         String path="folder11/folder21";
+        String showLink="true";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl)
                 .queryParam("email", email)
-                .queryParam("path",path);
+                .queryParam("path",path)
+                .queryParam("showLink",showLink);
 
         //when
         HttpEntity<Void> request=new HttpEntity<>(headers);
@@ -299,9 +303,11 @@ public class DataTest {
         String baseUrl="http://localhost:" + port + "/folder";
         String email="user1Email";
         String path="";
+        String showLink="true";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl)
                 .queryParam("email", email)
-                .queryParam("path",path);
+                .queryParam("path",path)
+                .queryParam("showLink",showLink);
 
         //when
         HttpEntity<Void> request=new HttpEntity<>(headers);
@@ -327,9 +333,11 @@ public class DataTest {
         String baseUrl="http://localhost:" + port + "/folder";
         String email="user2Email@email.com";
         String path="";
+        String showLink="true";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl)
                 .queryParam("email", email)
-                .queryParam("path",path);
+                .queryParam("path",path)
+                .queryParam("showLink",showLink);
 
         //when
         HttpEntity<Void> request=new HttpEntity<>(headers);
@@ -355,9 +363,11 @@ public class DataTest {
         String baseUrl="http://localhost:" + port + "/folder";
         String email="user1Email@email.com";
         String path="folder14/folder13";
+        String showLink="true";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl)
                 .queryParam("email", email)
-                .queryParam("path",path);
+                .queryParam("path",path)
+                .queryParam("showLink",showLink);
 
         //when
         HttpEntity<Void> request=new HttpEntity<>(headers);
@@ -380,12 +390,14 @@ public class DataTest {
         HttpHeaders headers = new HttpHeaders();
         headers.set("JSON","true");
 
-        String baseUrl="http://localhost:" + port + "/folder/folder";
+        String baseUrl="http://localhost:" + port + "/folder";
         String email="user1Email@email.com";
         String path="";
+        String showLink="false";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl)
                 .queryParam("email", email)
-                .queryParam("path",path);
+                .queryParam("path",path)
+                .queryParam("showLink",showLink);
 
         //when
         HttpEntity<Void> request=new HttpEntity<>(headers);
@@ -409,12 +421,14 @@ public class DataTest {
         HttpHeaders headers = new HttpHeaders();
         headers.set("JSON","true");
 
-        String baseUrl="http://localhost:" + port + "/folder/folder";
+        String baseUrl="http://localhost:" + port + "/folder";
         String email="user1Email@email.com";
         String path="folder11/folder21";
+        String showLink="false";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl)
                 .queryParam("email", email)
-                .queryParam("path",path);
+                .queryParam("path",path)
+                .queryParam("showLink",showLink);
 
         //when
         HttpEntity<Void> request=new HttpEntity<>(headers);
@@ -438,12 +452,14 @@ public class DataTest {
         HttpHeaders headers = new HttpHeaders();
         headers.set("JSON","true");
 
-        String baseUrl="http://localhost:" + port + "/folder/folder";
+        String baseUrl="http://localhost:" + port + "/folder";
         String email="user1Email";
         String path="";
+        String showLink="false";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl)
                 .queryParam("email", email)
-                .queryParam("path",path);
+                .queryParam("path",path)
+                .queryParam("showLink",showLink);
 
         //when
         HttpEntity<Void> request=new HttpEntity<>(headers);
@@ -466,12 +482,14 @@ public class DataTest {
         HttpHeaders headers = new HttpHeaders();
         headers.set("JSON","true");
 
-        String baseUrl="http://localhost:" + port + "/folder/folder";
+        String baseUrl="http://localhost:" + port + "/folder";
         String email="user2Email@email.com";
         String path="";
+        String showLink="false";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl)
                 .queryParam("email", email)
-                .queryParam("path",path);
+                .queryParam("path",path)
+                .queryParam("showLink",showLink);
 
         //when
         HttpEntity<Void> request=new HttpEntity<>(headers);
@@ -494,12 +512,15 @@ public class DataTest {
         HttpHeaders headers = new HttpHeaders();
         headers.set("JSON","true");
 
-        String baseUrl="http://localhost:" + port + "/folder/folder";
+        String baseUrl="http://localhost:" + port + "/folder";
         String email="user1Email@email.com";
         String path="folder14/folder13";
+        String showLink="false";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl)
                 .queryParam("email", email)
-                .queryParam("path",path);
+                .queryParam("path",path)
+                .queryParam("showLink",showLink);
+
 
         //when
         HttpEntity<Void> request=new HttpEntity<>(headers);
@@ -688,14 +709,15 @@ public class DataTest {
         HttpHeaders headers = new HttpHeaders();
         headers.set("JSON","true");
         String email="user1Email@email.com";
-        String path="folder11/folder21";
+        List<String> paths=new ArrayList<>();
+        paths.add("folder11/folder21");
 
         String baseUrl="http://localhost:" + port + "/folder";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
 
         FolderDeleteRequestDto folderDeleteRequestDto= FolderDeleteRequestDto.builder()
                 .email(email)
-                .path(path)
+                .paths(paths)
                 .build();
 
         //when
@@ -720,14 +742,15 @@ public class DataTest {
         HttpHeaders headers = new HttpHeaders();
         headers.set("JSON","true");
         String email="user1Email@email.com";
-        String path="";
+        List<String> paths=new ArrayList<>();
+        paths.add("");
 
         String baseUrl="http://localhost:" + port + "/folder";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
 
         FolderDeleteRequestDto folderDeleteRequestDto= FolderDeleteRequestDto.builder()
                 .email(email)
-                .path(path)
+                .paths(paths)
                 .build();
 
         //when
@@ -751,14 +774,15 @@ public class DataTest {
         HttpHeaders headers = new HttpHeaders();
         headers.set("JSON","true");
         String email="user1Email";
-        String path="folder11";
+        List<String> paths=new ArrayList<>();
+        paths.add("folder11");
 
         String baseUrl="http://localhost:" + port + "/folder";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
 
         FolderDeleteRequestDto folderDeleteRequestDto= FolderDeleteRequestDto.builder()
                 .email(email)
-                .path(path)
+                .paths(paths)
                 .build();
 
         //when
@@ -782,14 +806,15 @@ public class DataTest {
         HttpHeaders headers = new HttpHeaders();
         headers.set("JSON","true");
         String email="user2Email@email.com";
-        String path="folder11";
+        List<String> paths=new ArrayList<>();
+        paths.add("folder11");
 
         String baseUrl="http://localhost:" + port + "/folder";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
 
         FolderDeleteRequestDto folderDeleteRequestDto= FolderDeleteRequestDto.builder()
                 .email(email)
-                .path(path)
+                .paths(paths)
                 .build();
 
         //when
@@ -813,14 +838,15 @@ public class DataTest {
         HttpHeaders headers = new HttpHeaders();
         headers.set("JSON","true");
         String email="user1Email@email.com";
-        String path="folder11/folder24";
+        List<String> paths=new ArrayList<>();
+        paths.add("folder11/folder24");
 
         String baseUrl="http://localhost:" + port + "/folder";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
 
         FolderDeleteRequestDto folderDeleteRequestDto= FolderDeleteRequestDto.builder()
                 .email(email)
-                .path(path)
+                .paths(paths)
                 .build();
 
         //when
@@ -1540,15 +1566,18 @@ public class DataTest {
         headers.set("JSON","true");
         String id=idUpdate.toString();
         String email="user1Email@email.com";
-        String path="folder11/folder21";
+        List<String> paths=new ArrayList<>();
+        paths.add("folder11/folder21");
+        List<String> ids=new ArrayList<>();
+        ids.add(id);
 
         String baseUrl="http://localhost:" + port + "/link";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
 
         LinkDeleteRequestDto linkDeleteRequestDto= LinkDeleteRequestDto.builder()
-                .id(id)
+                .ids(ids)
                 .email(email)
-                .path(path)
+                .paths(paths)
                 .build();
 
         //when
@@ -1573,15 +1602,18 @@ public class DataTest {
         headers.set("JSON","true");
         String id=idUpdate.toString();
         String email="user1Email";
-        String path="folder11/folder21";
+        List<String> paths=new ArrayList<>();
+        paths.add("folder11/folder21");
+        List<String> ids=new ArrayList<>();
+        ids.add(id);
 
         String baseUrl="http://localhost:" + port + "/link";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
 
         LinkDeleteRequestDto linkDeleteRequestDto= LinkDeleteRequestDto.builder()
-                .id(id)
+                .ids(ids)
                 .email(email)
-                .path(path)
+                .paths(paths)
                 .build();
 
         //when
@@ -1605,15 +1637,18 @@ public class DataTest {
         headers.set("JSON","true");
         String id=idUpdate.toString();
         String email="user2Email@email.com";
-        String path="folder11/folder21";
+        List<String> paths=new ArrayList<>();
+        paths.add("folder11/folder21");
+        List<String> ids=new ArrayList<>();
+        ids.add(id);
 
         String baseUrl="http://localhost:" + port + "/link";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
 
         LinkDeleteRequestDto linkDeleteRequestDto= LinkDeleteRequestDto.builder()
-                .id(id)
+                .ids(ids)
                 .email(email)
-                .path(path)
+                .paths(paths)
                 .build();
 
         //when
@@ -1637,15 +1672,18 @@ public class DataTest {
         headers.set("JSON","true");
         String id=idUpdate.toString();
         String email="user1Email@email.com";
-        String path="folder11";
+        List<String> paths=new ArrayList<>();
+        paths.add("folder11");
+        List<String> ids=new ArrayList<>();
+        ids.add(id);
 
         String baseUrl="http://localhost:" + port + "/link";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
 
         LinkDeleteRequestDto linkDeleteRequestDto= LinkDeleteRequestDto.builder()
-                .id(id)
+                .ids(ids)
                 .email(email)
-                .path(path)
+                .paths(paths)
                 .build();
 
         //when
@@ -1653,6 +1691,155 @@ public class DataTest {
         ResponseEntity<String> response = restTemplate.exchange(
                 builder.toUriString(),
                 HttpMethod.DELETE,
+                request,
+                String.class);
+
+        //then
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    @DisplayName("링크이동성공1")
+    public void 링크이동성공1() throws URISyntaxException{
+
+        //given
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("JSON","true");
+        String id=idUpdate.toString();
+        String email="user1Email@email.com";
+        List<String> originalPaths=new ArrayList<>();
+        originalPaths.add("folder11/folder21");
+        List<String> originalIds=new ArrayList<>();
+        originalIds.add(id);
+        String modifiedPath="folder11/folder22";
+
+        String baseUrl="http://localhost:" + port + "/link/path";
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
+
+        LinkMoveRequestDto linkMoveRequestDto= LinkMoveRequestDto.builder()
+                .email(email)
+                .originalPaths(originalPaths)
+                .originalIds(originalIds)
+                .modifiedPath(modifiedPath)
+                .build();
+
+        //when
+        HttpEntity<LinkMoveRequestDto> request = new HttpEntity<>(linkMoveRequestDto,headers);
+        ResponseEntity<String> response = restTemplate.exchange(
+                builder.toUriString(),
+                HttpMethod.PUT,
+                request,
+                String.class);
+
+        //then
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(folderRepository.checkPathLink(userRepository.findByEmail(email).get().getRootFolderId(),"folder11/folder22/link31")).isEqualTo(true);
+    }
+
+    @Test
+    @DisplayName("링크이동실패1, 이메일 형식 오류")
+    public void 링크이동실패1_이메일형식오류() throws URISyntaxException{
+
+        //given
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("JSON","true");
+        String id=idUpdate.toString();
+        String email="user1Email";
+        List<String> originalPaths=new ArrayList<>();
+        originalPaths.add("folder11/folder21");
+        List<String> originalIds=new ArrayList<>();
+        originalIds.add(id);
+        String modifiedPath="folder11/folder22";
+
+        String baseUrl="http://localhost:" + port + "/link/path";
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
+
+        LinkMoveRequestDto linkMoveRequestDto= LinkMoveRequestDto.builder()
+                .email(email)
+                .originalPaths(originalPaths)
+                .originalIds(originalIds)
+                .modifiedPath(modifiedPath)
+                .build();
+
+        //when
+        HttpEntity<LinkMoveRequestDto> request = new HttpEntity<>(linkMoveRequestDto,headers);
+        ResponseEntity<String> response = restTemplate.exchange(
+                builder.toUriString(),
+                HttpMethod.PUT,
+                request,
+                String.class);
+
+        //then
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    @DisplayName("링크이동실패2, 이메일존재하지않음")
+    public void 링크이동실패2_이메일존재하지않음() throws URISyntaxException{
+
+        //given
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("JSON","true");
+        String id=idUpdate.toString();
+        String email="user2Email@email.com";
+        List<String> originalPaths=new ArrayList<>();
+        originalPaths.add("folder11/folder21");
+        List<String> originalIds=new ArrayList<>();
+        originalIds.add(id);
+        String modifiedPath="folder11/folder22";
+
+        String baseUrl="http://localhost:" + port + "/link/path";
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
+
+        LinkMoveRequestDto linkMoveRequestDto= LinkMoveRequestDto.builder()
+                .email(email)
+                .originalPaths(originalPaths)
+                .originalIds(originalIds)
+                .modifiedPath(modifiedPath)
+                .build();
+
+        //when
+        HttpEntity<LinkMoveRequestDto> request = new HttpEntity<>(linkMoveRequestDto,headers);
+        ResponseEntity<String> response = restTemplate.exchange(
+                builder.toUriString(),
+                HttpMethod.PUT,
+                request,
+                String.class);
+
+        //then
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    @DisplayName("링크이동실패3, 경로유효하지않음")
+    public void 링크이동실패3_경로유효하지않음() throws URISyntaxException{
+
+        //given
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("JSON","true");
+        String id=idUpdate.toString();
+        String email="user1Email@email.com";
+        List<String> originalPaths=new ArrayList<>();
+        originalPaths.add("folder11/folder21");
+        List<String> originalIds=new ArrayList<>();
+        originalIds.add(id);
+        String modifiedPath="folder11/folder24";
+
+        String baseUrl="http://localhost:" + port + "/link/path";
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
+
+        LinkMoveRequestDto linkMoveRequestDto= LinkMoveRequestDto.builder()
+                .email(email)
+                .originalPaths(originalPaths)
+                .originalIds(originalIds)
+                .modifiedPath(modifiedPath)
+                .build();
+
+        //when
+        HttpEntity<LinkMoveRequestDto> request = new HttpEntity<>(linkMoveRequestDto,headers);
+        ResponseEntity<String> response = restTemplate.exchange(
+                builder.toUriString(),
+                HttpMethod.PUT,
                 request,
                 String.class);
 

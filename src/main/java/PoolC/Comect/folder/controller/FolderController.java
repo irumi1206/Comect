@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,30 +29,22 @@ public class FolderController {
 
         return ResponseEntity.ok().build();
     }
-
     @GetMapping(value="/folder")
     public ResponseEntity<FolderReadResponseDto> folderRead(@ModelAttribute FolderReadRequestDto folderReadRequestDto){
         String email=folderReadRequestDto.getEmail();
         String path=folderReadRequestDto.getPath();
+        String showFolder=folderReadRequestDto.getShowLink();
         Folder folder =folderService.folderRead(email,path);
-        FolderReadResponseDto folderReadResponseDto = FolderReadResponseDto.builder()
+
+        List<LinkInfo> linkInfos = new ArrayList<>();
+        if(showFolder.equals("true")){
+            linkInfos=LinkInfo.toLinkInfo(folder.getLinks());
+        }
+
+        return ResponseEntity.ok().body(FolderReadResponseDto.builder()
                 .folderInfos(FolderInfo.toFolderInfo(folder.getFolders()))
-                .linkInfos(LinkInfo.toLinkInfo(folder.getLinks()))
-                .build();
-
-        return ResponseEntity.ok().body(folderReadResponseDto);
-    }
-
-    @GetMapping(value = "/folder/folder")
-    public ResponseEntity<FolderReadFolderResponseDto> folderReadFolder(@ModelAttribute FolderReadFolderRequestDto folderReadFolderRequestDto){
-        String email = folderReadFolderRequestDto.getEmail();
-        String path=folderReadFolderRequestDto.getPath();
-        Folder folder=folderService.folderRead(email,path);
-        FolderReadFolderResponseDto folderReadFolderResponseDto = FolderReadFolderResponseDto.builder()
-                .folderInfos(FolderInfo.toFolderInfo(folder.getFolders()))
-                .build();
-
-        return ResponseEntity.ok().body(folderReadFolderResponseDto);
+                .linkInfos(linkInfos)
+                .build());
     }
 
     @PutMapping(value="/folder")
@@ -66,8 +59,8 @@ public class FolderController {
     @DeleteMapping(value="/folder")
     public ResponseEntity<Void> folderDelete(@RequestBody FolderDeleteRequestDto folderDeleteRequestDto){
         String email = folderDeleteRequestDto.getEmail();
-        String path = folderDeleteRequestDto.getPath();
-        folderService.folderDelete(email,path);
+        List<String> paths = folderDeleteRequestDto.getPaths();
+        folderService.folderDelete(email,paths);
         return ResponseEntity.ok().build();
     }
 
@@ -93,7 +86,7 @@ public class FolderController {
     }
 
     @PostMapping(value="/link")
-    public ResponseEntity<LinkCreateRequestDto> linkCreate(@RequestBody LinkCreateRequestDto linkCreateRequestDto){
+    public ResponseEntity<Void> linkCreate(@RequestBody LinkCreateRequestDto linkCreateRequestDto){
         String email=linkCreateRequestDto.getEmail();
         String path=linkCreateRequestDto.getPath();
         String name=linkCreateRequestDto.getName();
@@ -106,7 +99,7 @@ public class FolderController {
     }
 
     @PutMapping(value="/link")
-    public ResponseEntity<LinkUpdateRequestDto> linkUpdate(@RequestBody LinkUpdateRequestDto linkUpdateRequestDto){
+    public ResponseEntity<Void> linkUpdate(@RequestBody LinkUpdateRequestDto linkUpdateRequestDto){
         String id=linkUpdateRequestDto.getId();
         String email=linkUpdateRequestDto.getEmail();
         String path=linkUpdateRequestDto.getPath();
@@ -120,11 +113,21 @@ public class FolderController {
     }
 
     @DeleteMapping(value="/link")
-    public ResponseEntity<LinkDeleteRequestDto> linkDelete(@RequestBody LinkDeleteRequestDto linkDeleteRequestDto){
+    public ResponseEntity<Void> linkDelete(@RequestBody LinkDeleteRequestDto linkDeleteRequestDto){
         String email=linkDeleteRequestDto.getEmail();
-        String path=linkDeleteRequestDto.getPath();
-        String id=linkDeleteRequestDto.getId();
-        folderService.linkDelete(email,path,id);
+        List<String> paths=linkDeleteRequestDto.getPaths();
+        List<String> ids=linkDeleteRequestDto.getIds();
+        folderService.linkDelete(email,paths,ids);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(value="/link/path")
+    public ResponseEntity<Void> linkMove(@RequestBody LinkMoveRequestDto linkMoveRequestDto){
+        String email=linkMoveRequestDto.getEmail();
+        List<String> originalPaths=linkMoveRequestDto.getOriginalPaths();
+        List<String> originalIds=linkMoveRequestDto.getOriginalIds();
+        String modifiedPath=linkMoveRequestDto.getModifiedPath();
+        folderService.linkMove(email,originalPaths,originalIds,modifiedPath);
         return ResponseEntity.ok().build();
     }
 

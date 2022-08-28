@@ -26,9 +26,7 @@ public class FolderController {
     @PostMapping(value="/folder")
     public ResponseEntity<Void> folderCreate(@RequestBody FolderCreateRequestDto folderCreateRequestDto){
         log.info(
-                "Called POST/folder, \tbody: email="+folderCreateRequestDto.getEmail()+
-                ", \tpath="+folderCreateRequestDto.getPath()+
-                ", \tname="+folderCreateRequestDto.getName()
+                "Called POST/folder, \tbody: "+folderCreateRequestDto.toString()
         );
         String email = folderCreateRequestDto.getEmail();
         String path = folderCreateRequestDto.getPath();
@@ -40,9 +38,7 @@ public class FolderController {
     @GetMapping(value="/folder")
     public ResponseEntity<FolderReadResponseDto> folderRead(@ModelAttribute FolderReadRequestDto folderReadRequestDto){
         log.info(
-                "Called GET/folder, \tparameter: email="+folderReadRequestDto.getEmail()+
-                        ", \tpath="+folderReadRequestDto.getPath()+
-                        ", \tshowLink="+folderReadRequestDto.getShowLink()
+                "Called GET/folder, \tparameter: "+folderReadRequestDto.toString()
         );
         String email=folderReadRequestDto.getEmail();
         String path=folderReadRequestDto.getPath();
@@ -63,9 +59,7 @@ public class FolderController {
     @PutMapping(value="/folder")
     public ResponseEntity<Void> folderUpdate(@RequestBody FolderUpdateRequestDto folderUpdateRequestDto){
         log.info(
-                "Called PUT/folder, \tbody: email="+folderUpdateRequestDto.getEmail()+
-                        ", \tpath="+folderUpdateRequestDto.getPath()+
-                        ", \tshowLink="+folderUpdateRequestDto.getNewName()
+                "Called PUT/folder, \tbody: "+folderUpdateRequestDto.toString()
         );
         String email = folderUpdateRequestDto.getEmail();
         String path = folderUpdateRequestDto.getPath();
@@ -77,8 +71,7 @@ public class FolderController {
     @DeleteMapping(value="/folder")
     public ResponseEntity<Void> folderDelete(@RequestBody FolderDeleteRequestDto folderDeleteRequestDto){
         log.info(
-                "Called DELETE/folder, \tbody: email="+folderDeleteRequestDto.getEmail()+
-                        ", \tpaths="+folderDeleteRequestDto.getPaths()
+                "Called DELETE/folder, \tbody: "+folderDeleteRequestDto.toString()
         );
         String email = folderDeleteRequestDto.getEmail();
         List<String> paths = folderDeleteRequestDto.getPaths();
@@ -89,9 +82,7 @@ public class FolderController {
     @PutMapping(value="/folder/path")
     public ResponseEntity<Void> folderMove(@RequestBody FolderMoveRequestDto folderMoveRequestDto){
         log.info(
-                "Called PUT/folder/path, \tbody: email="+folderMoveRequestDto.getEmail()+
-                        ", \toriginalPaths="+folderMoveRequestDto.getOriginalPaths()+
-                        ", \tmodifiedPath="+folderMoveRequestDto.getModifiedPath()
+                "Called PUT/folder/path, \tbody: "+folderMoveRequestDto.toString()
         );
         String email=folderMoveRequestDto.getEmail();
         List<String> originalPaths=folderMoveRequestDto.getOriginalPaths();
@@ -103,8 +94,7 @@ public class FolderController {
     @GetMapping(value="/folder/path")
     public ResponseEntity<FolderCheckPathResponseDto> folderCheckPath(@ModelAttribute FolderCheckPathRequestDto folderCheckPathRequestDto){
         log.info(
-                "Called GET/folder/path, \tparameter: email="+folderCheckPathRequestDto.getEmail()+
-                        ", \tpath="+folderCheckPathRequestDto.getPath()
+                "Called GET/folder/path, \tparameter: "+folderCheckPathRequestDto.toString()
         );
         String email = folderCheckPathRequestDto.getEmail();
         String path = folderCheckPathRequestDto.getPath();
@@ -119,13 +109,7 @@ public class FolderController {
     @PostMapping(value="/link")
     public ResponseEntity<Void> linkCreate(@RequestBody LinkCreateRequestDto linkCreateRequestDto){
         log.info(
-                "Called POST/link, \tbody: email="+linkCreateRequestDto.getEmail()+
-                        ", \tpath="+linkCreateRequestDto.getPath()+
-                        ", \tname="+linkCreateRequestDto.getName()+
-                        ", \turl="+linkCreateRequestDto.getUrl()+
-                        ", \timageUrl="+linkCreateRequestDto.getImageUrl()+
-                        ", \tkeywords="+linkCreateRequestDto.getKeywords()+
-                        ", \tisPublic="+linkCreateRequestDto.getIsPublic()
+                "Called POST/link, \tbody: "+linkCreateRequestDto.toString()
         );
         String email=linkCreateRequestDto.getEmail();
         String path=linkCreateRequestDto.getPath();
@@ -141,14 +125,7 @@ public class FolderController {
     @PutMapping(value="/link")
     public ResponseEntity<Void> linkUpdate(@RequestBody LinkUpdateRequestDto linkUpdateRequestDto){
         log.info(
-                "Called PUT/link, \tbody: id="+linkUpdateRequestDto.getId() +
-                        "\temail="+linkUpdateRequestDto.getEmail()+
-                        ", \tpath="+linkUpdateRequestDto.getPath()+
-                        ", \tname="+linkUpdateRequestDto.getName()+
-                        ", \turl="+linkUpdateRequestDto.getUrl()+
-                        ", \timageUrl="+linkUpdateRequestDto.getImageUrl()+
-                        ", \tkeywords="+linkUpdateRequestDto.getKeywords()+
-                        ", \tisPublic="+linkUpdateRequestDto.getIsPublic()
+                "Called PUT/link, \tbody: "+linkUpdateRequestDto.toString()
         );
         String id=linkUpdateRequestDto.getId();
         String email=linkUpdateRequestDto.getEmail();
@@ -165,9 +142,7 @@ public class FolderController {
     @DeleteMapping(value="/link")
     public ResponseEntity<Void> linkDelete(@RequestBody LinkDeleteRequestDto linkDeleteRequestDto){
         log.info(
-                "Called DELETE/link, \tbody: email="+linkDeleteRequestDto.getEmail()+
-                        ", \tpaths="+linkDeleteRequestDto.getPaths()+
-                        ", \tids="+linkDeleteRequestDto.getIds()
+                "Called DELETE/link, \tbody: "+linkDeleteRequestDto.toString()
         );
         String email=linkDeleteRequestDto.getEmail();
         List<String> paths=linkDeleteRequestDto.getPaths();
@@ -179,10 +154,7 @@ public class FolderController {
     @PutMapping(value="/link/path")
     public ResponseEntity<Void> linkMove(@RequestBody LinkMoveRequestDto linkMoveRequestDto){
         log.info(
-                "Called PUT/link/path, \tbody: email="+linkMoveRequestDto.getEmail()+
-                        ", \toriginalPaths="+linkMoveRequestDto.getOriginalPaths()+
-                        ", \toriginalIds="+linkMoveRequestDto.getOriginalIds()+
-                        ", \tmodifiedPath="+linkMoveRequestDto.getModifiedPath()
+                "Called PUT/link/path, \tbody: "+linkMoveRequestDto.toString()
         );
         String email=linkMoveRequestDto.getEmail();
         List<String> originalPaths=linkMoveRequestDto.getOriginalPaths();

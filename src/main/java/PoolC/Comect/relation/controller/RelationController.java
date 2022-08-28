@@ -28,7 +28,7 @@ public class RelationController {
 
     @GetMapping("/friend")
     public ResponseEntity<ReadRelationResponseDto> findRelation(@ModelAttribute ReadRelationRequestDto request){
-        log.info("Called GET/friend, \tparameter: email="+request.getEmail());
+        log.info("Called GET/friend, \tparameter: "+request.toString());
         List<ObjectId> requestList = relationService.findRequestIds(request.getEmail());
         List<ObjectId> friendsList = relationService.findFriendIds(request.getEmail());
         List<FriendInfo> requestFriendsList = relationService.listToInfo(requestList);
@@ -43,28 +43,28 @@ public class RelationController {
 
     @PostMapping("/friend")
     public ResponseEntity<CreateRelationRequestDto> addRelation(@RequestBody CreateRelationRequestDto request){
-        log.info("Called POST/friend, \tbody: email="+request.getEmail()+", \tfriendNickname="+request.getFriendNickname());
+        log.info("Called POST/friend, \tbody: "+request.toString());
         relationService.createRelation(request.getEmail(), request.getFriendNickname());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/friend/request")
     public ResponseEntity<Void> acceptRelation(@RequestBody AcceptRelationRequestDto request){
-        log.info("Called POST/friend/request, \tbody: email="+request.getEmail()+", \tfriendNickname="+request.getFriendNickname());
+        log.info("Called POST/friend/request, \tbody: "+request.toString());
         relationService.acceptRelation(request.getEmail(), request.getFriendNickname());
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/friend/request")
     public ResponseEntity<Void> rejectRelation(@RequestBody RejectRelationRequestDto request){
-        log.info("Called DELETE/friend/request, \tbody: email="+request.getEmail()+", \tfriendNickname="+request.getFriendNickname());
+        log.info("Called DELETE/friend/request, \tbody: "+request.toString());
         relationService.rejectRelation(request.getEmail(), request.getFriendNickname());
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/friend")
     public ResponseEntity<Void> deleteRelation(@RequestBody DeleteFriendRequestDto request){
-        log.info("Called DELETE/friend, \tbody: email="+request.getEmail()+", \tfriendNickname="+request.getFriendNickname());
+        log.info("Called DELETE/friend, \tbody: "+request.toString());
         relationService.deleteRelation(request.getEmail(), request.getFriendNickname());
         return ResponseEntity.ok().build();
     }

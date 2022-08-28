@@ -21,10 +21,7 @@ public class UserController {
     @PostMapping("/member")
     public ResponseEntity<Void> createUser(@RequestBody CreateUserRequestDto request){
         log.info(
-                "Called POST/member, \tbody: email="+request.getEmail()+
-                ", \tpassword="+request.getPassword()+
-                ", \tnickname="+request.getNickname()+
-                ", \timageUrl="+request.getImageUrl()
+                "Called POST/member, \tbody: "+request.toString()
         );
         userService.join(request.getEmail(),request.getPassword(),request.getNickname(), request.getImageUrl());
         log.trace("signup success");
@@ -34,8 +31,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto request){
         log.info(
-                "Called POST/login, \tbody: email="+request.getEmail()+
-                ", \tpassword="+request.getPassword()
+                "Called POST/login, \tbody: "+request.toString()
         );
         userService.login(request.getEmail(), request.getPassword());
         LoginResponseDto loginResponseDto = new LoginResponseDto(request.getEmail());
@@ -44,7 +40,7 @@ public class UserController {
 
     @GetMapping("/my")
     public ResponseEntity<ReadUserResponseDto> readUser(@ModelAttribute ReadUserRequestDto request){
-        log.info("Called GET/my, \tparameter: email="+request.getEmail());
+        log.info("Called GET/my, \tparameter: "+request.toString());
         User user = userService.findOne(request.getEmail());
         return ResponseEntity.ok(new ReadUserResponseDto(user));
     }
@@ -52,9 +48,7 @@ public class UserController {
     @PutMapping("/my")
     public ResponseEntity<Void> updateUser(@RequestBody UpdateUserRequestDto request){
         log.info(
-                "Called PUT/my, \tparameter: email="+request.getEmail()+
-                ", \tnewNickname="+request.getNewNickname()+
-                ", \tnewImageUrl="+request.getNewImageUrl());
+                "Called PUT/my, \tparameter: "+request.toString());
         userService.update(request.getEmail(), request.getNewNickname(), request.getNewImageUrl());
         return ResponseEntity.ok().build();
     }

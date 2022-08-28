@@ -1,7 +1,7 @@
 package PoolC.Comect.user.service;
 
-import PoolC.Comect.common.CustomException;
-import PoolC.Comect.common.ErrorCode;
+import PoolC.Comect.exception.CustomException;
+import PoolC.Comect.exception.ErrorCode;
 import PoolC.Comect.folder.domain.Folder;
 import PoolC.Comect.folder.repository.FolderRepository;
 import PoolC.Comect.user.domain.User;
@@ -11,7 +11,6 @@ import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

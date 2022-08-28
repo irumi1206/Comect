@@ -1,7 +1,7 @@
 package PoolC.Comect.relation.service;
 
-import PoolC.Comect.common.CustomException;
-import PoolC.Comect.common.ErrorCode;
+import PoolC.Comect.exception.CustomException;
+import PoolC.Comect.exception.ErrorCode;
 import PoolC.Comect.relation.domain.FriendInfo;
 import PoolC.Comect.relation.domain.Relation;
 import PoolC.Comect.relation.domain.RelationType;
@@ -10,14 +10,11 @@ import PoolC.Comect.relation.repository.RelationRepository;
 import PoolC.Comect.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service

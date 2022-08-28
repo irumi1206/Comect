@@ -1,7 +1,7 @@
 package PoolC.Comect.folder.repository;
 
-import PoolC.Comect.common.CustomException;
-import PoolC.Comect.common.ErrorCode;
+import PoolC.Comect.exception.CustomException;
+import PoolC.Comect.exception.ErrorCode;
 import PoolC.Comect.folder.domain.Folder;
 import PoolC.Comect.folder.domain.Link;
 import com.mongodb.BasicDBObject;
@@ -14,10 +14,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
-import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor

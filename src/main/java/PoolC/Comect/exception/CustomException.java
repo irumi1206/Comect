@@ -1,4 +1,4 @@
-package PoolC.Comect.common;
+package PoolC.Comect.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

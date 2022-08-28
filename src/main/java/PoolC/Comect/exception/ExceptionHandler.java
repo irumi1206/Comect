@@ -1,15 +1,9 @@
-package PoolC.Comect.common;
+package PoolC.Comect.exception;
 
-import PoolC.Comect.relation.controller.RelationController;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import java.util.Collections;
-import java.util.Map;
 
 @RestControllerAdvice
 @Slf4j

@@ -18,11 +18,9 @@ public class UserController {
 
     private final UserService userService;
 
-    Logger logger = LoggerFactory.getLogger(UserController.class);
-
     @PostMapping("/member")
     public ResponseEntity<Void> createUser(@RequestBody CreateUserRequestDto request){
-        logger.info(
+        log.info(
                 "Called POST/member, \tbody: email="+request.getEmail()+
                 ", \tpassword="+request.getPassword()+
                 ", \tnickname="+request.getNickname()+
@@ -35,7 +33,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto request){
-        logger.info(
+        log.info(
                 "Called POST/login, \tbody: email="+request.getEmail()+
                 ", \tpassword="+request.getPassword()
         );
@@ -46,14 +44,14 @@ public class UserController {
 
     @GetMapping("/my")
     public ResponseEntity<ReadUserResponseDto> readUser(@ModelAttribute ReadUserRequestDto request){
-        logger.info("Called GET/my, \tparameter: email="+request.getEmail());
+        log.info("Called GET/my, \tparameter: email="+request.getEmail());
         User user = userService.findOne(request.getEmail());
         return ResponseEntity.ok(new ReadUserResponseDto(user));
     }
 
     @PutMapping("/my")
     public ResponseEntity<Void> updateUser(@RequestBody UpdateUserRequestDto request){
-        logger.info(
+        log.info(
                 "Called PUT/my, \tparameter: email="+request.getEmail()+
                 ", \tnewNickname="+request.getNewNickname()+
                 ", \tnewImageUrl="+request.getNewImageUrl());

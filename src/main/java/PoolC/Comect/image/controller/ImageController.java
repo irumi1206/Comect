@@ -1,22 +1,52 @@
 package PoolC.Comect.image.controller;
 
-import PoolC.Comect.image.domain.Image;
-import PoolC.Comect.image.dto.CreateImageRequestDto;
+import PoolC.Comect.image.domain.ReadImageDomain;
+import PoolC.Comect.image.dto.*;
 import PoolC.Comect.image.service.ImageService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.core.io.Resource;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
-@Controller
+@RestController
+@RequiredArgsConstructor
+@Slf4j
 public class ImageController {
+    @Autowired
     private ImageService imageService;
 
     @PostMapping("/image")
-    public String saveImage(@RequestParam("image")CreateImageRequestDto createImageRequestDto) throws IOException {
-        String uploadDir = imageService.save(createImageRequestDto.getImageName(), createImageRequestDto.getMultipartFile());
-        return uploadDir;
+    public ResponseEntity<CreateImageResponseDto> createImage(@ModelAttribute CreateImageRequestDto createImageRequestDto) throws IOException {
+        String id=imageService.upLoad(createImageRequestDto.getImageName(), createImageRequestDto.getMultipartFile(), createImageRequestDto.getEmail()).toHexString();
+        CreateImageResponseDto createImageResponseDto = new CreateImageResponseDto("image?id="+id);
+        return ResponseEntity.ok(createImageResponseDto);
     }
+
+    @GetMapping("/image")
+    public ResponseEntity<Resource> readImage(@ModelAttribute ReadImageRequestDto readImageRequestDto) throws IOException {
+        ReadImageResponseDto readImageResponseDto = new ReadImageResponseDto();
+        ReadImageDomain readImageDomain = imageService.readImage(new ObjectId(readImageRequestDto.getId()));
+        readImageResponseDto.setImage(readImageDomain.getResource());
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentDisposition(
+                ContentDisposition.builder("attachment")
+                        .filename(readImageDomain.getImageName(), StandardCharsets.UTF_8)
+                        .build()
+        );
+        headers.add(HttpHeaders.CONTENT_TYPE, readImageDomain.getContentType());
+        return new ResponseEntity<>(readImageDomain.getResource(),headers, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/image")
+    public ResponseEntity<Void> deleteImage(@ModelAttribute DeleteImageRequestDto deleteImageRequestDto) throws IOException {
+        imageService.deleteImage(new ObjectId(deleteImageRequestDto.getId()));
+        return ResponseEntity.ok().build();
+    }
+
 }

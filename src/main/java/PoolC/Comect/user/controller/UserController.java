@@ -38,14 +38,14 @@ public class UserController {
         return ResponseEntity.ok(loginResponseDto);
     }
 
-    @GetMapping("/my")
+    @GetMapping("/member/me")
     public ResponseEntity<ReadUserResponseDto> readUser(@ModelAttribute ReadUserRequestDto request){
         log.info("Called GET/my, \tparameter: "+request.toString());
         User user = userService.findOne(request.getEmail());
         return ResponseEntity.ok(new ReadUserResponseDto(user));
     }
 
-    @PutMapping("/my")
+    @PutMapping("/member/me")
     public ResponseEntity<Void> updateUser(@RequestBody UpdateUserRequestDto request){
         log.info(
                 "Called PUT/my, \tparameter: "+request.toString());

@@ -15,10 +15,13 @@ public class Image {
     @Generated
     private ObjectId id;
     private String imageName;
-    private String imagePath;
+    private String email;
+    private String extender;
 
-    public Image(String imageName) {
+    public Image(String imageName, String extender,String email) {
         this.id=new ObjectId();
         this.imageName = imageName;
+        this.extender=extender;
+        this.email=email;
     }
 }

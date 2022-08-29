@@ -18,7 +18,8 @@ public enum ErrorCode{
     EMAIL_EXISTS(HttpStatus.FORBIDDEN,"이미 존재하는 이메일"),
     REQUEST_EXIST(HttpStatus.BAD_REQUEST,"이미 존재하는 요청"),
     REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND,"요청을 찾을 수 없습니다"),
-    NICKNAME_EXISTS(HttpStatus.FORBIDDEN,"이미 존재하는 닉네임");
+    NICKNAME_EXISTS(HttpStatus.FORBIDDEN,"이미 존재하는 닉네임"),
+    IMAGE_SAVE_CANCELED(HttpStatus.BAD_REQUEST,"이미지 저장 실패");
 
 
 

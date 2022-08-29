@@ -57,7 +57,7 @@ public class userTest {
         userRepository.deleteAll();
 
         Folder folder1 = new Folder("");
-        User user1 = new User("user1", "user1Email@naver.com", folder1.get_id(), "user1Picture", "1234");
+        User user1 = new User("user1", "user1Email@naver.com", folder1.get_id(), "user1Picture", "123456");
         folderRepository.save(folder1);
         userRepository.save(user1);
         Folder data2 = new Folder("");
@@ -65,11 +65,11 @@ public class userTest {
         folderRepository.save(data2);
         userRepository.save(user2);
         Folder data3 = new Folder("");
-        User user3 = new User("user3", "user3Email@naver.com", data3.get_id(), "user3Picture", "1234");
+        User user3 = new User("user3", "user3Email@naver.com", data3.get_id(), "user3Picture", "123456");
         folderRepository.save(data3);
         userRepository.save(user3);
         Folder data4 = new Folder("");
-        User user4 = new User("user4", "user4Email@naver.com", data4.get_id(), "user4Picture", "12345");
+        User user4 = new User("user4", "user4Email@naver.com", data4.get_id(), "user4Picture", "1234565");
         folderRepository.save(data4);
         userRepository.save(user4);
 
@@ -100,17 +100,17 @@ public class userTest {
         URI uri = new URI(baseUrl);
         CreateUserRequestDto createUserRequestDto = new CreateUserRequestDto();
         createUserRequestDto.setEmail("user5Email@naver.com");
-        createUserRequestDto.setNickname("user5");
-        createUserRequestDto.setPassword("1234");
+        createUserRequestDto.setNickname("userfive");
+        createUserRequestDto.setPassword("123456");
         createUserRequestDto.setImageUrl("user5picture");
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,createUserRequestDto,String.class);
         //then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        User user5 = userRepository.findByNickname("user5").get();
+        User user5 = userRepository.findByNickname("userfive").get();
         assertThat(user5.getEmail()).isEqualTo("user5Email@naver.com");
-        assertThat(user5.getPassword()).isEqualTo("1234");
+        assertThat(user5.getPassword()).isEqualTo("123456");
         assertThat(user5.getImageUrl()).isEqualTo("user5picture");
 
     }
@@ -123,7 +123,7 @@ public class userTest {
         CreateUserRequestDto createUserRequestDto = new CreateUserRequestDto();
         createUserRequestDto.setEmail("user1Email@naver.com");
         createUserRequestDto.setNickname("testName");
-        createUserRequestDto.setPassword("1234");
+        createUserRequestDto.setPassword("123456");
         createUserRequestDto.setImageUrl("user3picture");
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,createUserRequestDto,String.class);
@@ -143,7 +143,7 @@ public class userTest {
         CreateUserRequestDto createUserRequestDto = new CreateUserRequestDto();
         createUserRequestDto.setEmail("user1Email");
         createUserRequestDto.setNickname("testName");
-        createUserRequestDto.setPassword("1234");
+        createUserRequestDto.setPassword("123456");
         createUserRequestDto.setImageUrl("user3picture");
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,createUserRequestDto,String.class);
@@ -161,13 +161,13 @@ public class userTest {
         URI uri = new URI(baseUrl);
         UpdateUserRequestDto updateUserRequestDto = new UpdateUserRequestDto();
         updateUserRequestDto.setEmail("user1Email@naver.com");
-        updateUserRequestDto.setNewNickname("user123");
+        updateUserRequestDto.setNewNickname("newUser");
         updateUserRequestDto.setNewImageUrl("ppiiccttuurree");
         //when
         this.restTemplate.put(uri,updateUserRequestDto);
         //then
         User user1 = userRepository.findByEmail("user1Email@naver.com").get();
-        assertThat(user1.getNickname()).isEqualTo("user123");
+        assertThat(user1.getNickname()).isEqualTo("newUser");
         assertThat(user1.getImageUrl()).isEqualTo("ppiiccttuurree");
     }
 
@@ -221,7 +221,7 @@ public class userTest {
         URI uri = new URI(baseUrl);
         LoginRequestDto loginRequestDto = new LoginRequestDto();
         loginRequestDto.setEmail("user1Email@naver.com");
-        loginRequestDto.setPassword("1234");
+        loginRequestDto.setPassword("123456");
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,loginRequestDto,String.class);
         //then
@@ -237,7 +237,7 @@ public class userTest {
         URI uri = new URI(baseUrl);
         LoginRequestDto loginRequestDto = new LoginRequestDto();
         loginRequestDto.setEmail("user123Email@naver.com");
-        loginRequestDto.setPassword("1234");
+        loginRequestDto.setPassword("123456");
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,loginRequestDto,String.class);
         //then
@@ -251,7 +251,7 @@ public class userTest {
         URI uri = new URI(baseUrl);
         LoginRequestDto loginRequestDto = new LoginRequestDto();
         loginRequestDto.setEmail("user1Email@naver.com");
-        loginRequestDto.setPassword("12345");
+        loginRequestDto.setPassword("1234565");
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,loginRequestDto,String.class);
         //then

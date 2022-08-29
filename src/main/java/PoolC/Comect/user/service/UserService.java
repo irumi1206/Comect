@@ -25,9 +25,9 @@ public class UserService {
     //회원 가입
     @Transactional
     public ObjectId join(String email, String password,String nickname,String imageUrl){
-        validateEmailUser(email);
+        //validateEmailUser(email);
         validateDuplicateUser(email);
-        validatePassword(password);
+        //validatePassword(password);
         Folder folder=new Folder("");
         folderRepository.save(folder);
         User user=new User(nickname,email,folder.get_id(),imageUrl, password);
@@ -36,7 +36,7 @@ public class UserService {
     }
 
     public void login(String email, String password){
-        validateEmailUser(email);
+        //validateEmailUser(email);
         User user = userRepository.findByEmail(email).orElseThrow(()->new CustomException(ErrorCode.LOGIN_FAIL));
         if(!user.getPassword().equals(password)) {
             throw new CustomException(ErrorCode.LOGIN_FAIL);
@@ -44,7 +44,7 @@ public class UserService {
     }
 
     public void update(String email,String userNickname, String picture){
-        validateEmailUser(email);
+        //validateEmailUser(email);
         User user = userRepository.findByEmail(email).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
         user.setNickname(userNickname);
         user.setImageUrl(picture);
@@ -52,7 +52,7 @@ public class UserService {
     }
 
     public User findOne(String email){
-        validateEmailUser(email);
+        //validateEmailUser(email);
         User user = userRepository.findByEmail(email).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
         return user;
     }
@@ -71,16 +71,16 @@ public class UserService {
         }
     }
 
-    private void validateEmailUser(String email){
-        String regx = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
-        Pattern pattern = Pattern.compile(regx);
-        Matcher matcher = pattern.matcher(email);
-        if(!matcher.matches()){
-            throw new CustomException(ErrorCode.EMAIL_NOT_VALID);
-        }
-    }
+//    private void validateEmailUser(String email){
+//        String regx = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
+//        Pattern pattern = Pattern.compile(regx);
+//        Matcher matcher = pattern.matcher(email);
+//        if(!matcher.matches()){
+//            throw new CustomException(ErrorCode.EMAIL_NOT_VALID);
+//        }
+//    }
 
-    private void validatePassword(String password){
-
-    }
+//    private void validatePassword(String password){
+//
+//    }
 }

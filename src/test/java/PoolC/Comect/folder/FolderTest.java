@@ -587,7 +587,7 @@ public class FolderTest {
         headers.set("JSON","true");
         String email="user1Email@email.com";
         String path="folder11/folder21";
-        String newName="folder21Modified";
+        String newName="new21";
 
         String baseUrl="http://localhost:" + port + "/folder";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
@@ -608,7 +608,7 @@ public class FolderTest {
 
         //then
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Assertions.assertThat(folderRepository.checkPathFolder(userRepository.findByEmail(email).get().getRootFolderId(),"folder11/folder21Modified")).isEqualTo(true);
+        Assertions.assertThat(folderRepository.checkPathFolder(userRepository.findByEmail(email).get().getRootFolderId(),"folder11/new21")).isEqualTo(true);
 
     }
 
@@ -621,7 +621,7 @@ public class FolderTest {
         headers.set("JSON","true");
         String email="user1Email@email.com";
         String path="";
-        String newName="rootFolderModified";
+        String newName="newroot";
 
         String baseUrl="http://localhost:" + port + "/folder";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
@@ -720,7 +720,7 @@ public class FolderTest {
         headers.set("JSON","true");
         String email="user1Email@email.com";
         String path="folder11/folder23";
-        String newName="folder21Modified";
+        String newName="new21";
 
         String baseUrl="http://localhost:" + port + "/folder";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);

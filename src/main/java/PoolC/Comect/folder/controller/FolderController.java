@@ -1,6 +1,8 @@
 package PoolC.Comect.folder.controller;
 import PoolC.Comect.elasticFolder.ElasticFolderRepository;
 import PoolC.Comect.elasticFolder.ElasticFolderService;
+import PoolC.Comect.exception.CustomException;
+import PoolC.Comect.exception.ErrorCode;
 import PoolC.Comect.folder.domain.Folder;
 import PoolC.Comect.folder.dto.*;
 import PoolC.Comect.folder.service.FolderService;
@@ -13,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +29,7 @@ public class FolderController {
     //private final ElasticFolderService elasticFolderService;
 
     @PostMapping(value="/folder")
-    public ResponseEntity<Void> folderCreate(@RequestBody FolderCreateRequestDto folderCreateRequestDto){
+    public ResponseEntity<Void> folderCreate(@Valid @RequestBody FolderCreateRequestDto folderCreateRequestDto){
         log.info(
                 "Called POST/folder, \tbody: "+folderCreateRequestDto.toString()
         );
@@ -59,7 +62,7 @@ public class FolderController {
     }
 
     @PutMapping(value="/folder")
-    public ResponseEntity<Void> folderUpdate(@RequestBody FolderUpdateRequestDto folderUpdateRequestDto){
+    public ResponseEntity<Void> folderUpdate(@Valid @RequestBody FolderUpdateRequestDto folderUpdateRequestDto){
         log.info(
                 "Called PUT/folder, \tbody: "+folderUpdateRequestDto.toString()
         );
@@ -109,7 +112,7 @@ public class FolderController {
     }
 
     @PostMapping(value="/link")
-    public ResponseEntity<Void> linkCreate(@RequestBody LinkCreateRequestDto linkCreateRequestDto){
+    public ResponseEntity<Void> linkCreate(@Valid @RequestBody LinkCreateRequestDto linkCreateRequestDto){
         log.info(
                 "Called POST/link, \tbody: "+linkCreateRequestDto.toString()
         );
@@ -119,13 +122,14 @@ public class FolderController {
         String url=linkCreateRequestDto.getUrl();
         String imageUrl=linkCreateRequestDto.getImageUrl();
         List<String> keywords=linkCreateRequestDto.getKeywords();
+        for(String keyword:keywords) if(keyword.length()>30 || keyword.contains(" ") ) throw new CustomException(ErrorCode.INVALID_KEYWORD);
         String isPublic = linkCreateRequestDto.getIsPublic();
         folderService.linkCreate(email,path,name,url,imageUrl,keywords,isPublic);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping(value="/link")
-    public ResponseEntity<Void> linkUpdate(@RequestBody LinkUpdateRequestDto linkUpdateRequestDto){
+    public ResponseEntity<Void> linkUpdate(@Valid @RequestBody LinkUpdateRequestDto linkUpdateRequestDto){
         log.info(
                 "Called PUT/link, \tbody: "+linkUpdateRequestDto.toString()
         );

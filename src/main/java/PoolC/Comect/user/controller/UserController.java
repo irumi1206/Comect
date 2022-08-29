@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -19,7 +21,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/member")
-    public ResponseEntity<Void> createUser(@RequestBody CreateUserRequestDto request){
+    public ResponseEntity<Void> createUser(@Valid @RequestBody CreateUserRequestDto request){
         log.info(
                 "Called POST/member, \tbody: "+request.toString()
         );
@@ -46,7 +48,7 @@ public class UserController {
     }
 
     @PutMapping("/my")
-    public ResponseEntity<Void> updateUser(@RequestBody UpdateUserRequestDto request){
+    public ResponseEntity<Void> updateUser(@Valid @RequestBody UpdateUserRequestDto request){
         log.info(
                 "Called PUT/my, \tparameter: "+request.toString());
         userService.update(request.getEmail(), request.getNewNickname(), request.getNewImageUrl());

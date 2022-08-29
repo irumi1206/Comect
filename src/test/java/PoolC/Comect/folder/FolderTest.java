@@ -200,7 +200,7 @@ public class FolderTest {
         ResponseEntity<String> result = restTemplate.postForEntity(uri,request,String.class);
 
         //then
-        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
     }
 
@@ -228,7 +228,7 @@ public class FolderTest {
         ResponseEntity<String> result = restTemplate.postForEntity(uri,request,String.class);
 
         //then
-        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
     }
 
@@ -385,7 +385,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
     }
 
@@ -415,7 +415,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
     }
 
@@ -543,7 +543,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
     }
 
@@ -574,7 +574,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
     }
 
@@ -707,7 +707,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
     }
 
@@ -740,7 +740,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
     }
 
@@ -869,7 +869,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
     }
 
@@ -901,7 +901,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
     }
 
@@ -1039,7 +1039,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
     }
 
@@ -1073,7 +1073,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         Assertions.assertThat(folderRepository.checkPathFolder(userRepository.findByEmail(email).get().getRootFolderId(),"folder11/folder21")).isEqualTo(true);
         Assertions.assertThat(folderRepository.checkPathFolder(userRepository.findByEmail(email).get().getRootFolderId(),"folder11/folder21/folder21/folder21")).isEqualTo(false);
 
@@ -1215,7 +1215,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
     }
 
@@ -1382,7 +1382,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
@@ -1423,7 +1423,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     @Test
@@ -1550,7 +1550,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
@@ -1592,7 +1592,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     @Test
@@ -1698,7 +1698,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
@@ -1733,7 +1733,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     @Test
@@ -1845,7 +1845,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
@@ -1882,7 +1882,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
 

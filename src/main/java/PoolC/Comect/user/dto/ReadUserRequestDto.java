@@ -7,6 +7,6 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class ReadUserRequestDto {
-
+    @Email
     private String email;
 }

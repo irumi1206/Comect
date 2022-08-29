@@ -92,7 +92,7 @@ public class relationTest {
 
     @Test
     @DisplayName("테스트 01 : 친구목록, 신청목록 가져오기")
-    public void friendList1() throws URISyntaxException, JsonProcessingException {
+    public void 친구목록조회() throws URISyntaxException, JsonProcessingException {
         //given
         final String baseUrl = "http://localhost:" + port + "/friend?email=user1Email@naver.com";
         URI uri = new URI(baseUrl);
@@ -108,7 +108,7 @@ public class relationTest {
 
     @Test
     @DisplayName("테스트 01-1 : 친구목록, 신청목록 가져오기, 데이터가 없음")
-    public void friendList2() throws URISyntaxException {
+    public void 친구목록조회_친구가없음() throws URISyntaxException {
         //given
         final String baseUrl = "http://localhost:" + port + "/friend?email=user3Email@naver.com";
         URI uri = new URI(baseUrl);
@@ -120,19 +120,19 @@ public class relationTest {
 
     @Test
     @DisplayName("테스트 02 : 친구목록, 신청목록 가져오기, 없는 이메일")
-    public void friendList3() throws URISyntaxException {
+    public void 친구목록조회_없는이메일() throws URISyntaxException {
         //given
         final String baseUrl = "http://localhost:" + port + "/friend?email=user333Email@naver.com";
         URI uri = new URI(baseUrl);
         //when
         ResponseEntity<String> result = this.restTemplate.getForEntity(uri,String.class);
         //then
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
     @DisplayName("테스트 03 : 친구 신청")
-    public void friendRequest1() throws URISyntaxException {
+    public void 친구신청() throws URISyntaxException {
         //given
         final String baseUrl = "http://localhost:" + port + "/friend";
         URI uri = new URI(baseUrl);
@@ -155,7 +155,7 @@ public class relationTest {
 
     @Test
     @DisplayName("테스트 04 : 친구 신청, 이미 있는 신청")
-    public void friendRequest2() throws URISyntaxException {
+    public void 친구신청_이미신청() throws URISyntaxException {
         //given
         final String baseUrl = "http://localhost:" + port + "/friend";
         URI uri = new URI(baseUrl);
@@ -165,12 +165,12 @@ public class relationTest {
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,createRelationRequestDto,String.class);
         //then
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
 
     @Test
     @DisplayName("테스트 05 : 친구 수락")
-    public void friendAccept1() throws URISyntaxException{
+    public void 친구수락() throws URISyntaxException{
         //given
         final String baseUrl = "http://localhost:" + port + "/friend/request";
         URI uri = new URI(baseUrl);
@@ -187,7 +187,7 @@ public class relationTest {
 
     @Test
     @DisplayName("테스트 06 : 친구 수락, 내가 요청한 친구")
-    public void friendAccept2() throws URISyntaxException{
+    public void 친구수락_내가요청_실패() throws URISyntaxException{
         //given
         final String baseUrl = "http://localhost:" + port + "/friend/request";
         URI uri = new URI(baseUrl);
@@ -202,7 +202,7 @@ public class relationTest {
 
     @Test
     @DisplayName("테스트 07 : 친구 수락, 이미 수락한 친구")
-    public void friendAccept3() throws URISyntaxException{
+    public void 친구수락_이미친구() throws URISyntaxException{
         //given
         final String baseUrl = "http://localhost:" + port + "/friend/request";
         URI uri = new URI(baseUrl);
@@ -217,7 +217,7 @@ public class relationTest {
 
     @Test
     @DisplayName("테스트 08 : 친구 수락, 없는 사용자")
-    public void friendAccept4() throws URISyntaxException{
+    public void 친구수락_없는사람() throws URISyntaxException{
         //given
         final String baseUrl = "http://localhost:" + port + "/friend/request";
         URI uri = new URI(baseUrl);
@@ -227,12 +227,12 @@ public class relationTest {
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,acceptRelationRequestDto,String.class);
         //then
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
     @DisplayName("테스트 09 : 친구 수락, 없는 요청")
-    public void friendAccept5() throws URISyntaxException{
+    public void 친구수락_없는요청() throws URISyntaxException{
         //given
         final String baseUrl = "http://localhost:" + port + "/friend/request";
         URI uri = new URI(baseUrl);
@@ -242,12 +242,12 @@ public class relationTest {
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,acceptRelationRequestDto,String.class);
         //then
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
     @DisplayName("테스트 10 : 친구 거절")
-    public void friendReject1() throws URISyntaxException{
+    public void 친구거절() throws URISyntaxException{
         //given
         final String baseUrl = "http://localhost:" + port + "/friend/request";
         URI uri = new URI(baseUrl);
@@ -263,12 +263,12 @@ public class relationTest {
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         User user2 = userRepository.findByNickname("user2").get();
-        assertThat(relationRepository.findById(user2.getRelations().get(0)).get().getRelationType()).isEqualTo(RelationType.REJECTED);
+        assertThat(relationRepository.findById(user2.getRelations().get(0)).isEmpty()).isEqualTo(true);
     }
 
     @Test
     @DisplayName("테스트 11 : 친구 거절, 내가 신청한 요청")
-    public void friendReject2() throws URISyntaxException{
+    public void 친구거절_내가요청() throws URISyntaxException{
         //given
         final String baseUrl = "http://localhost:" + port + "/friend/request";
         URI uri = new URI(baseUrl);
@@ -286,7 +286,7 @@ public class relationTest {
 
     @Test
     @DisplayName("테스트 12 : 친구 거절, 없는 사용자")
-    public void friendReject3() throws URISyntaxException{
+    public void 친구거절_없는사람() throws URISyntaxException{
         //given
         final String baseUrl = "http://localhost:" + port + "/friend/request";
         URI uri = new URI(baseUrl);
@@ -299,11 +299,11 @@ public class relationTest {
         HttpEntity<RejectRelationRequestDto> request = new HttpEntity<>(rejectRelationRequestDto,headers);
         ResponseEntity<String> result = this.restTemplate.exchange(uri, HttpMethod.DELETE,request,String.class);
         //then
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
     @Test
     @DisplayName("테스트 13 : 친구 삭제")
-    public void friendDelete1() throws URISyntaxException{
+    public void 친구삭제() throws URISyntaxException{
         //given
         final String baseUrl = "http://localhost:" + port + "/friend";
         URI uri = new URI(baseUrl);
@@ -318,11 +318,11 @@ public class relationTest {
         //then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         User user4 = userRepository.findByNickname("user4").get();
-        assertThat(relationRepository.findById(user4.getRelations().get(0)).get().getRelationType()).isEqualTo(RelationType.DELETED);
+        assertThat(user4.getRelations().isEmpty()).isEqualTo(true);
     }
     @Test
     @DisplayName("테스트 14 : 친구 삭제, 없는 요청")
-    public void friendDelete2() throws URISyntaxException{
+    public void 친구삭제_없는요청() throws URISyntaxException{
         //given
         final String baseUrl = "http://localhost:" + port + "/friend";
         URI uri = new URI(baseUrl);
@@ -339,7 +339,7 @@ public class relationTest {
     }
     @Test
     @DisplayName("테스트 15 : 친구 삭제, 이미 삭제된 요청")
-    public void friendDelete3() throws URISyntaxException{
+    public void 친구삭제_이미삭제() throws URISyntaxException{
         //given
         final String baseUrl = "http://localhost:" + port + "/friend";
         URI uri = new URI(baseUrl);
@@ -354,7 +354,7 @@ public class relationTest {
         //then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         User user4 = userRepository.findByNickname("user4").get();
-        assertThat(relationRepository.findById(user4.getRelations().get(0)).get().getRelationType()).isEqualTo(RelationType.DELETED);
+        assertThat(user4.getRelations().isEmpty()).isEqualTo(true);
 
         ResponseEntity<String> result1 = this.restTemplate.exchange(uri, HttpMethod.DELETE,request,String.class);
         assertThat(result1.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);

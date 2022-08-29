@@ -61,7 +61,7 @@ public class userTest {
         folderRepository.save(folder1);
         userRepository.save(user1);
         Folder data2 = new Folder("");
-        User user2 = new User("user2", "user2Email@naver.com", data2.get_id(), "user2Picture", "5678");
+        User user2 = new User("user2", "user2Email@naver.com", data2.get_id(), "user2Picture", "567891");
         folderRepository.save(data2);
         userRepository.save(user2);
         Folder data3 = new Folder("");
@@ -94,7 +94,7 @@ public class userTest {
 
     @Test
     @DisplayName("테스트 01 : 유저 생성")
-    public void createUser1() throws URISyntaxException {
+    public void 유저생성() throws URISyntaxException {
         //given
         final String baseUrl = "http://localhost:" + port + "/member";
         URI uri = new URI(baseUrl);
@@ -116,7 +116,7 @@ public class userTest {
     }
     @Test
     @DisplayName("테스트 02 : 유저 생성 시 같은 이메일 실패")
-    public void createUser2() throws URISyntaxException {
+    public void 유저생성_이미있는이메일() throws URISyntaxException {
         //given
         final String baseUrl = "http://localhost:" + port + "/member";
         URI uri = new URI(baseUrl);
@@ -128,7 +128,7 @@ public class userTest {
         //when
         ResponseEntity<String> result = this.restTemplate.postForEntity(uri,createUserRequestDto,String.class);
         //then
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
 
         Optional<User> testName = userRepository.findByNickname("testName");
         assertThat(testName.isEmpty()).isEqualTo(true);
@@ -136,7 +136,7 @@ public class userTest {
 
     @Test
     @DisplayName("테스트 03 : 유저 생성 시 이메일 형식 실패")
-    public void createUser3() throws URISyntaxException {
+    public void 유저생성_형식실패() throws URISyntaxException {
         //given
         final String baseUrl = "http://localhost:" + port + "/member";
         URI uri = new URI(baseUrl);
@@ -155,7 +155,7 @@ public class userTest {
 
     @Test
     @DisplayName("테스트 04 : 정보 수정")
-    public void updateUser1() throws URISyntaxException {
+    public void 정보수정() throws URISyntaxException {
         //given
         final String baseUrl = "http://localhost:" + port + "/member/me";
         URI uri = new URI(baseUrl);
@@ -173,7 +173,7 @@ public class userTest {
 
     @Test
     @DisplayName("테스트 05 : 정보 수정, 없는 이메일")
-    public void updateUser2() throws URISyntaxException {
+    public void 정보수정_없는이메일() throws URISyntaxException {
         //given
         final String baseUrl = "http://localhost:" + port + "/member/me";
         URI uri = new URI(baseUrl);
@@ -190,7 +190,7 @@ public class userTest {
 
     @Test
     @DisplayName("테스트 06 : 내 정보 검색")
-    public void findUser1() throws URISyntaxException, JsonProcessingException {
+    public void 내정보검색() throws URISyntaxException, JsonProcessingException {
         //given
         final String baseUrl = "http://localhost:" + port + "/member/me?email=user1Email@naver.com";
         URI uri = new URI(baseUrl);
@@ -204,18 +204,19 @@ public class userTest {
     }
     @Test
     @DisplayName("테스트 07 : 이메일 형식 맞지 않음")
-    public void findUser2() throws URISyntaxException{
+    public void 내정보검색_형식오류_없는이메일() throws URISyntaxException{
         //given
         final String baseUrl = "http://localhost:" + port + "/member/me?email=user11231231Email";
         URI uri = new URI(baseUrl);
         //when
         ResponseEntity<String> result = this.restTemplate.getForEntity(uri, String.class);
         //then
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        //형식 오류는 BAD_REQUEST지만 create에서 체크하는거고, 이후는 해당 이메일이 없음.
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
     @Test
     @DisplayName("테스트 08 : 로그인")
-    public void login1() throws URISyntaxException, JsonProcessingException {
+    public void 로그인() throws URISyntaxException, JsonProcessingException {
         //given
         final String baseUrl = "http://localhost:" + port + "/login";
         URI uri = new URI(baseUrl);
@@ -231,7 +232,7 @@ public class userTest {
     }
     @Test
     @DisplayName("테스트 09 : 로그인 실패, 해당 이메일 없음")
-    public void login2() throws URISyntaxException {
+    public void 로그인_없는이메일() throws URISyntaxException {
         //given
         final String baseUrl = "http://localhost:" + port + "/login";
         URI uri = new URI(baseUrl);
@@ -245,7 +246,7 @@ public class userTest {
     }
     @Test
     @DisplayName("테스트 10 : 로그인 실패, 비밀번호 틀림")
-    public void login3() throws URISyntaxException {
+    public void 로그인_실패() throws URISyntaxException {
         //given
         final String baseUrl = "http://localhost:" + port + "/login";
         URI uri = new URI(baseUrl);

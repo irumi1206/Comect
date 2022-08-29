@@ -2,7 +2,8 @@
   "analysis": {
     "analyzer": {
       "nori_analyzer": {
-        "type": "nori"
+
+        "tokenizer": "nori_tokenizer"
       }
     }
   }

@@ -93,7 +93,7 @@ public class CustomFolderRepositoryImpl implements CustomFolderRepository {
         UpdateResult updateResult=mongoTemplate.updateFirst(query,update,Folder.class);
 
         if(updateResult.getModifiedCount()==0) {
-            throw new CustomException(ErrorCode.PATH_NOT_VALID);
+            throw new CustomException(ErrorCode.PATH_NOT_FOUND);
         }
     }
 
@@ -116,7 +116,7 @@ public class CustomFolderRepositoryImpl implements CustomFolderRepository {
                     break;
                 }
             }
-            if(!flag) throw new CustomException(ErrorCode.PATH_NOT_VALID);
+            if(!flag) throw new CustomException(ErrorCode.PATH_NOT_FOUND);
         }
 
         return folder;
@@ -144,7 +144,7 @@ public class CustomFolderRepositoryImpl implements CustomFolderRepository {
         UpdateResult updateResult = mongoTemplate.updateFirst(query,update,Folder.class);
 
         if(updateResult.getModifiedCount()==0) {
-            throw new CustomException(ErrorCode.PATH_NOT_VALID);
+            throw new CustomException(ErrorCode.PATH_NOT_FOUND);
         }
     }
 
@@ -170,7 +170,7 @@ public class CustomFolderRepositoryImpl implements CustomFolderRepository {
         UpdateResult updateResult = mongoTemplate.updateFirst(query,update,Folder.class);
 
         if(updateResult.getModifiedCount()==0) {
-            throw new CustomException(ErrorCode.PATH_NOT_VALID);
+            throw new CustomException(ErrorCode.PATH_NOT_FOUND);
         }
     }
 
@@ -195,7 +195,7 @@ public class CustomFolderRepositoryImpl implements CustomFolderRepository {
         UpdateResult updateResult=mongoTemplate.updateFirst(query,update,Folder.class);
 
         if(updateResult.getModifiedCount()==0) {
-            throw new CustomException(ErrorCode.PATH_NOT_VALID);
+            throw new CustomException(ErrorCode.PATH_NOT_FOUND);
         }
     }
 
@@ -216,14 +216,14 @@ public class CustomFolderRepositoryImpl implements CustomFolderRepository {
                     break;
                 }
             }
-            if(!flag) throw new CustomException(ErrorCode.PATH_NOT_VALID);
+            if(!flag) throw new CustomException(ErrorCode.PATH_NOT_FOUND);
         }
 
         for(int i=0;i<folder.getLinks().size();++i){
             if(id.equals(folder.getLinks().get(i).get_id())) return folder.getLinks().get(i);
         }
 
-        throw new CustomException(ErrorCode.PATH_NOT_VALID);
+        throw new CustomException(ErrorCode.PATH_NOT_FOUND);
     }
 
     public void linkUpdate(ObjectId rootId, String path, ObjectId id, Link link){
@@ -232,6 +232,7 @@ public class CustomFolderRepositoryImpl implements CustomFolderRepository {
         Update update=new Update();
 
         String []tokens= Arrays.stream(path.split("/")).filter(e -> e.trim().length() > 0).toArray(String[]::new);
+
         String pushQuery="";
 
         for(int i=0;i<tokens.length;++i) {
@@ -249,7 +250,7 @@ public class CustomFolderRepositoryImpl implements CustomFolderRepository {
         UpdateResult updateResult = mongoTemplate.updateFirst(query,update,Folder.class);
 
         if(updateResult.getModifiedCount()==0) {
-            throw new CustomException(ErrorCode.PATH_NOT_VALID);
+            throw new CustomException(ErrorCode.PATH_NOT_FOUND);
         }
     }
 
@@ -275,7 +276,7 @@ public class CustomFolderRepositoryImpl implements CustomFolderRepository {
         UpdateResult updateResult = mongoTemplate.updateFirst(query,update,Folder.class);
 
         if(updateResult.getModifiedCount()==0) {
-            throw new CustomException(ErrorCode.PATH_NOT_VALID);
+            throw new CustomException(ErrorCode.PATH_NOT_FOUND);
         }
     }
 

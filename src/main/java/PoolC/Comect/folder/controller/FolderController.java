@@ -20,17 +20,13 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 public class FolderController {
 
     private final FolderService folderService;
-    //private final ElasticFolderService elasticFolderService;
 
     @PostMapping(value="/folder")
     public ResponseEntity<Void> folderCreate(@Valid @RequestBody FolderCreateRequestDto folderCreateRequestDto){
-        log.info(
-                "Called POST/folder, \tbody: "+folderCreateRequestDto.toString()
-        );
+
         String email = folderCreateRequestDto.getEmail();
         String path = folderCreateRequestDto.getPath();
         String name = folderCreateRequestDto.getName();
@@ -38,11 +34,10 @@ public class FolderController {
 
         return ResponseEntity.ok().build();
     }
+
     @GetMapping(value="/folder")
     public ResponseEntity<FolderReadResponseDto> folderRead(@ModelAttribute FolderReadRequestDto folderReadRequestDto){
-        log.info(
-                "Called GET/folder, \tparameter: "+folderReadRequestDto.toString()
-        );
+
         String email=folderReadRequestDto.getEmail();
         String path=folderReadRequestDto.getPath();
         String showFolder=folderReadRequestDto.getShowLink();
@@ -61,9 +56,6 @@ public class FolderController {
 
     @PutMapping(value="/folder")
     public ResponseEntity<Void> folderUpdate(@Valid @RequestBody FolderUpdateRequestDto folderUpdateRequestDto){
-        log.info(
-                "Called PUT/folder, \tbody: "+folderUpdateRequestDto.toString()
-        );
         String email = folderUpdateRequestDto.getEmail();
         String path = folderUpdateRequestDto.getPath();
         String newName = folderUpdateRequestDto.getNewName();
@@ -73,9 +65,6 @@ public class FolderController {
 
     @DeleteMapping(value="/folder")
     public ResponseEntity<Void> folderDelete(@RequestBody FolderDeleteRequestDto folderDeleteRequestDto){
-        log.info(
-                "Called DELETE/folder, \tbody: "+folderDeleteRequestDto.toString()
-        );
         String email = folderDeleteRequestDto.getEmail();
         List<String> paths = folderDeleteRequestDto.getPaths();
         folderService.folderDelete(email,paths);
@@ -84,9 +73,6 @@ public class FolderController {
 
     @PutMapping(value="/folder/path")
     public ResponseEntity<Void> folderMove(@RequestBody FolderMoveRequestDto folderMoveRequestDto){
-        log.info(
-                "Called PUT/folder/path, \tbody: "+folderMoveRequestDto.toString()
-        );
         String email=folderMoveRequestDto.getEmail();
         List<String> originalPaths=folderMoveRequestDto.getOriginalPaths();
         String modifiedPath=folderMoveRequestDto.getModifiedPath();
@@ -96,9 +82,6 @@ public class FolderController {
 
     @GetMapping(value="/folder/path")
     public ResponseEntity<FolderCheckPathResponseDto> folderCheckPath(@ModelAttribute FolderCheckPathRequestDto folderCheckPathRequestDto){
-        log.info(
-                "Called GET/folder/path, \tparameter: "+folderCheckPathRequestDto.toString()
-        );
         String email = folderCheckPathRequestDto.getEmail();
         String path = folderCheckPathRequestDto.getPath();
         boolean checkValid = folderService.folderCheckPath(email,path);
@@ -111,9 +94,6 @@ public class FolderController {
 
     @PostMapping(value="/link")
     public ResponseEntity<Void> linkCreate(@Valid @RequestBody LinkCreateRequestDto linkCreateRequestDto){
-        log.info(
-                "Called POST/link, \tbody: "+linkCreateRequestDto.toString()
-        );
         String email=linkCreateRequestDto.getEmail();
         String path=linkCreateRequestDto.getPath();
         String name=linkCreateRequestDto.getName();
@@ -128,9 +108,6 @@ public class FolderController {
 
     @PutMapping(value="/link")
     public ResponseEntity<Void> linkUpdate(@Valid @RequestBody LinkUpdateRequestDto linkUpdateRequestDto){
-        log.info(
-                "Called PUT/link, \tbody: "+linkUpdateRequestDto.toString()
-        );
         String id=linkUpdateRequestDto.getId();
         String email=linkUpdateRequestDto.getEmail();
         String path=linkUpdateRequestDto.getPath();
@@ -145,9 +122,6 @@ public class FolderController {
 
     @DeleteMapping(value="/link")
     public ResponseEntity<Void> linkDelete(@RequestBody LinkDeleteRequestDto linkDeleteRequestDto){
-        log.info(
-                "Called DELETE/link, \tbody: "+linkDeleteRequestDto.toString()
-        );
         String email=linkDeleteRequestDto.getEmail();
         List<String> paths=linkDeleteRequestDto.getPaths();
         List<String> ids=linkDeleteRequestDto.getIds();
@@ -157,9 +131,6 @@ public class FolderController {
 
     @PutMapping(value="/link/path")
     public ResponseEntity<Void> linkMove(@RequestBody LinkMoveRequestDto linkMoveRequestDto){
-        log.info(
-                "Called PUT/link/path, \tbody: "+linkMoveRequestDto.toString()
-        );
         String email=linkMoveRequestDto.getEmail();
         List<String> originalPaths=linkMoveRequestDto.getOriginalPaths();
         List<String> originalIds=linkMoveRequestDto.getOriginalIds();

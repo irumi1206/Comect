@@ -96,8 +96,9 @@ public class RelationService {
     public void rejectRelation(String email,String friendNickname){
         Relation relation = findRequest(email,friendNickname);
         if(relation.getRelationType().equals(RelationType.REQUEST)){
-            relation.setRelationType(RelationType.REJECTED);
-            relationRepository.save(relation);
+//            relation.setRelationType(RelationType.REJECTED);
+//            relationRepository.save(relation);
+            relationRepository.delete(relation);
         }else{
             throw new CustomException(ErrorCode.REQUEST_NOT_FOUND);
         }
@@ -110,10 +111,12 @@ public class RelationService {
 
         Relation relation = findRelation(me.getId(),friend.getId());
         if(!relation.getRelationType().equals(RelationType.DELETED)) {
-            relation.setRelationType(RelationType.DELETED);
+//            relation.setRelationType(RelationType.DELETED);
+            me.getRelations().remove(relation.getId());
+            friend.getRelations().remove(relation.getId());
             userRepository.save(me);
             userRepository.save(friend);
-            relationRepository.save(relation);
+            relationRepository.delete(relation);
         }else{
             throw new CustomException(ErrorCode.REQUEST_NOT_FOUND);
         }

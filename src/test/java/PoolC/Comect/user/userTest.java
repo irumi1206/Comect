@@ -157,7 +157,7 @@ public class userTest {
     @DisplayName("테스트 04 : 정보 수정")
     public void updateUser1() throws URISyntaxException {
         //given
-        final String baseUrl = "http://localhost:" + port + "/my";
+        final String baseUrl = "http://localhost:" + port + "/member/me";
         URI uri = new URI(baseUrl);
         UpdateUserRequestDto updateUserRequestDto = new UpdateUserRequestDto();
         updateUserRequestDto.setEmail("user1Email@naver.com");
@@ -175,7 +175,7 @@ public class userTest {
     @DisplayName("테스트 05 : 정보 수정, 없는 이메일")
     public void updateUser2() throws URISyntaxException {
         //given
-        final String baseUrl = "http://localhost:" + port + "/my";
+        final String baseUrl = "http://localhost:" + port + "/member/me";
         URI uri = new URI(baseUrl);
         UpdateUserRequestDto updateUserRequestDto = new UpdateUserRequestDto();
         updateUserRequestDto.setEmail("user100000Email");
@@ -192,7 +192,7 @@ public class userTest {
     @DisplayName("테스트 06 : 내 정보 검색")
     public void findUser1() throws URISyntaxException, JsonProcessingException {
         //given
-        final String baseUrl = "http://localhost:" + port + "/my?email=user1Email@naver.com";
+        final String baseUrl = "http://localhost:" + port + "/member/me?email=user1Email@naver.com";
         URI uri = new URI(baseUrl);
         //when
         ResponseEntity<String> result = this.restTemplate.getForEntity(uri, String.class);
@@ -206,7 +206,7 @@ public class userTest {
     @DisplayName("테스트 07 : 이메일 형식 맞지 않음")
     public void findUser2() throws URISyntaxException{
         //given
-        final String baseUrl = "http://localhost:" + port + "/my?email=user11231231Email";
+        final String baseUrl = "http://localhost:" + port + "/member/me?email=user11231231Email";
         URI uri = new URI(baseUrl);
         //when
         ResponseEntity<String> result = this.restTemplate.getForEntity(uri, String.class);

@@ -1,15 +1,16 @@
-package PoolC.Comect.relation.domain;
+package PoolC.Comect.user.domain;
 
+import lombok.Builder;
 import lombok.Data;
-import org.bson.types.ObjectId;
 
 @Data
-public class FriendInfo {
+@Builder
+public class FollowInfo {
     private String email;
     private String nickname;
     private String imageUrl;
 
-    public FriendInfo(String email, String nickname, String imageUrl) {
+    public FollowInfo(String email, String nickname, String imageUrl) {
         this.email = email;
         this.nickname = nickname;
         this.imageUrl = imageUrl;

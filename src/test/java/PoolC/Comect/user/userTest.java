@@ -2,9 +2,6 @@ package PoolC.Comect.user;
 
 import PoolC.Comect.folder.domain.Folder;
 import PoolC.Comect.folder.repository.FolderRepository;
-import PoolC.Comect.relation.domain.Relation;
-import PoolC.Comect.relation.domain.RelationType;
-import PoolC.Comect.relation.repository.RelationRepository;
 import PoolC.Comect.user.domain.User;
 import PoolC.Comect.user.dto.*;
 import PoolC.Comect.user.repository.UserRepository;
@@ -44,8 +41,6 @@ public class userTest {
     @Autowired
     private FolderRepository folderRepository;
     @Autowired
-    private RelationRepository relationRepository;
-    @Autowired
     private UserRepository userRepository;
 
     private ObjectMapper mapper = new ObjectMapper();
@@ -53,7 +48,6 @@ public class userTest {
     @Before
     public void before(){
         folderRepository.deleteAll();
-        relationRepository.deleteAll();
         userRepository.deleteAll();
 
         Folder folder1 = new Folder("");
@@ -73,22 +67,6 @@ public class userTest {
         folderRepository.save(data4);
         userRepository.save(user4);
 
-        User temp1 = userRepository.findByNickname("user1").get();
-        User temp2 = userRepository.findByNickname("user2").get();
-
-        Relation d=new Relation(temp1.getId(),temp2.getId());
-        User temp4 = userRepository.findByNickname("user4").get();
-        Relation d1=new Relation(temp1.getId(),temp4.getId());
-        d1.setRelationType(RelationType.BOTH);
-        relationRepository.save(d);
-        relationRepository.save(d1);
-        user1.getRelations().add(d.getId());
-        user1.getRelations().add(d1.getId());
-        user2.getRelations().add(d.getId());
-        user4.getRelations().add(d1.getId());
-        userRepository.save(user1);
-        userRepository.save(user2);
-        userRepository.save(user4);
     }
 
 

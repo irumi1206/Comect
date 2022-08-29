@@ -3,7 +3,6 @@ package PoolC.Comect.image;
 import PoolC.Comect.folder.domain.Folder;
 import PoolC.Comect.folder.repository.FolderRepository;
 import PoolC.Comect.image.repository.ImageRepository;
-import PoolC.Comect.relation.repository.RelationRepository;
 import PoolC.Comect.user.domain.User;
 import PoolC.Comect.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,8 +29,6 @@ public class imageTest {
     @Autowired
     private FolderRepository folderRepository;
     @Autowired
-    private RelationRepository relationRepository;
-    @Autowired
     private UserRepository userRepository;
     @Autowired
     private ImageRepository imageRepository;
@@ -42,7 +39,6 @@ public class imageTest {
     public void before(){
         userRepository.deleteAll();
         imageRepository.deleteAll();
-        relationRepository.deleteAll();
         folderRepository.deleteAll();
 
         Folder folder1 = new Folder("");

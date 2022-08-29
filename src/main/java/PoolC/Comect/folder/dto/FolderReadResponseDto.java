@@ -19,13 +19,4 @@ public class FolderReadResponseDto {
         this.folderInfos=folderInfos;
         this.linkInfos=linkInfos;
     }
-
-//    @JsonProperty("folderInfos")
-//    public List<FolderInfo> getFolderInfos(){
-//        return folderInfos;
-//    }
-//    @JsonProperty("linkInfos")
-//    public List<LinkInfo> getLinkInfos(){
-//        return linkInfos;
-//    }
 }

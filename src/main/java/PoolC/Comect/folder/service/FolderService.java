@@ -26,28 +26,25 @@ public class FolderService {
     private final UserRepository userRepository;
 
     public void folderCreate(String userEmail, String path, String folderName){
-        validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
+        if(folderRepository.checkPathFolder(user.getRootFolderId(),path+"/"+folderName)) throw new CustomException(ErrorCode.FILE_CONFLICT);
         Folder folder = new Folder(folderName);
         folderRepository.folderCreate(user.getRootFolderId(), path, folder);
     }
 
     public Folder folderRead(String userEmail, String path){
-        validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
         Folder folder=folderRepository.folderRead(user.getRootFolderId(),path);
         return folder;
     }
 
     public void folderUpdate(String userEmail, String path, String folderName){
-        validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
         folderRepository.folderUpdate(user.getRootFolderId(),path,folderName);
     }
 
     @Transactional
     public void folderDelete(String userEmail, List<String> paths){
-        validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
         for(String path:paths) {
             folderRepository.folderDelete(user.getRootFolderId(), path);
@@ -56,7 +53,6 @@ public class FolderService {
 
     @Transactional
     public void folderMove(String userEmail, List<String> originalPaths, String modifiedPath){
-        validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
         for(String originalPath:originalPaths){
             Folder folder=folderRepository.folderRead(user.getRootFolderId(),originalPath);
@@ -66,20 +62,17 @@ public class FolderService {
     }
 
     public boolean folderCheckPath(String userEmail, String path){
-        validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
         return folderRepository.checkPathFolder(user.getRootFolderId(), path);
     }
 
     public void linkCreate(String userEmail, String path, String name, String url, String imageUrl, List<String> keywords, String isPublic){
-        validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
         Link link=new Link(name,imageUrl,url,keywords,isPublic);
         folderRepository.linkCreate(user.getRootFolderId(), path, link);
     }
 
     public void linkUpdate(String id,String email,String path,String name,String url,String imageUrl,List<String> keywords,String isPublic){
-        validateEmail(email);
         User user = getUserByEmail(email);
         Link link=new Link(name,imageUrl,url,keywords,isPublic);
         folderRepository.linkUpdate(user.getRootFolderId(), path,new ObjectId(id), link);
@@ -87,7 +80,6 @@ public class FolderService {
 
     @Transactional
     public void linkDelete(String email,List<String> paths,List<String> ids){
-        validateEmail(email);
         User user = getUserByEmail(email);
         for(int i=0;i<paths.size();++i){
             folderRepository.linkDelete(user.getRootFolderId(), paths.get(i),new ObjectId(ids.get(i)));
@@ -96,7 +88,6 @@ public class FolderService {
 
     @Transactional
     public void linkMove(String userEmail, List<String> originalPaths, List<String> originalIds,String modifiedPath){
-        validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
         for(int i=0;i<originalPaths.size();++i){
             String originalPath=originalPaths.get(i);
@@ -110,15 +101,6 @@ public class FolderService {
     private User getUserByEmail(String userEmail){
         Optional<User> user = userRepository.findByEmail(userEmail);
         return user.orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-    }
-
-    private void validateEmail(String userEmail){
-        String regx = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
-        Pattern pattern = Pattern.compile(regx);
-        Matcher matcher = pattern.matcher(userEmail);
-        if(!matcher.matches()){
-            throw new CustomException(ErrorCode.EMAIL_NOT_VALID);
-        }
     }
 
 }

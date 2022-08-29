@@ -3,6 +3,9 @@ package PoolC.Comect.folder.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Data
@@ -11,6 +14,8 @@ public class LinkUpdateRequestDto {
     private String id;
     private String email;
     private String path;
+    @NotNull
+    @Size(max=50)
     private String name;
     private String url;
     private String imageUrl;

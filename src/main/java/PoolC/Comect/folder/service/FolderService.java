@@ -28,6 +28,7 @@ public class FolderService {
     public void folderCreate(String userEmail, String path, String folderName){
         validateEmail(userEmail);
         User user = getUserByEmail(userEmail);
+        if(folderRepository.checkPathFolder(user.getRootFolderId(),path+"/"+folderName)) throw new CustomException(ErrorCode.FILE_CONFLICT);
         Folder folder = new Folder(folderName);
         folderRepository.folderCreate(user.getRootFolderId(), path, folder);
     }

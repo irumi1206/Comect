@@ -1,5 +1,6 @@
 package PoolC.Comect.exception;
 
+import co.elastic.clients.elasticsearch.nodes.Http;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ public enum ErrorCode{
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "이메일이 존재하지 않음"),
     EMAIL_NOT_VALID(HttpStatus.BAD_REQUEST,"이메일 형식이 잘못됨"),
     PATH_NOT_VALID(HttpStatus.NOT_FOUND,"경로가 유효하지 않음"),
+    FILE_CONFLICT(HttpStatus.CONFLICT,"이미 같은 이름의 파일이 존재함"),
 
     //member
     COOKIE_ROTTEN(HttpStatus.UNAUTHORIZED,"쿠키가 유효하지 않음"),

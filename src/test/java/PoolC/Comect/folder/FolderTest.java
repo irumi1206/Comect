@@ -6,6 +6,9 @@ import PoolC.Comect.folder.dto.*;
 import PoolC.Comect.folder.repository.FolderRepository;
 import PoolC.Comect.user.domain.User;
 import PoolC.Comect.user.repository.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.bson.types.ObjectId;
 import org.junit.Before;
@@ -43,6 +46,7 @@ public class FolderTest {
     UserRepository userRepository;
 
     ObjectId idUpdate;
+    ObjectMapper jsonMapper=new ObjectMapper();
 
     @Before
     public void before() {
@@ -229,8 +233,36 @@ public class FolderTest {
     }
 
     @Test
+    @DisplayName("폴더 생성 실패4, 이미 같은 이름의 파일이 존재함")
+    public void 폴더생성실패4_같은이름의폴더존재() throws URISyntaxException{
+
+        //given
+        String baseUrl="http://localhost:" + port + "/folder";
+        URI uri =new URI(baseUrl);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("JSON","true");
+
+        String email="user1Email@email.com";
+        String path="folder11/folder21";
+        String name="folder31";
+        FolderCreateRequestDto folderCreateRequestDto= FolderCreateRequestDto.builder()
+                .email((email))
+                .path(path)
+                .name(name)
+                .build();
+
+        //when
+        HttpEntity<FolderCreateRequestDto> request = new HttpEntity<>(folderCreateRequestDto,headers);
+        ResponseEntity<String> result = restTemplate.postForEntity(uri,request,String.class);
+
+        //then
+        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+
+    }
+
+    @Test
     @DisplayName("폴더 조회 성공1, 루트 폴터")
-    public void 폴더조회성공1_루트폴더() throws URISyntaxException{
+    public void 폴더조회성공1_루트폴더() throws URISyntaxException, JsonProcessingException {
 
         //given
         HttpHeaders headers = new HttpHeaders();
@@ -255,13 +287,17 @@ public class FolderTest {
 
         //then
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        System.out.println(response.getBody());
+        JsonNode jsonBody = jsonMapper.readTree(response.getBody());
+        Assertions.assertThat(jsonBody.get("folderInfos").get(0).get("name").asText()).isEqualTo("folder11");
+        Assertions.assertThat(jsonBody.get("folderInfos").get(1).get("name").asText()).isEqualTo("folder12");
+        Assertions.assertThat(jsonBody.get("linkInfos").get(0).get("name").asText()).isEqualTo("link11");
+        Assertions.assertThat(jsonBody.get("linkInfos").get(1).get("name").asText()).isEqualTo("link12");
 
     }
 
     @Test
     @DisplayName("폴더 조회 성공2, 루트 폴터 아닌 폴더")
-    public void 폴더조회성공2_루트폴더아닌폴더() throws URISyntaxException{
+    public void 폴더조회성공2_루트폴더아닌폴더() throws URISyntaxException, JsonProcessingException{
 
         //given
         HttpHeaders headers = new HttpHeaders();
@@ -286,7 +322,10 @@ public class FolderTest {
 
         //then
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        System.out.println(response.getBody());
+        JsonNode jsonBody = jsonMapper.readTree(response.getBody());
+        Assertions.assertThat(jsonBody.get("folderInfos").get(0).get("name").asText()).isEqualTo("folder31");
+        Assertions.assertThat(jsonBody.get("linkInfos").get(0).get("name").asText()).isEqualTo("link31");
+        Assertions.assertThat(jsonBody.get("linkInfos").get(1).get("name").asText()).isEqualTo("link32");
 
     }
 
@@ -382,7 +421,7 @@ public class FolderTest {
 
     @Test
     @DisplayName("폴더폴더 조회 성공1, 루트 폴터")
-    public void 폴더폴더조회성공1_루트폴더() throws URISyntaxException{
+    public void 폴더폴더조회성공1_루트폴더() throws URISyntaxException, JsonProcessingException{
 
         //given
         HttpHeaders headers = new HttpHeaders();
@@ -407,13 +446,16 @@ public class FolderTest {
 
         //then
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        System.out.println(response.getBody());
+        JsonNode jsonBody = jsonMapper.readTree(response.getBody());
+        Assertions.assertThat(jsonBody.get("folderInfos").get(0).get("name").asText()).isEqualTo("folder11");
+        Assertions.assertThat(jsonBody.get("folderInfos").get(1).get("name").asText()).isEqualTo("folder12");
+        Assertions.assertThat(jsonBody.get("linkInfos").size()).isEqualTo(0);
 
     }
 
     @Test
     @DisplayName("폴더폴더 조회 성공2, 루트 폴터 아닌 폴더")
-    public void 폴더폴더조회성공2_루트폴더아닌폴더() throws URISyntaxException{
+    public void 폴더폴더조회성공2_루트폴더아닌폴더() throws URISyntaxException, JsonProcessingException{
 
         //given
         HttpHeaders headers = new HttpHeaders();
@@ -438,7 +480,10 @@ public class FolderTest {
 
         //then
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        System.out.println(response.getBody());
+        JsonNode jsonBody = jsonMapper.readTree(response.getBody());
+        Assertions.assertThat(jsonBody.get("folderInfos").get(0).get("name").asText()).isEqualTo("folder31");
+        Assertions.assertThat(jsonBody.get("folderInfos").get(1).get("name").asText()).isEqualTo("folder32");
+        Assertions.assertThat(jsonBody.get("linkInfos").size()).isEqualTo(0);
 
     }
 
@@ -1059,7 +1104,6 @@ public class FolderTest {
 
         //then
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        System.out.println(response.getBody());
 
     }
 
@@ -1088,7 +1132,6 @@ public class FolderTest {
 
         //then
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        System.out.println(response.getBody());
 
     }
 
@@ -1117,7 +1160,6 @@ public class FolderTest {
 
         //then
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        System.out.println(response.getBody());
 
     }
 
@@ -1146,7 +1188,6 @@ public class FolderTest {
 
         //then
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        System.out.println(response.getBody());
 
     }
 
@@ -1175,7 +1216,6 @@ public class FolderTest {
 
         //then
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        System.out.println(response.getBody());
 
     }
 

@@ -22,14 +22,14 @@ public class ImageController {
     private ImageService imageService;
 
     @PostMapping("/image")
-    public ResponseEntity<CreateImageResponseDto> createImage(@ModelAttribute CreateImageRequestDto createImageRequestDto) throws IOException {
+    public ResponseEntity<CreateImageResponseDto> createImage(@ModelAttribute CreateImageRequestDto createImageRequestDto){
         String id=imageService.upLoad(createImageRequestDto.getImageName(), createImageRequestDto.getMultipartFile(), createImageRequestDto.getEmail()).toHexString();
         CreateImageResponseDto createImageResponseDto = new CreateImageResponseDto("image?id="+id);
         return ResponseEntity.ok(createImageResponseDto);
     }
 
     @GetMapping("/image")
-    public ResponseEntity<Resource> readImage(@ModelAttribute ReadImageRequestDto readImageRequestDto) throws IOException {
+    public ResponseEntity<Resource> readImage(@ModelAttribute ReadImageRequestDto readImageRequestDto){
         ReadImageResponseDto readImageResponseDto = new ReadImageResponseDto();
         ReadImageDomain readImageDomain = imageService.readImage(new ObjectId(readImageRequestDto.getId()));
         readImageResponseDto.setImage(readImageDomain.getResource());
@@ -44,7 +44,7 @@ public class ImageController {
     }
 
     @DeleteMapping("/image")
-    public ResponseEntity<Void> deleteImage(@ModelAttribute DeleteImageRequestDto deleteImageRequestDto) throws IOException {
+    public ResponseEntity<Void> deleteImage(@ModelAttribute DeleteImageRequestDto deleteImageRequestDto){
         imageService.deleteImage(new ObjectId(deleteImageRequestDto.getId()));
         return ResponseEntity.ok().build();
     }

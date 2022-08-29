@@ -28,7 +28,8 @@ public class User {
     private String email;
     private ObjectId rootFolderId;
     private String imageUrl;
-    private List<ObjectId> relations;
+    private List<ObjectId> followings;
+    private List<ObjectId> followers;
     private String password;
 
     public User(String nickname, String email, ObjectId rootFolderId, String imageUrl, String password) {
@@ -38,7 +39,8 @@ public class User {
         this.rootFolderId = rootFolderId;
         this.imageUrl = imageUrl;
         this.password = password;
-        this.relations=new ArrayList<>();
+        this.followings=new ArrayList<>();
+        this.followers=new ArrayList<>();
     }
 
     @Override
@@ -49,7 +51,8 @@ public class User {
                 ", email='" + email + '\'' +
                 ", rootFolderId=" + rootFolderId +
                 ", imageUrl='" + imageUrl + '\'' +
-                ", relations=" + relations +
+                ", followings=" + followings +
+                ", followers=" + followers +
                 ", password='" + password + '\'' +
                 '}';
     }

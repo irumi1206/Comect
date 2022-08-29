@@ -6,8 +6,6 @@ import PoolC.Comect.exception.ErrorCode;
 import PoolC.Comect.folder.domain.Folder;
 import PoolC.Comect.folder.dto.*;
 import PoolC.Comect.folder.service.FolderService;
-import PoolC.Comect.relation.controller.RelationController;
-import PoolC.Comect.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;

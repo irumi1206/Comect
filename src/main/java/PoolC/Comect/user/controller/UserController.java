@@ -1,6 +1,6 @@
 package PoolC.Comect.user.controller;
 
-import PoolC.Comect.relation.controller.RelationController;
+import PoolC.Comect.user.domain.FollowInfo;
 import PoolC.Comect.user.domain.User;
 import PoolC.Comect.user.dto.*;
 import PoolC.Comect.user.service.UserService;
@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -55,5 +56,38 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/follow")
+    public ResponseEntity<Void> createFollow(@RequestBody CreateFollowRequestDto request){
+        log.info(
+                "Called POST/follow, \tbody: "+request.toString()
+        );
+        userService.createFollow(request.getEmail(),request.getFollowedNickname());
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/follow")
+    public ResponseEntity<ReadFollowResponseDto> readFollow(@ModelAttribute ReadFollowRequestDto request){
+        log.info(
+                "Called GET/follow, \tbody: "+request.toString()
+        );
+        List<FollowInfo> followers = userService.readFollower(request.getEmail());
+        List<FollowInfo> followings = userService.readFollowing(request.getEmail());
+        ReadFollowResponseDto readFollowResponseDto = ReadFollowResponseDto.builder()
+                .numberOfFollowing(followings.size())
+                .numberOfFollower(followers.size())
+                .followings(followings)
+                .followers(followers)
+                .build();
+        return ResponseEntity.ok(readFollowResponseDto);
+    }
+
+    @DeleteMapping("/follow")
+    public ResponseEntity<Void> deleteFollow(@RequestBody DeleteFollowRequestDto request){
+        log.info(
+                "Called DELETE/follow, \tbody: "+request.toString()
+        );
+        userService.deleteFollow(request.getEmail(),request.getFollowedNickname());
+        return ResponseEntity.ok().build();
+    }
 }
 

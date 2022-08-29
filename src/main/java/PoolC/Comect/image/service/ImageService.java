@@ -31,8 +31,12 @@ public class ImageService {
     private final UserService userService;
 
     @Transactional
-    public void deleteImage(ObjectId id) throws IOException {
-        Files.delete(Paths.get("imageStorage/"+id.toHexString()));
+    public void deleteImage(ObjectId id){
+        try{
+            Files.delete(Paths.get("imageStorage/"+id.toHexString()));
+        }catch(IOException ioe){
+            throw new CustomException(ErrorCode.FILE_NOT_FOUND);
+        }
         Image image = imageRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.IMAGE_NOT_FOUND));
 //        if(!image.getEmail().equals(email)){
 //            throw new CustomException(ErrorCode.NOT_MY_IMAGE);
@@ -40,33 +44,46 @@ public class ImageService {
         imageRepository.delete(image);
     }
 
-    public ReadImageDomain readImage(ObjectId id) throws IOException {
+    public ReadImageDomain readImage(ObjectId id){
         Image image = imageRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.IMAGE_NOT_FOUND));
 //        if(!image.getEmail().equals(email)){
 //            throw new CustomException(ErrorCode.NOT_MY_IMAGE);
 //        }
         Path path=Paths.get("imageStorage/"+image.getId().toHexString());
         String contentType=image.getExtender();
-        Resource resource = new InputStreamResource(Files.newInputStream(path));
+        Resource resource;
+        try{
+            resource = new InputStreamResource(Files.newInputStream(path));
+        }catch(IOException ioe){
+            throw new CustomException(ErrorCode.FILE_NOT_FOUND);
+        }
         return new ReadImageDomain(contentType,resource,image.getImageName());
     }
 
-    public ObjectId upLoad(String imageName, MultipartFile multipartFile, String email) throws IOException {
+    public ObjectId upLoad(String imageName, MultipartFile multipartFile, String email){
         //validate check
         userService.findOne(email);
         Image image = new Image(imageName,multipartFile.getContentType(),email);
         String upLoadDir = "imageStorage";
         imageRepository.save(image);
-        saveFile(upLoadDir,image.getId().toHexString(),multipartFile);
+        try{
+            saveFile(upLoadDir,image.getId().toHexString(),multipartFile);
+        }catch(Exception e){
+            throw new CustomException(ErrorCode.IMAGE_SAVE_CANCELED);
+        }
         return image.getId();
     }
 
     public static void saveFile(String uploadDir, String fileName,
-                                MultipartFile multipartFile) throws IOException {
+                                MultipartFile multipartFile){
         Path uploadPath = Paths.get(uploadDir);
 
         if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
+            try{
+                Files.createDirectories(uploadPath);
+            }catch(IOException ioe){
+                throw new CustomException(ErrorCode.IMAGE_SAVE_CANCELED);
+            }
         }
 
         try (InputStream inputStream = multipartFile.getInputStream()) {

@@ -1,4 +1,6 @@
 package PoolC.Comect.folder.controller;
+import PoolC.Comect.elasticFolder.ElasticFolderRepository;
+import PoolC.Comect.elasticFolder.ElasticFolderService;
 import PoolC.Comect.folder.domain.Folder;
 import PoolC.Comect.folder.dto.*;
 import PoolC.Comect.folder.service.FolderService;
@@ -21,7 +23,7 @@ import java.util.Map;
 public class FolderController {
 
     private final FolderService folderService;
-    private final UserRepository userRepository;
+    //private final ElasticFolderService elasticFolderService;
 
     @PostMapping(value="/folder")
     public ResponseEntity<Void> folderCreate(@RequestBody FolderCreateRequestDto folderCreateRequestDto){

@@ -7,18 +7,14 @@ import PoolC.Comect.folder.repository.FolderRepository;
 import PoolC.Comect.user.domain.FollowInfo;
 import PoolC.Comect.user.domain.MemberData;
 import PoolC.Comect.user.domain.User;
-import PoolC.Comect.user.dto.ReadFollowResponseDto;
 import PoolC.Comect.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
-import org.elasticsearch.monitor.os.OsStats;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @Transactional

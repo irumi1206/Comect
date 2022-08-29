@@ -5,7 +5,6 @@ import PoolC.Comect.exception.ErrorCode;
 import PoolC.Comect.image.domain.Image;
 import PoolC.Comect.image.domain.ReadImageDomain;
 import PoolC.Comect.image.repository.ImageRepository;
-import PoolC.Comect.user.repository.UserRepository;
 import PoolC.Comect.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;

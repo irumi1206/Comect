@@ -4,7 +4,6 @@ package PoolC.Comect.image.dto;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.*;
 
 @Data
 public class CreateImageRequestDto {

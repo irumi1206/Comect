@@ -1,6 +1,7 @@
 package PoolC.Comect.user.controller;
 
 import PoolC.Comect.user.domain.FollowInfo;
+import PoolC.Comect.user.domain.MemberData;
 import PoolC.Comect.user.domain.User;
 import PoolC.Comect.user.dto.*;
 import PoolC.Comect.user.service.UserService;
@@ -68,7 +69,7 @@ public class UserController {
     @GetMapping("/follow")
     public ResponseEntity<ReadFollowResponseDto> readFollow(@ModelAttribute ReadFollowRequestDto request){
         log.info(
-                "Called GET/follow, \tbody: "+request.toString()
+                "Called GET/follow, \tparameter: "+request.toString()
         );
         List<FollowInfo> followers = userService.readFollower(request.getEmail());
         List<FollowInfo> followings = userService.readFollowing(request.getEmail());
@@ -88,6 +89,21 @@ public class UserController {
         );
         userService.deleteFollow(request.getEmail(),request.getFollowedNickname());
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/member")
+    public ResponseEntity<GetMemberResponseDto> getMember(@ModelAttribute GetMemberRequestDto request){
+        log.info(
+                "Called GET/member, \tparameter: "+request.toString()
+        );
+        MemberData memberInfo = userService.getMemberInfo(request.getNickname());
+        GetMemberResponseDto getMemberResponseDto = GetMemberResponseDto.builder()
+                .imageUrl(memberInfo.getImageUrl())
+                .nickname(memberInfo.getNickname())
+                .follower(memberInfo.getFollower())
+                .following(memberInfo.getFollowing())
+                .build();
+        return ResponseEntity.ok(getMemberResponseDto);
     }
 }
 

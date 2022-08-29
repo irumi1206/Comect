@@ -5,11 +5,13 @@ import PoolC.Comect.exception.ErrorCode;
 import PoolC.Comect.folder.domain.Folder;
 import PoolC.Comect.folder.repository.FolderRepository;
 import PoolC.Comect.user.domain.FollowInfo;
+import PoolC.Comect.user.domain.MemberData;
 import PoolC.Comect.user.domain.User;
 import PoolC.Comect.user.dto.ReadFollowResponseDto;
 import PoolC.Comect.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
+import org.elasticsearch.monitor.os.OsStats;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,6 +74,17 @@ public class UserService {
         followed.getFollowers().add(user.getId());
         userRepository.save(user);
         userRepository.save(followed);
+    }
+
+    public MemberData getMemberInfo(String nickname){
+        User user = userRepository.findByNickname(nickname).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        MemberData memberData = MemberData.builder()
+                .follower(user.getFollowers().size())
+                .following(user.getFollowings().size())
+                .nickname(user.getNickname())
+                .imageUrl(user.getImageUrl())
+                .build();
+        return memberData;
     }
 
     private void validateDuplicateUser(String email){

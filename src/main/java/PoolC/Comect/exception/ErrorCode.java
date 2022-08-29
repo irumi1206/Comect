@@ -1,9 +1,7 @@
 package PoolC.Comect.exception;
 
-import co.elastic.clients.elasticsearch.nodes.Http;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.apache.http.protocol.HTTP;
 import org.springframework.http.HttpStatus;
 
 @Getter

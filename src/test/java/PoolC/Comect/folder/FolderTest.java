@@ -149,34 +149,6 @@ public class FolderTest {
     }
 
     @Test
-    @DisplayName("폴더 생성 실패1, 이메일 형식 오류")
-    public void 폴더생성실패1_이메일형식오류() throws URISyntaxException{
-
-        //given
-        String baseUrl="http://localhost:" + port + "/folder";
-        URI uri =new URI(baseUrl);
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("JSON","true");
-
-        String email="user1";
-        String path="";
-        String name="folder13";
-        FolderCreateRequestDto folderCreateRequestDto= FolderCreateRequestDto.builder()
-                .email((email))
-                .path(path)
-                .name(name)
-                .build();
-
-        //when
-        HttpEntity<FolderCreateRequestDto> request = new HttpEntity<>(folderCreateRequestDto,headers);
-        ResponseEntity<String> result = restTemplate.postForEntity(uri,request,String.class);
-
-        //then
-        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-
-    }
-
-    @Test
     @DisplayName("폴더 생성 실패2, 회원이 존재하지 않음")
     public void 폴더생성실패2_회원존재하지않음() throws URISyntaxException{
 
@@ -205,8 +177,8 @@ public class FolderTest {
     }
 
     @Test
-    @DisplayName("폴더 생성 실패3, 경로가 유효하지 않음")
-    public void 폴더생성실패3_경로유효하지않음() throws URISyntaxException{
+    @DisplayName("폴더 생성 실패3, 경로가없음")
+    public void 폴더생성실패3_경로가없음() throws URISyntaxException{
 
         //given
         String baseUrl="http://localhost:" + port + "/folder";
@@ -228,7 +200,7 @@ public class FolderTest {
         ResponseEntity<String> result = restTemplate.postForEntity(uri,request,String.class);
 
         //then
-        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
     }
 
@@ -330,38 +302,8 @@ public class FolderTest {
     }
 
     @Test
-    @DisplayName("폴더 조회 실패1, 이메일 형식이 맞지 않음")
-    public void 폴더조회실패1_이메일형식오류() throws URISyntaxException{
-
-        //given
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("JSON","true");
-
-        String baseUrl="http://localhost:" + port + "/folder";
-        String email="user1Email";
-        String path="";
-        String showLink="true";
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl)
-                .queryParam("email", email)
-                .queryParam("path",path)
-                .queryParam("showLink",showLink);
-
-        //when
-        HttpEntity<Void> request=new HttpEntity<>(headers);
-        ResponseEntity<String> response = restTemplate.exchange(
-                builder.toUriString(),
-                HttpMethod.GET,
-                request,
-                String.class);
-
-        //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-
-    }
-
-    @Test
-    @DisplayName("폴더 조회 실패2, 이메일존재하지않음")
-    public void 폴더조회실패2_이메일존재하지않음() throws URISyntaxException{
+    @DisplayName("폴더 조회 실패1, 이메일존재하지않음")
+    public void 폴더조회실패1_이메일존재하지않음() throws URISyntaxException{
 
         //given
         HttpHeaders headers = new HttpHeaders();
@@ -390,8 +332,8 @@ public class FolderTest {
     }
 
     @Test
-    @DisplayName("폴더 조회 실패3, 유효하지않는경로")
-    public void 폴더조회실패3_유효하지않는경로() throws URISyntaxException{
+    @DisplayName("폴더 조회 실패2, 경로가없음")
+    public void 폴더조회실패2_경로가없음() throws URISyntaxException{
 
         //given
         HttpHeaders headers = new HttpHeaders();
@@ -415,7 +357,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
     }
 
@@ -488,38 +430,8 @@ public class FolderTest {
     }
 
     @Test
-    @DisplayName("폴더폴더 조회 실패1, 이메일 형식이 맞지 않음")
-    public void 폴더폴더조회실패1_이메일형식오류() throws URISyntaxException{
-
-        //given
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("JSON","true");
-
-        String baseUrl="http://localhost:" + port + "/folder";
-        String email="user1Email";
-        String path="";
-        String showLink="false";
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl)
-                .queryParam("email", email)
-                .queryParam("path",path)
-                .queryParam("showLink",showLink);
-
-        //when
-        HttpEntity<Void> request=new HttpEntity<>(headers);
-        ResponseEntity<String> response = restTemplate.exchange(
-                builder.toUriString(),
-                HttpMethod.GET,
-                request,
-                String.class);
-
-        //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-
-    }
-
-    @Test
-    @DisplayName("폴더폴더 조회 실패2, 이메일존재하지않음")
-    public void 폴더폴더조회실패2_이메일존재하지않음() throws URISyntaxException{
+    @DisplayName("폴더폴더 조회 실패1, 이메일존재하지않음")
+    public void 폴더폴더조회실패1_이메일존재하지않음() throws URISyntaxException{
 
         //given
         HttpHeaders headers = new HttpHeaders();
@@ -548,8 +460,8 @@ public class FolderTest {
     }
 
     @Test
-    @DisplayName("폴더폴더 조회 실패3, 유효하지않는경로")
-    public void 폴더폴더조회실패3_유효하지않는경로() throws URISyntaxException{
+    @DisplayName("폴더폴더 조회 실패2, 경로가없음")
+    public void 폴더폴더조회실패2_경로가없음() throws URISyntaxException{
 
         //given
         HttpHeaders headers = new HttpHeaders();
@@ -574,7 +486,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
     }
 
@@ -641,53 +553,20 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-
-    }
-
-    @Test
-    @DisplayName("폴더 수정 실패2, 이메일형식오류")
-    public void 폴더수정실패2_이메일형식오류() throws URISyntaxException{
-
-        //given
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("JSON","true");
-        String email="user1Email@";
-        String path="folder11/folder21";
-        String newName="folder21Modified";
-
-        String baseUrl="http://localhost:" + port + "/folder";
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
-
-        FolderUpdateRequestDto folderUpdateRequestDto= FolderUpdateRequestDto.builder()
-                .email(email)
-                .path(path)
-                .newName(newName)
-                .build();
-
-        //when
-        HttpEntity<FolderUpdateRequestDto> request = new HttpEntity<>(folderUpdateRequestDto,headers);
-        ResponseEntity<String> response = restTemplate.exchange(
-                builder.toUriString(),
-                HttpMethod.PUT,
-                request,
-                String.class);
-
-        //then
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
     }
 
     @Test
-    @DisplayName("폴더 수정 실패3, 존재하지않는이메일")
-    public void 폴더수정실패3_존재하지않는이메일() throws URISyntaxException{
+    @DisplayName("폴더 수정 실패2, 존재하지않는이메일")
+    public void 폴더수정실패2_존재하지않는이메일() throws URISyntaxException{
 
         //given
         HttpHeaders headers = new HttpHeaders();
         headers.set("JSON","true");
         String email="user2Email@email.com";
         String path="folder11/folder21";
-        String newName="folder21Modified";
+        String newName="new21";
 
         String baseUrl="http://localhost:" + port + "/folder";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
@@ -712,8 +591,8 @@ public class FolderTest {
     }
 
     @Test
-    @DisplayName("폴더 수정 실패4, 경로유효하지않음")
-    public void 폴더수정실패4_경로유효하지않음() throws URISyntaxException{
+    @DisplayName("폴더 수정 실패3, 경로가없음")
+    public void 폴더수정실패3_경로가없음() throws URISyntaxException{
 
         //given
         HttpHeaders headers = new HttpHeaders();
@@ -740,7 +619,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
     }
 
@@ -805,38 +684,6 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-
-    }
-
-    @Test
-    @DisplayName("폴더 삭제 실패2, 이메일형식오류")
-    public void 폴더삭제실패2_이메일형식오류() throws URISyntaxException{
-
-        //given
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("JSON","true");
-        String email="user1Email";
-        List<String> paths=new ArrayList<>();
-        paths.add("folder11");
-
-        String baseUrl="http://localhost:" + port + "/folder";
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
-
-        FolderDeleteRequestDto folderDeleteRequestDto= FolderDeleteRequestDto.builder()
-                .email(email)
-                .paths(paths)
-                .build();
-
-        //when
-        HttpEntity<FolderDeleteRequestDto> request = new HttpEntity<>(folderDeleteRequestDto,headers);
-        ResponseEntity<String> response = restTemplate.exchange(
-                builder.toUriString(),
-                HttpMethod.DELETE,
-                request,
-                String.class);
-
-        //then
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
     }
@@ -874,8 +721,8 @@ public class FolderTest {
     }
 
     @Test
-    @DisplayName("폴더 삭제 실패4, 경로유효하지않음")
-    public void 폴더삭제실패4_경로유효하지않음() throws URISyntaxException{
+    @DisplayName("폴더 삭제 실패4, 경로가없음")
+    public void 폴더삭제실패4_경로가없음() throws URISyntaxException{
 
         //given
         HttpHeaders headers = new HttpHeaders();
@@ -901,7 +748,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
     }
 
@@ -976,40 +823,6 @@ public class FolderTest {
     }
 
     @Test
-    @DisplayName("폴더 이동 실패1, 이메일형식오류")
-    public void 폴더이동실패1_이메일형식오류() throws URISyntaxException{
-
-        //given
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("JSON","true");
-        String email="user1Email";
-        List<String> originalPaths=new ArrayList<>();
-        originalPaths.add("folder11/folder21");
-        String modifiedPath="";
-
-        String baseUrl="http://localhost:" + port + "/folder/path";
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
-
-        FolderMoveRequestDto folderMoveRequestDto= FolderMoveRequestDto.builder()
-                .email(email)
-                .originalPaths(originalPaths)
-                .modifiedPath(modifiedPath)
-                .build();
-
-        //when
-        HttpEntity<FolderMoveRequestDto> request = new HttpEntity<>(folderMoveRequestDto,headers);
-        ResponseEntity<String> response = restTemplate.exchange(
-                builder.toUriString(),
-                HttpMethod.PUT,
-                request,
-                String.class);
-
-        //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-
-    }
-
-    @Test
     @DisplayName("폴더 이동 실패2, 이메일존재하지않음")
     public void 폴더이동실패2_이메일존재하지않음() throws URISyntaxException{
 
@@ -1044,8 +857,8 @@ public class FolderTest {
     }
 
     @Test
-    @DisplayName("폴더 이동 실패3, 경로유효하지않음")
-    public void 폴더이동실패3_이메일형식오류() throws URISyntaxException{
+    @DisplayName("폴더 이동 실패3, 경로가없음")
+    public void 폴더이동실패3_경로가없음() throws URISyntaxException{
 
         //given
         HttpHeaders headers = new HttpHeaders();
@@ -1073,7 +886,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         Assertions.assertThat(folderRepository.checkPathFolder(userRepository.findByEmail(email).get().getRootFolderId(),"folder11/folder21")).isEqualTo(true);
         Assertions.assertThat(folderRepository.checkPathFolder(userRepository.findByEmail(email).get().getRootFolderId(),"folder11/folder21/folder21/folder21")).isEqualTo(false);
 
@@ -1160,34 +973,6 @@ public class FolderTest {
 
         //then
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-    }
-
-    @Test
-    @DisplayName("폴더 경로 유효성 실패1, 이메일형식오류")
-    public void 폴더경로유효성실패1_이메일형식오류() throws URISyntaxException{
-
-        //given
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("JSON","true");
-
-        String baseUrl="http://localhost:" + port + "/folder/path";
-        String email="user1Email";
-        String path="folder11/folder21/folder31";
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl)
-                .queryParam("email", email)
-                .queryParam("path",path);
-
-        //when
-        HttpEntity<Void> request=new HttpEntity<>(headers);
-        ResponseEntity<String> response = restTemplate.exchange(
-                builder.toUriString(),
-                HttpMethod.GET,
-                request,
-                String.class);
-
-        //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
     }
 
@@ -1304,47 +1089,6 @@ public class FolderTest {
     }
 
     @Test
-    @DisplayName("링크 생성실패1, 이메일형식오류")
-    public void 링크생성실패1_이메일형식오류() throws URISyntaxException{
-
-        //given
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("JSON","true");
-        String email="user1Email";
-        String path="folder11/folder21/folder31";
-        String name="link41";
-        String url="url";
-        String imageUrl="imageUrl";
-        List<String> keywords=new ArrayList<>();
-        keywords.add("keyword1,keyword2");
-        String isPublic="true";
-
-        String baseUrl="http://localhost:" + port + "/link";
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
-
-        LinkCreateRequestDto linkCreateRequestDto= LinkCreateRequestDto.builder()
-                .email(email)
-                .path(path)
-                .name(name)
-                .url(url)
-                .imageUrl(imageUrl)
-                .keywords(keywords)
-                .isPublic(isPublic)
-                .build();
-
-        //when
-        HttpEntity<LinkCreateRequestDto> request = new HttpEntity<>(linkCreateRequestDto,headers);
-        ResponseEntity<String> response = restTemplate.exchange(
-                builder.toUriString(),
-                HttpMethod.POST,
-                request,
-                String.class);
-
-        //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-    }
-
-    @Test
     @DisplayName("링크 생성실패2, 이메일존재하지않음")
     public void 링크생성실패2_이메일존재하지않음() throws URISyntaxException{
 
@@ -1386,8 +1130,8 @@ public class FolderTest {
     }
 
     @Test
-    @DisplayName("링크 생성실패3, 경로유효성오류")
-    public void 링크생성실패3_경로유효성오() throws URISyntaxException{
+    @DisplayName("링크 생성실패3, 경로가없음")
+    public void 링크생성실패3_경로가없음() throws URISyntaxException{
 
         //given
         HttpHeaders headers = new HttpHeaders();
@@ -1423,7 +1167,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
@@ -1470,48 +1214,6 @@ public class FolderTest {
     }
 
     @Test
-    @DisplayName("링크수정실패1, 이메일형식오류")
-    public void 링크수정실패1_이메일형식오류() throws URISyntaxException{
-
-        //given
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("JSON","true");
-        String id=idUpdate.toString();
-        String email="user1Emaim";
-        String path="folder11/folder21";
-        String name="folder31Modified";
-        String url="newUrl";
-        String imageUrl="newImageUrl";
-        List<String> keywords=new ArrayList<>();
-        String isPublic="false";
-
-        String baseUrl="http://localhost:" + port + "/link";
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
-
-        LinkUpdateRequestDto linkUpdateRequestDto= LinkUpdateRequestDto.builder()
-                .id(id)
-                .email(email)
-                .path(path)
-                .name(name)
-                .url(url)
-                .imageUrl(imageUrl)
-                .keywords(keywords)
-                .isPublic(isPublic)
-                .build();
-
-        //when
-        HttpEntity<LinkUpdateRequestDto> request = new HttpEntity<>(linkUpdateRequestDto,headers);
-        ResponseEntity<String> response = restTemplate.exchange(
-                builder.toUriString(),
-                HttpMethod.PUT,
-                request,
-                String.class);
-
-        //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-    }
-
-    @Test
     @DisplayName("링크수정실패2, 이메일존재하지않음")
     public void 링크수정실패2_이메일존재하지않음() throws URISyntaxException{
 
@@ -1554,8 +1256,8 @@ public class FolderTest {
     }
 
     @Test
-    @DisplayName("링크수정실패3, 유효하지않는경로")
-    public void 링크수정실패3_유효하지않는경로() throws URISyntaxException{
+    @DisplayName("링크수정실패3, 경로가없음")
+    public void 링크수정실패3_경로가없음() throws URISyntaxException{
 
         //given
         HttpHeaders headers = new HttpHeaders();
@@ -1592,7 +1294,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
@@ -1632,41 +1334,6 @@ public class FolderTest {
     }
 
     @Test
-    @DisplayName("링크삭제실패1, 이메일 형식오류")
-    public void 링크삭제실패1_이메일형식오류() throws URISyntaxException{
-
-        //given
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("JSON","true");
-        String id=idUpdate.toString();
-        String email="user1Email";
-        List<String> paths=new ArrayList<>();
-        paths.add("folder11/folder21");
-        List<String> ids=new ArrayList<>();
-        ids.add(id);
-
-        String baseUrl="http://localhost:" + port + "/link";
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
-
-        LinkDeleteRequestDto linkDeleteRequestDto= LinkDeleteRequestDto.builder()
-                .ids(ids)
-                .email(email)
-                .paths(paths)
-                .build();
-
-        //when
-        HttpEntity<LinkDeleteRequestDto> request = new HttpEntity<>(linkDeleteRequestDto,headers);
-        ResponseEntity<String> response = restTemplate.exchange(
-                builder.toUriString(),
-                HttpMethod.DELETE,
-                request,
-                String.class);
-
-        //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-    }
-
-    @Test
     @DisplayName("링크삭제실패2, 이메일존재하지않음")
     public void 링크삭제실패2_이메일존재하지않음() throws URISyntaxException{
 
@@ -1702,8 +1369,8 @@ public class FolderTest {
     }
 
     @Test
-    @DisplayName("링크삭제실패3, 경로유효하지않음")
-    public void 링크삭제실패3_경로유효하지않음() throws URISyntaxException{
+    @DisplayName("링크삭제실패3, 경로가없음")
+    public void 링크삭제실패3_경로가없음() throws URISyntaxException{
 
         //given
         HttpHeaders headers = new HttpHeaders();
@@ -1733,7 +1400,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
@@ -1775,43 +1442,6 @@ public class FolderTest {
     }
 
     @Test
-    @DisplayName("링크이동실패1, 이메일 형식 오류")
-    public void 링크이동실패1_이메일형식오류() throws URISyntaxException{
-
-        //given
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("JSON","true");
-        String id=idUpdate.toString();
-        String email="user1Email";
-        List<String> originalPaths=new ArrayList<>();
-        originalPaths.add("folder11/folder21");
-        List<String> originalIds=new ArrayList<>();
-        originalIds.add(id);
-        String modifiedPath="folder11/folder22";
-
-        String baseUrl="http://localhost:" + port + "/link/path";
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl);
-
-        LinkMoveRequestDto linkMoveRequestDto= LinkMoveRequestDto.builder()
-                .email(email)
-                .originalPaths(originalPaths)
-                .originalIds(originalIds)
-                .modifiedPath(modifiedPath)
-                .build();
-
-        //when
-        HttpEntity<LinkMoveRequestDto> request = new HttpEntity<>(linkMoveRequestDto,headers);
-        ResponseEntity<String> response = restTemplate.exchange(
-                builder.toUriString(),
-                HttpMethod.PUT,
-                request,
-                String.class);
-
-        //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-    }
-
-    @Test
     @DisplayName("링크이동실패2, 이메일존재하지않음")
     public void 링크이동실패2_이메일존재하지않음() throws URISyntaxException{
 
@@ -1849,8 +1479,8 @@ public class FolderTest {
     }
 
     @Test
-    @DisplayName("링크이동실패3, 경로유효하지않음")
-    public void 링크이동실패3_경로유효하지않음() throws URISyntaxException{
+    @DisplayName("링크이동실패3, 경로가없음")
+    public void 링크이동실패3_경로가없음() throws URISyntaxException{
 
         //given
         HttpHeaders headers = new HttpHeaders();
@@ -1882,7 +1512,7 @@ public class FolderTest {
                 String.class);
 
         //then
-        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
 

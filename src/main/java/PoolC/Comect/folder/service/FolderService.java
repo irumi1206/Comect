@@ -1,7 +1,7 @@
 package PoolC.Comect.folder.service;
 
-import PoolC.Comect.exception.CustomException;
-import PoolC.Comect.exception.ErrorCode;
+import PoolC.Comect.common.exception.CustomException;
+import PoolC.Comect.common.exception.ErrorCode;
 import PoolC.Comect.folder.domain.Link;
 import PoolC.Comect.folder.domain.Folder;
 import PoolC.Comect.folder.repository.FolderRepository;
@@ -14,8 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @Transactional

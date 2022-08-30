@@ -1,7 +1,7 @@
 package PoolC.Comect.image.service;
 
-import PoolC.Comect.exception.CustomException;
-import PoolC.Comect.exception.ErrorCode;
+import PoolC.Comect.common.exception.CustomException;
+import PoolC.Comect.common.exception.ErrorCode;
 import PoolC.Comect.image.domain.Image;
 import PoolC.Comect.image.domain.ReadImageDomain;
 import PoolC.Comect.image.repository.ImageRepository;

@@ -1,4 +1,4 @@
-package PoolC.Comect.elasticFolder;
-
-public class ElasticFolderService {
-}
+//package PoolC.Comect.elasticFolder;
+//
+//public class ElasticFolderService {
+//}

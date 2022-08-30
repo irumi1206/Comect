@@ -1,13 +1,13 @@
 package PoolC.Comect.user.controller;
 
 import PoolC.Comect.user.domain.FollowInfo;
+import PoolC.Comect.user.service.UserService;
 import PoolC.Comect.user.domain.MemberData;
 import PoolC.Comect.user.domain.User;
 import PoolC.Comect.user.dto.*;
-import PoolC.Comect.user.service.UserService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+//import io.swagger.annotations.ApiOperation;
+//import io.swagger.v3.oas.annotations.responses.ApiResponse;
+//import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +23,12 @@ public class UserController {
 
     private final UserService userService;
 
-    @ApiOperation(value="회원가입", notes="")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "유저 잘 생성됨."),
-            @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식 또는 비밀번호 형식 또는 닉네임"),
-            @ApiResponse(responseCode = "409", description = "이미 존재하는 이메일 또는 닉네임")
-    })
+//    @ApiOperation(value="회원가입", notes="")
+//    @ApiResponses({
+//            @ApiResponse(responseCode = "200", description = "유저 잘 생성됨."),
+//            @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식 또는 비밀번호 형식 또는 닉네임"),
+//            @ApiResponse(responseCode = "409", description = "이미 존재하는 이메일 또는 닉네임")
+//    })
     @PostMapping("/member")
     public ResponseEntity<Void> createUser(@Valid @RequestBody CreateUserRequestDto request){
         log.info(
@@ -39,12 +39,12 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperation(value="로그인", notes="")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "로그인 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식 또는 비밀번호 형식"),
-            @ApiResponse(responseCode = "404", description = "해당 유저가 존재하지 않음, 로그인 실패")
-    })
+//    @ApiOperation(value="로그인", notes="")
+//    @ApiResponses({
+//            @ApiResponse(responseCode = "200", description = "로그인 성공"),
+//            @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식 또는 비밀번호 형식"),
+//            @ApiResponse(responseCode = "404", description = "해당 유저가 존재하지 않음, 로그인 실패")
+//    })
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto request){
         log.info(

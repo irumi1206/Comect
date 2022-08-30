@@ -1,9 +1,9 @@
 package PoolC.Comect.user.service;
 
-import PoolC.Comect.exception.CustomException;
-import PoolC.Comect.exception.ErrorCode;
+import PoolC.Comect.common.exception.CustomException;
+import PoolC.Comect.common.exception.ErrorCode;
 import PoolC.Comect.folder.domain.Folder;
-import PoolC.Comect.folder.dto.repository.FolderRepository;
+import PoolC.Comect.folder.repository.FolderRepository;
 import PoolC.Comect.user.domain.FollowInfo;
 import PoolC.Comect.user.domain.MemberData;
 import PoolC.Comect.user.domain.User;

@@ -15,7 +15,7 @@ public class FolderMoveRequestDto {
     private String modifiedPath;
 
     @Builder
-    public FolderMoveRequestDto(String email, List<String> originalPaths, String modifiedPath, String modifiedFolderName){
+    public FolderMoveRequestDto(String email, List<String> originalPaths, String modifiedPath){
         this.email=email;
         this.originalPaths=originalPaths;
         this.modifiedPath=modifiedPath;

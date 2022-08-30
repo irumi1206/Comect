@@ -1,32 +1,32 @@
 package PoolC.Comect.folder.controller;
-import PoolC.Comect.elasticFolder.ElasticFolderRepository;
-import PoolC.Comect.elasticFolder.ElasticFolderService;
-import PoolC.Comect.exception.CustomException;
-import PoolC.Comect.exception.ErrorCode;
+//import PoolC.Comect.elasticFolder.ElasticFolderRepository;
+//import PoolC.Comect.elasticFolder.ElasticFolderService;
+import PoolC.Comect.common.exception.CustomException;
+import PoolC.Comect.common.exception.ErrorCode;
 import PoolC.Comect.folder.domain.Folder;
 import PoolC.Comect.folder.dto.*;
 import PoolC.Comect.folder.service.FolderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class FolderController {
 
     private final FolderService folderService;
 
     @PostMapping(value="/folder")
     public ResponseEntity<Void> folderCreate(@Valid @RequestBody FolderCreateRequestDto folderCreateRequestDto){
-
+        log.info(
+                "Called POST/member, \tbody: "+folderCreateRequestDto.toString()
+        );
         String email = folderCreateRequestDto.getEmail();
         String path = folderCreateRequestDto.getPath();
         String name = folderCreateRequestDto.getName();

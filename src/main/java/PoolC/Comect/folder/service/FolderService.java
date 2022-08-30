@@ -53,6 +53,7 @@ public class FolderService {
         User user = getUserByEmail(userEmail);
         for(String originalPath:originalPaths){
             Folder folder=folderRepository.folderRead(user.getRootFolderId(),originalPath);
+            if(folderRepository.checkPathFolder(user.getRootFolderId(),modifiedPath+"/"+folder.getName())) throw new CustomException(ErrorCode.FILE_CONFLICT);
             folderRepository.folderDelete(user.getRootFolderId(),originalPath);
             folderRepository.folderCreate(user.getRootFolderId(),modifiedPath,folder);
         }

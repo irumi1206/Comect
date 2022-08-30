@@ -3,11 +3,13 @@ package PoolC.Comect.folder.dto;
 import PoolC.Comect.folder.domain.Folder;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class FolderInfo {
 
     private String name;

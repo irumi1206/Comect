@@ -24,9 +24,7 @@ public class FolderController {
 
     @PostMapping(value="/folder")
     public ResponseEntity<Void> folderCreate(@Valid @RequestBody FolderCreateRequestDto folderCreateRequestDto){
-        log.info(
-                "Called POST/member, \tbody: "+folderCreateRequestDto.toString()
-        );
+
         String email = folderCreateRequestDto.getEmail();
         String path = folderCreateRequestDto.getPath();
         String name = folderCreateRequestDto.getName();

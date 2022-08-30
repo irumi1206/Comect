@@ -77,6 +77,9 @@ public class CustomFolderRepositoryImpl implements CustomFolderRepository {
 
     public void folderCreate(ObjectId rootId,String path, Folder folder){
 
+        if(checkPathFolder(rootId,path+"/"+folder.getName())) throw new CustomException(ErrorCode.FILE_CONFLICT);
+
+
         Query query=new Query().addCriteria(Criteria.where("_id").is(rootId));
         Update update=new Update();
 
@@ -105,8 +108,6 @@ public class CustomFolderRepositoryImpl implements CustomFolderRepository {
 
         String []tokens= Arrays.stream(path.split("/")).filter(e -> e.trim().length() > 0).toArray(String[]::new);
 
-        System.out.println(tokens.length);
-
         for(int i=0;i<tokens.length;++i){
             boolean flag=false;
             for(int j=0;j<folder.getFolders().size();++j){
@@ -130,6 +131,14 @@ public class CustomFolderRepositoryImpl implements CustomFolderRepository {
         String []tokens= Arrays.stream(path.split("/")).filter(e -> e.trim().length() > 0).toArray(String[]::new);
 
         if(tokens.length==0) throw new CustomException(ErrorCode.PATH_NOT_VALID);
+
+        String newPath="";
+        for(int i=0;i< tokens.length-1;++i){
+            newPath+=tokens[i];
+            newPath+="/";
+        }
+        newPath+=folderName;
+        if(checkPathFolder(rootId,newPath)) throw new CustomException(ErrorCode.FILE_CONFLICT);
 
         String pushQuery="";
         for(int i=0;i<tokens.length;++i) {

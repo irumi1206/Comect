@@ -2,8 +2,10 @@ package PoolC.Comect.folder.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class FolderCheckPathResponseDto {
 
     private int valid;

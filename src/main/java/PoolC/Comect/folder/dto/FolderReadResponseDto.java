@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class FolderReadResponseDto {
 
     private List<FolderInfo> folderInfos;

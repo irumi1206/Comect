@@ -6,7 +6,6 @@ import PoolC.Comect.user.domain.User;
 import PoolC.Comect.user.dto.*;
 import PoolC.Comect.user.service.UserService;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;

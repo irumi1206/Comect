@@ -61,7 +61,7 @@ public class ImageService {
 
     public ObjectId upLoad(MultipartFile multipartFile, String email){
         //validate check
-        userService.findOne(email);
+        userService.findOneEmail(email);
         Image image = new Image(multipartFile.getContentType(),email);
         String upLoadDir = "imageStorage";
         imageRepository.save(image);

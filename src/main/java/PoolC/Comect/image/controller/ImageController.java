@@ -49,12 +49,7 @@ public class ImageController {
     @GetMapping("/image")
     public ResponseEntity<Resource> readImage(@ModelAttribute ReadImageRequestDto readImageRequestDto){
         ReadImageResponseDto readImageResponseDto = new ReadImageResponseDto();
-        ObjectId id;
-        try{
-            id = new ObjectId(readImageRequestDto.getId());
-        }catch(Exception e){
-            throw new CustomException(ErrorCode.IMAGE_NOT_FOUND);
-        }
+        ObjectId id = validateId(readImageRequestDto.getId());
         ReadImageDomain readImageDomain = imageService.readImage(id);
         readImageResponseDto.setImage(readImageDomain.getResource());
         HttpHeaders headers = new HttpHeaders();
@@ -76,8 +71,19 @@ public class ImageController {
     })
     @DeleteMapping("/image")
     public ResponseEntity<Void> deleteImage(@ModelAttribute DeleteImageRequestDto deleteImageRequestDto){
-        imageService.deleteImage(new ObjectId(deleteImageRequestDto.getId()));
+        ObjectId id = validateId(deleteImageRequestDto.getId());
+        imageService.deleteImage(id);
         return ResponseEntity.ok().build();
+    }
+
+    private ObjectId validateId(String id){
+        ObjectId objectId;
+        try{
+            objectId = new ObjectId(id);
+        }catch(Exception e){
+            throw new CustomException(ErrorCode.IMAGE_NOT_FOUND);
+        }
+        return objectId;
     }
 
 }

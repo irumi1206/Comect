@@ -50,7 +50,7 @@ public class UserService {
     public void update(String email,String userNickname, String picture){
         //validateEmailUser(email);
         User user = findOne(email);
-        if(!user.getNickname().equals(email)){
+        if(!user.getNickname().equals(userNickname)){
             validateDuplicateNickname(userNickname);
             user.setNickname(userNickname);
         }

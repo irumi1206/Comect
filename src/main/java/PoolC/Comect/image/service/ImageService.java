@@ -56,13 +56,13 @@ public class ImageService {
         }catch(IOException ioe){
             throw new CustomException(ErrorCode.FILE_NOT_FOUND);
         }
-        return new ReadImageDomain(contentType,resource,image.getImageName());
+        return new ReadImageDomain(contentType,resource);
     }
 
-    public ObjectId upLoad(String imageName, MultipartFile multipartFile, String email){
+    public ObjectId upLoad(MultipartFile multipartFile, String email){
         //validate check
         userService.findOne(email);
-        Image image = new Image(imageName,multipartFile.getContentType(),email);
+        Image image = new Image(multipartFile.getContentType(),email);
         String upLoadDir = "imageStorage";
         imageRepository.save(image);
         try{

@@ -71,7 +71,8 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "유저 잘 생성됨."),
             @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식"),
             @ApiResponse(responseCode = "401", description = "쿠키가 유효하지 않음"),
-            @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때")
+            @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때"),
+            @ApiResponse(responseCode = "409", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때")
     })
     @PutMapping("/member/me")
     public ResponseEntity<Void> updateUser(@Valid @RequestBody UpdateUserRequestDto request){
@@ -148,6 +149,19 @@ public class UserController {
                 .following(memberInfo.getFollowing())
                 .build();
         return ResponseEntity.ok(getMemberResponseDto);
+    }
+
+    @ApiOperation(value="유저 탈퇴", notes="")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "유저 잘 생성됨."),
+            @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식"),
+            @ApiResponse(responseCode = "401", description = "쿠키가 유효하지 않음"),
+            @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때, 비밀번호가 틀릴때"),
+    })
+    @DeleteMapping("/member")
+    public ResponseEntity<Void> deleteMember(@RequestBody DeleteUserRequestDto request){
+        userService.deleteMember(request.getEmail(),request.getPassword());
+        return ResponseEntity.ok().build();
     }
 }
 

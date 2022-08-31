@@ -8,6 +8,7 @@ import PoolC.Comect.user.domain.FollowInfo;
 import PoolC.Comect.user.domain.MemberData;
 import PoolC.Comect.user.domain.User;
 import PoolC.Comect.user.repository.UserRepository;
+import com.mongodb.session.ClientSession;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class UserService {
     private final FolderRepository folderRepository;
 
     //회원 가입
-    @Transactional
+    //@Transactional(rollbackFor={CustomException.class})
     public ObjectId join(String email, String password,String nickname,String imageUrl){
         //validateEmailUser(email);
         validateDuplicateUser(email);
@@ -49,9 +50,13 @@ public class UserService {
     public void update(String email,String userNickname, String picture){
         //validateEmailUser(email);
         User user = findOne(email);
-        validateDuplicateNickname(userNickname);
-        user.setNickname(userNickname);
-        user.setImageUrl(picture);
+        if(!user.getNickname().equals(email)){
+            validateDuplicateNickname(userNickname);
+            user.setNickname(userNickname);
+        }
+        if(!user.getImageUrl().equals(picture)){
+            user.setImageUrl(picture);
+        }
         userRepository.save(user);
     }
 
@@ -59,7 +64,7 @@ public class UserService {
         return userRepository.findByEmail(email).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
-    @Transactional
+    //@Transactional
     public void createFollow(String email, String followedNickname){
         User user = findOne(email);
         User followed = userRepository.findByNickname(followedNickname).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
@@ -110,7 +115,7 @@ public class UserService {
         return followingInfos;
     }
 
-    @Transactional
+    //@Transactional
     public void deleteFollow(String email, String followedNickname) {
         User user = findOne(email);
         User followed = userRepository.findByNickname(followedNickname).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
@@ -135,7 +140,21 @@ public class UserService {
         return followInfos;
     }
 
+    public void deleteMember(String email, String password) {
+        User user = findOne(email);
+        if(user.getPassword().equals(password)){
+            throw new CustomException(ErrorCode.LOGIN_FAIL);
+        }
 
+        for (ObjectId followerId : user.getFollowers()) {
+            userRepository.findById(followerId).ifPresent((follower)->follower.getFollowings().remove(user.getId()));
+        }
+        for (ObjectId followingId : user.getFollowings()) {
+            userRepository.findById(followingId).ifPresent((following) -> following.getFollowers().remove(user.getId()));
+        }
+        folderRepository.findById(user.getRootFolderId()).ifPresent((folder)->folderRepository.delete(folder));
+        userRepository.delete(user);
+    }
 
 
 //    private void validateEmailUser(String email){

@@ -32,7 +32,7 @@ public class ImageController {
     })
     @PostMapping("/image")
     public ResponseEntity<CreateImageResponseDto> createImage(@ModelAttribute CreateImageRequestDto createImageRequestDto){
-        String id=imageService.upLoad(createImageRequestDto.getImageName(), createImageRequestDto.getMultipartFile(), createImageRequestDto.getEmail()).toHexString();
+        String id=imageService.upLoad(createImageRequestDto.getMultipartFile(), createImageRequestDto.getEmail()).toHexString();
         CreateImageResponseDto createImageResponseDto = new CreateImageResponseDto("http://43.200.175.52:8080/image?id="+id);
         return ResponseEntity.ok(createImageResponseDto);
     }
@@ -52,7 +52,7 @@ public class ImageController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentDisposition(
                 ContentDisposition.builder("attachment")
-                        .filename(readImageDomain.getImageName(), StandardCharsets.UTF_8)
+                        .filename("image", StandardCharsets.UTF_8)
                         .build()
         );
         headers.add(HttpHeaders.CONTENT_TYPE, readImageDomain.getContentType());

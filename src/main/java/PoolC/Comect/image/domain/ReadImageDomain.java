@@ -7,11 +7,9 @@ import org.springframework.core.io.Resource;
 public class ReadImageDomain {
     private String contentType;
     private Resource resource;
-    private String imageName;
 
-    public ReadImageDomain(String contentType, Resource resource, String imageName) {
+    public ReadImageDomain(String contentType, Resource resource) {
         this.contentType = contentType;
         this.resource = resource;
-        this.imageName = imageName;
     }
 }

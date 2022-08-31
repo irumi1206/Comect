@@ -9,6 +9,5 @@ import org.springframework.web.multipart.MultipartFile;
 public class CreateImageRequestDto {
     private String email;
     private MultipartFile multipartFile;
-    private String imageName;
 
 }

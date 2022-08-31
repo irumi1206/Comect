@@ -62,7 +62,7 @@ public class UserController {
     })
     @GetMapping("/member/me")
     public ResponseEntity<ReadUserResponseDto> readUser(@ModelAttribute ReadUserRequestDto request){
-        User user = userService.findOne(request.getEmail());
+        User user = userService.findOneEmail(request.getEmail());
         return ResponseEntity.ok(new ReadUserResponseDto(user));
     }
 

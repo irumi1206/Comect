@@ -70,6 +70,12 @@ public class FolderService {
         folderRepository.linkCreate(user.getRootFolderId(), path, link);
     }
 
+    public Link linkRead(String userEmail,String path,String id){
+        User user=getUserByEmail(userEmail);
+        System.out.println(id);
+        return folderRepository.linkRead(user.getRootFolderId(),path,new ObjectId(id));
+    }
+
     public void linkUpdate(String id,String email,String path,String name,String url,String imageUrl,List<String> keywords,String isPublic){
         User user = getUserByEmail(email);
         Link link=new Link(name,imageUrl,url,keywords,isPublic);

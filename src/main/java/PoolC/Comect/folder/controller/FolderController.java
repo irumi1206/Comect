@@ -4,6 +4,7 @@ package PoolC.Comect.folder.controller;
 import PoolC.Comect.common.exception.CustomException;
 import PoolC.Comect.common.exception.ErrorCode;
 import PoolC.Comect.folder.domain.Folder;
+import PoolC.Comect.folder.domain.Link;
 import PoolC.Comect.folder.dto.*;
 import PoolC.Comect.folder.service.FolderService;
 import lombok.RequiredArgsConstructor;
@@ -102,6 +103,24 @@ public class FolderController {
         String isPublic = linkCreateRequestDto.getIsPublic();
         folderService.linkCreate(email,path,name,url,imageUrl,keywords,isPublic);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(value="/link")
+    public ResponseEntity<LinkReadResponseDto> linkRead(@ModelAttribute LinkReadRequestDto linkReadRequestDto){
+
+        String email=linkReadRequestDto.getEmail();
+        String path=linkReadRequestDto.getPath();
+        String id=linkReadRequestDto.getId();
+        Link link=folderService.linkRead(email,path,id);
+
+        return ResponseEntity.ok().body(LinkReadResponseDto.builder()
+                .id(link.get_id().toString())
+                .name(link.getName())
+                .imageUrl(link.getImageUrl())
+                .url(link.getUrl())
+                .keywords(link.getKeywords())
+                .isPublic(link.getIsPublic())
+                .build());
     }
 
     @PutMapping(value="/link")

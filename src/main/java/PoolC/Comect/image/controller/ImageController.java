@@ -1,5 +1,7 @@
 package PoolC.Comect.image.controller;
 
+import PoolC.Comect.common.exception.CustomException;
+import PoolC.Comect.common.exception.ErrorCode;
 import PoolC.Comect.image.domain.ReadImageDomain;
 import PoolC.Comect.image.dto.*;
 import PoolC.Comect.image.service.ImageService;
@@ -47,7 +49,13 @@ public class ImageController {
     @GetMapping("/image")
     public ResponseEntity<Resource> readImage(@ModelAttribute ReadImageRequestDto readImageRequestDto){
         ReadImageResponseDto readImageResponseDto = new ReadImageResponseDto();
-        ReadImageDomain readImageDomain = imageService.readImage(new ObjectId(readImageRequestDto.getId()));
+        ObjectId id;
+        try{
+            id = new ObjectId(readImageRequestDto.getId());
+        }catch(Exception e){
+            throw new CustomException(ErrorCode.IMAGE_NOT_FOUND);
+        }
+        ReadImageDomain readImageDomain = imageService.readImage(id);
         readImageResponseDto.setImage(readImageDomain.getResource());
         HttpHeaders headers = new HttpHeaders();
         headers.setContentDisposition(

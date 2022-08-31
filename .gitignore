@@ -79,6 +79,7 @@ $RECYCLE.BIN/
 .gradle
 **/build/
 !src/**/build/
+spring-boot-app.log
 
 # Ignore Gradle GUI config
 gradle-app.setting

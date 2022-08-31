@@ -121,19 +121,19 @@ public class FolderController {
     @DeleteMapping(value="/link")
     public ResponseEntity<Void> linkDelete(@RequestBody LinkDeleteRequestDto linkDeleteRequestDto){
         String email=linkDeleteRequestDto.getEmail();
-        List<String> paths=linkDeleteRequestDto.getPaths();
+        String path=linkDeleteRequestDto.getPath();
         List<String> ids=linkDeleteRequestDto.getIds();
-        folderService.linkDelete(email,paths,ids);
+        folderService.linkDelete(email,path,ids);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping(value="/link/path")
     public ResponseEntity<Void> linkMove(@RequestBody LinkMoveRequestDto linkMoveRequestDto){
         String email=linkMoveRequestDto.getEmail();
-        List<String> originalPaths=linkMoveRequestDto.getOriginalPaths();
+        String originalPath=linkMoveRequestDto.getOriginalPath();
         List<String> originalIds=linkMoveRequestDto.getOriginalIds();
         String modifiedPath=linkMoveRequestDto.getModifiedPath();
-        folderService.linkMove(email,originalPaths,originalIds,modifiedPath);
+        folderService.linkMove(email,originalPath,originalIds,modifiedPath);
         return ResponseEntity.ok().build();
     }
 

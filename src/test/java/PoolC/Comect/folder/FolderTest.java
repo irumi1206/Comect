@@ -62,8 +62,8 @@ public class FolderTest {
         folderRepository.folderCreate(userRootFolder.get_id(),"",folder11);
         Folder folder12=new Folder("folder12");
         folderRepository.folderCreate(userRootFolder.get_id(),"",folder12);
-        Folder folder13=new Folder("folder21");
-        folderRepository.folderCreate(userRootFolder.get_id(),"",folder13);
+//        Folder folder13=new Folder("folder21");
+//        folderRepository.folderCreate(userRootFolder.get_id(),"",folder13);
         Link link11=new Link("link11","imageUrl","url",null,"true");
         folderRepository.linkCreate(userRootFolder.get_id(),"",link11);
         Link link12=new Link("link12","imageUrl","url",null,"true");
@@ -1309,8 +1309,7 @@ public class FolderTest {
         headers.set("JSON","true");
         String id=idUpdate.toString();
         String email="user1Email@email.com";
-        List<String> paths=new ArrayList<>();
-        paths.add("folder11/folder21");
+        String path="folder11/folder21";
         List<String> ids=new ArrayList<>();
         ids.add(id);
 
@@ -1320,7 +1319,7 @@ public class FolderTest {
         LinkDeleteRequestDto linkDeleteRequestDto= LinkDeleteRequestDto.builder()
                 .ids(ids)
                 .email(email)
-                .paths(paths)
+                .path(path)
                 .build();
 
         //when
@@ -1345,8 +1344,7 @@ public class FolderTest {
         headers.set("JSON","true");
         String id=idUpdate.toString();
         String email="user2Email@email.com";
-        List<String> paths=new ArrayList<>();
-        paths.add("folder11/folder21");
+        String path="folder11/folder21";
         List<String> ids=new ArrayList<>();
         ids.add(id);
 
@@ -1356,7 +1354,7 @@ public class FolderTest {
         LinkDeleteRequestDto linkDeleteRequestDto= LinkDeleteRequestDto.builder()
                 .ids(ids)
                 .email(email)
-                .paths(paths)
+                .path(path)
                 .build();
 
         //when
@@ -1380,8 +1378,7 @@ public class FolderTest {
         headers.set("JSON","true");
         String id=idUpdate.toString();
         String email="user1Email@email.com";
-        List<String> paths=new ArrayList<>();
-        paths.add("folder11");
+        String path="folder11";
         List<String> ids=new ArrayList<>();
         ids.add(id);
 
@@ -1391,7 +1388,7 @@ public class FolderTest {
         LinkDeleteRequestDto linkDeleteRequestDto= LinkDeleteRequestDto.builder()
                 .ids(ids)
                 .email(email)
-                .paths(paths)
+                .path(path)
                 .build();
 
         //when
@@ -1415,8 +1412,7 @@ public class FolderTest {
         headers.set("JSON","true");
         String id=idUpdate.toString();
         String email="user1Email@email.com";
-        List<String> originalPaths=new ArrayList<>();
-        originalPaths.add("folder11/folder21");
+        String originalPath="folder11/folder21";
         List<String> originalIds=new ArrayList<>();
         originalIds.add(id);
         String modifiedPath="folder11/folder22";
@@ -1426,7 +1422,7 @@ public class FolderTest {
 
         LinkMoveRequestDto linkMoveRequestDto= LinkMoveRequestDto.builder()
                 .email(email)
-                .originalPaths(originalPaths)
+                .originalPath(originalPath)
                 .originalIds(originalIds)
                 .modifiedPath(modifiedPath)
                 .build();
@@ -1453,8 +1449,7 @@ public class FolderTest {
         headers.set("JSON","true");
         String id=idUpdate.toString();
         String email="user2Email@email.com";
-        List<String> originalPaths=new ArrayList<>();
-        originalPaths.add("folder11/folder21");
+        String originalPath="folder11/folder21";
         List<String> originalIds=new ArrayList<>();
         originalIds.add(id);
         String modifiedPath="folder11/folder22";
@@ -1464,7 +1459,7 @@ public class FolderTest {
 
         LinkMoveRequestDto linkMoveRequestDto= LinkMoveRequestDto.builder()
                 .email(email)
-                .originalPaths(originalPaths)
+                .originalPath(originalPath)
                 .originalIds(originalIds)
                 .modifiedPath(modifiedPath)
                 .build();
@@ -1490,8 +1485,7 @@ public class FolderTest {
         headers.set("JSON","true");
         String id=idUpdate.toString();
         String email="user1Email@email.com";
-        List<String> originalPaths=new ArrayList<>();
-        originalPaths.add("folder11/folder21");
+        String originalPath="folder11/folder21";
         List<String> originalIds=new ArrayList<>();
         originalIds.add(id);
         String modifiedPath="folder11/folder24";
@@ -1501,7 +1495,7 @@ public class FolderTest {
 
         LinkMoveRequestDto linkMoveRequestDto= LinkMoveRequestDto.builder()
                 .email(email)
-                .originalPaths(originalPaths)
+                .originalPath(originalPath)
                 .originalIds(originalIds)
                 .modifiedPath(modifiedPath)
                 .build();

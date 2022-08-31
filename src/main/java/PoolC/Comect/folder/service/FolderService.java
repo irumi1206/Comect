@@ -77,18 +77,17 @@ public class FolderService {
     }
 
     @Transactional
-    public void linkDelete(String email,List<String> paths,List<String> ids){
+    public void linkDelete(String email,String path,List<String> ids){
         User user = getUserByEmail(email);
-        for(int i=0;i<paths.size();++i){
-            folderRepository.linkDelete(user.getRootFolderId(), paths.get(i),new ObjectId(ids.get(i)));
+        for(int i=0;i<ids.size();++i){
+            folderRepository.linkDelete(user.getRootFolderId(), path,new ObjectId(ids.get(i)));
         }
     }
 
     @Transactional
-    public void linkMove(String userEmail, List<String> originalPaths, List<String> originalIds,String modifiedPath){
+    public void linkMove(String userEmail, String originalPath, List<String> originalIds,String modifiedPath){
         User user = getUserByEmail(userEmail);
-        for(int i=0;i<originalPaths.size();++i){
-            String originalPath=originalPaths.get(i);
+        for(int i=0;i<originalIds.size();++i){
             String originalId=originalIds.get(i);
             Link link=folderRepository.linkRead(user.getRootFolderId(),originalPath,new ObjectId(originalId));
             folderRepository.linkDelete(user.getRootFolderId(),originalPath,new ObjectId(originalId));

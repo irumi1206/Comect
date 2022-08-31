@@ -13,13 +13,13 @@ import java.util.List;
 public class LinkDeleteRequestDto {
 
     private String email;
-    private List<String> paths;
+    private String path;
     private List<String> ids;
 
     @Builder
-    public LinkDeleteRequestDto(String email,List<String> paths,List<String> ids){
+    public LinkDeleteRequestDto(String email,String path,List<String> ids){
         this.email=email;
-        this.paths=paths;
+        this.path=path;
         this.ids=ids;
     }
 }

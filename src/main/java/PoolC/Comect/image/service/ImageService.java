@@ -8,6 +8,7 @@ import PoolC.Comect.image.repository.ImageRepository;
 import PoolC.Comect.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
+import org.elasticsearch.cluster.ClusterState;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,6 @@ import java.nio.file.StandardCopyOption;
 public class ImageService {
 
     private final ImageRepository imageRepository;
-    private final UserService userService;
 
     @Transactional
     public void deleteImage(ObjectId id){
@@ -61,7 +61,6 @@ public class ImageService {
 
     public ObjectId upLoad(MultipartFile multipartFile, String email){
         //validate check
-        userService.findOneEmail(email);
         Image image = new Image(multipartFile.getContentType(),email);
         String upLoadDir = "imageStorage";
         imageRepository.save(image);
@@ -91,5 +90,15 @@ public class ImageService {
         } catch (IOException ioe) {
             throw new CustomException(ErrorCode.IMAGE_SAVE_CANCELED);
         }
+    }
+    public static ObjectId urlToId(String url){
+        String[] split = url.split("id=");
+        ObjectId objectId;
+        try{
+            objectId = new ObjectId(split[split.length-1]);
+        }catch(Exception e){
+            throw new CustomException(ErrorCode.IMAGE_SAVE_CANCELED);
+        }
+        return objectId;
     }
 }

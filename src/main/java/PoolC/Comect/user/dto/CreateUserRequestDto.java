@@ -1,6 +1,7 @@
 package PoolC.Comect.user.dto;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -22,5 +23,5 @@ public class CreateUserRequestDto {
     @Pattern(regexp="^[a-zA-z가-힣 ]+$")
     private String nickname;
 
-    private String imageUrl;
+    private MultipartFile multipartFile;
 }

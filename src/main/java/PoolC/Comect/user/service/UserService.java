@@ -93,9 +93,9 @@ public class UserService {
     }
 
     //user가 followed를 팔로우 중인지 확인하는 함수
-    public boolean isFollower(String userNickname, String followedNickname){
-        User user = findOneNickname(userNickname);
-        User followed = findOneNickname(followedNickname);
+    public boolean isFollower(ObjectId id, ObjectId followedId){
+        User user = userRepository.findById(id).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        User followed = userRepository.findById(followedId).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
         for (ObjectId followerId : user.getFollowers()) {
             if(followed.getId().equals(followerId)){
                 return true;

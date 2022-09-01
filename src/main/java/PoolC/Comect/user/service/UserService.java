@@ -158,7 +158,7 @@ public class UserService {
 
     public void deleteMember(String email, String password) {
         User user = findOneEmail(email);
-        if(user.getPassword().equals(password)){
+        if(!user.getPassword().equals(password)){
             throw new CustomException(ErrorCode.LOGIN_FAIL);
         }
 
@@ -170,6 +170,14 @@ public class UserService {
         }
         folderRepository.findById(user.getRootFolderId()).ifPresent((folder)->folderRepository.delete(folder));
         userRepository.delete(user);
+    }
+
+    public List<FollowInfo> readFollowerSmall(String email) {
+        User user = findOneEmail(email);
+
+    }
+
+    public List<FollowInfo> readFollowingSmall(String email) {
     }
 
 

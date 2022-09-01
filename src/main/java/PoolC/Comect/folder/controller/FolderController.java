@@ -1,6 +1,4 @@
 package PoolC.Comect.folder.controller;
-//import PoolC.Comect.elasticFolder.ElasticFolderRepository;
-//import PoolC.Comect.elasticFolder.ElasticFolderService;
 import PoolC.Comect.common.exception.CustomException;
 import PoolC.Comect.common.exception.ErrorCode;
 import PoolC.Comect.folder.domain.Folder;

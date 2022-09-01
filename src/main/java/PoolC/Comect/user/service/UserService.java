@@ -172,13 +172,13 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    public List<FollowInfo> readFollowerSmall(String email) {
-        User user = findOneEmail(email);
+//    public List<FollowInfo> readFollowerSmall(String email) {
+//        User user = findOneEmail(email);
+//
+//    }
 
-    }
-
-    public List<FollowInfo> readFollowingSmall(String email) {
-    }
+//    public List<FollowInfo> readFollowingSmall(String email) {
+//    }
 
 
 //    private void validateEmailUser(String email){

@@ -2,6 +2,9 @@ package PoolC.Comect.folder.service;
 
 import PoolC.Comect.common.exception.CustomException;
 import PoolC.Comect.common.exception.ErrorCode;
+//import PoolC.Comect.elasticFolder.domain.ElasticFolder;
+//import PoolC.Comect.elasticFolder.repository.ElasticFolderRepository;
+//import PoolC.Comect.elasticFolder.service.ElasticFolderService;
 import PoolC.Comect.folder.domain.Link;
 import PoolC.Comect.folder.domain.Folder;
 import PoolC.Comect.folder.repository.FolderRepository;
@@ -22,11 +25,14 @@ public class FolderService {
 
     private final FolderRepository folderRepository;
     private final UserRepository userRepository;
+    //private final ElasticFolderRepository elasticFolderRepository;
 
     public void folderCreate(String userEmail, String path, String folderName){
         User user = getUserByEmail(userEmail);
         Folder folder = new Folder(folderName);
         folderRepository.folderCreate(user.getRootFolderId(), path, folder);
+        //ElasticFolder elasticFolder=new ElasticFolder(user.getId().toString(),path+folderName+"/",folderName);
+        //elasticFolderRepository.save(elasticFolder);
     }
 
     public Folder folderRead(String userEmail, String path){
@@ -38,6 +44,7 @@ public class FolderService {
     public void folderUpdate(String userEmail, String path, String folderName){
         User user = getUserByEmail(userEmail);
         folderRepository.folderUpdate(user.getRootFolderId(),path,folderName);
+        //elasticFolderRepository.update(user.getId().toString(),path,folderName);
     }
 
     @Transactional
@@ -45,6 +52,7 @@ public class FolderService {
         User user = getUserByEmail(userEmail);
         for(String path:paths) {
             folderRepository.folderDelete(user.getRootFolderId(), path);
+            //elasticFolderRepository.delete(user.getId().toString(),path);
         }
     }
 
@@ -56,6 +64,7 @@ public class FolderService {
             if(folderRepository.checkPathFolder(user.getRootFolderId(),modifiedPath+"/"+folder.getName())) throw new CustomException(ErrorCode.FILE_CONFLICT);
             folderRepository.folderDelete(user.getRootFolderId(),originalPath);
             folderRepository.folderCreate(user.getRootFolderId(),modifiedPath,folder);
+            //elasticFolderRepository.move(user.getId().toString(),originalPath,modifiedPath);
         }
     }
 

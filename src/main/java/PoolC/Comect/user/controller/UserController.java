@@ -186,7 +186,7 @@ public class UserController {
         return ResponseEntity.ok(readFollowSmallResponseDto);
     }
 
-    @ApiOperation(value="팔로워, 팔로잉 최대 5명 조회", notes="")
+    @ApiOperation(value="이메일 중복 체크", notes="")
     @ApiResponses({
             @ApiResponse(responseCode = "409", description = "이미 존재하는 이메일")
     })

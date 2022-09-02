@@ -2,6 +2,7 @@ package PoolC.Comect.image.controller;
 
 import PoolC.Comect.common.exception.CustomException;
 import PoolC.Comect.common.exception.ErrorCode;
+import PoolC.Comect.image.domain.Image;
 import PoolC.Comect.image.domain.ReadImageDomain;
 import PoolC.Comect.image.dto.*;
 import PoolC.Comect.image.service.ImageService;
@@ -34,8 +35,8 @@ public class ImageController {
     })
     @PostMapping("/image")
     public ResponseEntity<CreateImageResponseDto> createImage(@ModelAttribute CreateImageRequestDto createImageRequestDto){
-        String id=imageService.upLoad(createImageRequestDto.getMultipartFile(), createImageRequestDto.getEmail()).toHexString();
-        CreateImageResponseDto createImageResponseDto = new CreateImageResponseDto("http://43.200.175.52:8080/image?id="+id);
+        Image image = imageService.upLoad(createImageRequestDto.getMultipartFile(), createImageRequestDto.getEmail());
+        CreateImageResponseDto createImageResponseDto = new CreateImageResponseDto(image.toString());
         return ResponseEntity.ok(createImageResponseDto);
     }
 

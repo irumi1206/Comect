@@ -54,7 +54,7 @@ public class FolderTest {
         folderRepository.deleteAll();
 
         Folder userRootFolder = new Folder("");
-        User user1 = new User("user1", "user1Email@email.com", userRootFolder.get_id(), "user1Picture", "user1");
+        User user1 = new User("user1", "user1Email@email.com", userRootFolder.get_id(), null, "user1");
         folderRepository.save(userRootFolder);
         userRepository.save(user1);
 

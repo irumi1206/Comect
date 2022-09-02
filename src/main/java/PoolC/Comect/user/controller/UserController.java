@@ -33,10 +33,12 @@ public class UserController {
             @ApiResponse(responseCode = "409", description = "이미 존재하는 이메일 또는 닉네임")
     })
     @PostMapping("/member")
-    public ResponseEntity<Void> createUser(@Valid @ModelAttribute CreateUserRequestDto request){
-
-        userService.join(request.getEmail(),request.getPassword(),request.getNickname(),request.getMultipartFile());
-        return ResponseEntity.ok().build();
+    public ResponseEntity<CreateUserResponseDto> createUser(@Valid @ModelAttribute CreateUserRequestDto request){
+        boolean success = userService.join(request.getEmail(), request.getPassword(), request.getNickname(), request.getMultipartFile());
+        CreateUserResponseDto createUserResponseDto = CreateUserResponseDto.builder()
+                .imageSuccess(success)
+                .build();
+        return ResponseEntity.ok(createUserResponseDto);
     }
 
     @ApiOperation(value="로그인", notes="")
@@ -75,9 +77,13 @@ public class UserController {
             @ApiResponse(responseCode = "409", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때")
     })
     @PutMapping("/member/me")
-    public ResponseEntity<Void> updateUser(@Valid @ModelAttribute UpdateUserRequestDto request){
-        userService.update(request.getEmail(), request.getNewNickname(), request.getNewMultipartFile(),request.getImageChange());
-        return ResponseEntity.ok().build();
+    public ResponseEntity<UpdateUserResponseDto> updateUser(@Valid @ModelAttribute UpdateUserRequestDto request){
+        boolean success = userService.update(request.getEmail(), request.getNewNickname(), request.getNewMultipartFile(), request.getImageChange());
+        UpdateUserResponseDto updateUserResponseDto = UpdateUserResponseDto
+                .builder()
+                .imageSuccess(success)
+                .build();
+        return ResponseEntity.ok(updateUserResponseDto);
     }
 
     @ApiOperation(value="팔로잉", notes="")

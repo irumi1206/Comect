@@ -59,7 +59,7 @@ public class ImageService {
         return new ReadImageDomain(contentType,resource);
     }
 
-    public ObjectId upLoad(MultipartFile multipartFile, String email){
+    public Image upLoad(MultipartFile multipartFile, String email){
         //validate check
         Image image = new Image(multipartFile.getContentType(),email);
         String upLoadDir = "imageStorage";
@@ -69,7 +69,7 @@ public class ImageService {
         }catch(Exception e){
             throw new CustomException(ErrorCode.IMAGE_SAVE_CANCELED);
         }
-        return image.getId();
+        return image;
     }
 
     public static void saveFile(String uploadDir, String fileName,
@@ -97,7 +97,7 @@ public class ImageService {
         try{
             objectId = new ObjectId(split[split.length-1]);
         }catch(Exception e){
-            throw new CustomException(ErrorCode.IMAGE_SAVE_CANCELED);
+            objectId=new ObjectId();
         }
         return objectId;
     }

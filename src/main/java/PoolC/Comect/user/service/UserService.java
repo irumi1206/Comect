@@ -4,9 +4,11 @@ import PoolC.Comect.common.exception.CustomException;
 import PoolC.Comect.common.exception.ErrorCode;
 import PoolC.Comect.folder.domain.Folder;
 import PoolC.Comect.folder.repository.FolderRepository;
+import PoolC.Comect.image.domain.Image;
 import PoolC.Comect.image.repository.ImageRepository;
 import PoolC.Comect.image.service.ImageService;
 import PoolC.Comect.user.domain.FollowInfo;
+import PoolC.Comect.user.domain.ImageUploadData;
 import PoolC.Comect.user.domain.MemberData;
 import PoolC.Comect.user.domain.User;
 import PoolC.Comect.user.repository.UserRepository;
@@ -34,26 +36,30 @@ public class UserService {
 
     //회원 가입
     //@Transactional(rollbackFor={CustomException.class})
-    public ObjectId join(String email, String password, String nickname, MultipartFile multipartFile){
+    public boolean join(String email, String password, String nickname, MultipartFile multipartFile){
+        //validation check
         validateEmailUser(email);
         validateDuplicateUser(email);
         validateDuplicateNickname(nickname);
         //validatePassword(password);
-        String imageUrl = imageToUrl(multipartFile,email);
+
+        //이미지 저장
+        ImageUploadData imageUploadData = imageToUrl(multipartFile, email);
         Folder folder=new Folder("");
         folderRepository.save(folder);
-        User user=new User(nickname,email,folder.get_id(),imageUrl, password);
+        User user=new User(nickname,email,folder.get_id(),imageUploadData.getImageId(), password);
         userRepository.save(user);
-        return user.getId();
+        return imageUploadData.isSuccess();
     }
 
-    public String imageToUrl(MultipartFile multipartFile,String email){
-        String imageUrl="";
-        if(multipartFile!=null){
-            ObjectId imageId = imageService.upLoad(multipartFile, email);
-            imageUrl="http://43.200.175.52:8080/image?id="+imageId.toHexString();
+    public ImageUploadData imageToUrl(MultipartFile multipartFile, String email){
+        ImageUploadData imageUploadData = new ImageUploadData();
+        if(multipartFile!=null && !multipartFile.isEmpty()){
+            Image image = imageService.upLoad(multipartFile, email);
+            imageUploadData.setImageId(image.getId());
+            imageUploadData.setSuccess(true);
         }
-        return imageUrl;
+        return imageUploadData;
     }
 
     public void login(String email, String password){
@@ -64,18 +70,22 @@ public class UserService {
         }
     }
 
-    public void update(String email,String userNickname, MultipartFile newMultipartFile, Boolean imageChange){
+    public boolean update(String email,String userNickname, MultipartFile newMultipartFile, Boolean imageChange){
         //validateEmailUser(email);
         User user = findOneEmail(email);
+        boolean changeSuccess=false;
         if(!user.getNickname().equals(userNickname)){
             validateDuplicateNickname(userNickname);
             user.setNickname(userNickname);
         }
         if(imageChange){
-            imageService.deleteImage(imageService.urlToId(user.getImageUrl()));
-            user.setImageUrl(imageToUrl(newMultipartFile,email));
+            imageService.deleteImage(user.getImageId());
+            ImageUploadData imageUploadData = imageToUrl(newMultipartFile, email);
+            user.setImageId(imageUploadData.getImageId());
+            changeSuccess = imageUploadData.isSuccess();
         }
         userRepository.save(user);
+        return changeSuccess;
     }
 
     public User findOneEmail(String email){
@@ -109,7 +119,7 @@ public class UserService {
                 .follower(user.getFollowers().size())
                 .following(user.getFollowings().size())
                 .nickname(user.getNickname())
-                .imageUrl(user.getImageUrl())
+                .imageUrl(user.getUrl())
                 .build();
         return memberData;
     }
@@ -181,7 +191,7 @@ public class UserService {
                 FollowInfo followInfo = FollowInfo.builder()
                         .email(following.getEmail())
                         .nickname(following.getNickname())
-                        .imageUrl(following.getImageUrl())
+                        .imageUrl(following.getUrl())
                         .build();
                 followInfos.add(followInfo);
             });
@@ -202,6 +212,7 @@ public class UserService {
             userRepository.findById(followingId).ifPresent((following) -> following.getFollowers().remove(user.getId()));
         }
         folderRepository.findById(user.getRootFolderId()).ifPresent((folder)->folderRepository.delete(folder));
+        imageService.deleteImage(user.getImageId());
         userRepository.delete(user);
     }
 

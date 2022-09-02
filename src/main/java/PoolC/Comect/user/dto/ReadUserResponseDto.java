@@ -13,6 +13,6 @@ public class ReadUserResponseDto {
     public ReadUserResponseDto(User user){
         this.email=user.getEmail();
         this.nickname=user.getNickname();
-        this.imageUrl=user.getImageUrl();
+        this.imageUrl=user.getUrl();
     }
 }

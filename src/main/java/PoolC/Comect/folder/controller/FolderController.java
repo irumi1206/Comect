@@ -189,7 +189,7 @@ public class FolderController {
             @ApiResponse(responseCode = "404", description = "경로를 못찾음")
     })
     @PutMapping(value="/link")
-    public ResponseEntity<LinkUpdateResponseDto> linkUpdate(@Valid @RequestBody LinkUpdateRequestDto linkUpdateRequestDto){
+    public ResponseEntity<LinkUpdateResponseDto> linkUpdate(@Valid @ModelAttribute LinkUpdateRequestDto linkUpdateRequestDto){
         String id=linkUpdateRequestDto.getId();
         String email=linkUpdateRequestDto.getEmail();
         String path=linkUpdateRequestDto.getPath();

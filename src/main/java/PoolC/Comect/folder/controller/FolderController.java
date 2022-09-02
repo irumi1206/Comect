@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -140,17 +141,20 @@ public class FolderController {
             @ApiResponse(responseCode = "404", description = "경로를 못찾음")
     })
     @PostMapping(value="/link")
-    public ResponseEntity<Void> linkCreate(@Valid @RequestBody LinkCreateRequestDto linkCreateRequestDto){
+    public ResponseEntity<LinkCreateResponseDto> linkCreate(@Valid @RequestBody LinkCreateRequestDto linkCreateRequestDto){
         String email=linkCreateRequestDto.getEmail();
         String path=linkCreateRequestDto.getPath();
         String name=linkCreateRequestDto.getName();
         String url=linkCreateRequestDto.getUrl();
-        String imageUrl=linkCreateRequestDto.getImageUrl();
+        MultipartFile multipartFile = linkCreateRequestDto.getMultipartFile();
         List<String> keywords=linkCreateRequestDto.getKeywords();
+        Boolean imageChange = linkCreateRequestDto.getImageChange();
         for(String keyword:keywords) if(keyword.length()>30 || keyword.contains(" ") ) throw new CustomException(ErrorCode.INVALID_KEYWORD);
         String isPublic = linkCreateRequestDto.getIsPublic();
-        folderService.linkCreate(email,path,name,url,imageUrl,keywords,isPublic);
-        return ResponseEntity.ok().build();
+        boolean imageSuccess = folderService.linkCreate(email, path, name, url, multipartFile, keywords, isPublic, imageChange);
+        LinkCreateResponseDto linkCreateResponseDto = new LinkCreateResponseDto();
+        linkCreateResponseDto.setImageSuccess(imageSuccess);
+        return ResponseEntity.ok(linkCreateResponseDto);
     }
 
     @ApiOperation(value="링크 조회", notes="")
@@ -186,17 +190,21 @@ public class FolderController {
             @ApiResponse(responseCode = "404", description = "경로를 못찾음")
     })
     @PutMapping(value="/link")
-    public ResponseEntity<Void> linkUpdate(@Valid @RequestBody LinkUpdateRequestDto linkUpdateRequestDto){
+    public ResponseEntity<LinkUpdateResponseDto> linkUpdate(@Valid @RequestBody LinkUpdateRequestDto linkUpdateRequestDto){
         String id=linkUpdateRequestDto.getId();
         String email=linkUpdateRequestDto.getEmail();
         String path=linkUpdateRequestDto.getPath();
         String name=linkUpdateRequestDto.getName();
         String url=linkUpdateRequestDto.getUrl();
-        String imageUrl=linkUpdateRequestDto.getImageUrl();
+        MultipartFile multipartFile=linkUpdateRequestDto.getMultipartFile();
         List<String> keywords=linkUpdateRequestDto.getKeywords();
         String isPublic=linkUpdateRequestDto.getIsPublic();
-        folderService.linkUpdate(id,email,path,name,url,imageUrl,keywords,isPublic);
-        return ResponseEntity.ok().build();
+        Boolean imageChage = linkUpdateRequestDto.isImageChange();
+        boolean imageSuccess = folderService.linkUpdate(id, email, path, name, url, multipartFile, keywords, isPublic, imageChage);
+
+        LinkUpdateResponseDto linkUpdateResponseDto = new LinkUpdateResponseDto();
+        linkUpdateResponseDto.setImageSuccess(imageSuccess);
+        return ResponseEntity.ok(linkUpdateResponseDto);
     }
 
     @ApiOperation(value="링크 삭제", notes="")

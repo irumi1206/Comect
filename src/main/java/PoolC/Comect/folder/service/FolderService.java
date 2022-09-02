@@ -8,12 +8,16 @@ import PoolC.Comect.common.exception.ErrorCode;
 import PoolC.Comect.folder.domain.Link;
 import PoolC.Comect.folder.domain.Folder;
 import PoolC.Comect.folder.repository.FolderRepository;
+import PoolC.Comect.image.domain.Image;
+import PoolC.Comect.image.service.ImageService;
+import PoolC.Comect.user.domain.ImageUploadData;
 import PoolC.Comect.user.domain.User;
 import PoolC.Comect.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +29,7 @@ public class FolderService {
 
     private final FolderRepository folderRepository;
     private final UserRepository userRepository;
+    private final ImageService imageService;
     //private final ElasticFolderRepository elasticFolderRepository;
 
     public void folderCreate(String userEmail, String path, String folderName){
@@ -73,10 +78,20 @@ public class FolderService {
         return folderRepository.checkPathFolder(user.getRootFolderId(), path);
     }
 
-    public void linkCreate(String userEmail, String path, String name, String url, String imageUrl, List<String> keywords, String isPublic){
+    public boolean linkCreate(String userEmail, String path, String name, String url, MultipartFile multipartFile, List<String> keywords, String isPublic,Boolean imageChange){
         User user = getUserByEmail(userEmail);
-        Link link=new Link(name,imageUrl,url,keywords,isPublic);
+
+        Image image = imageService.upLoad(multipartFile, userEmail);
+        boolean changeSuccess=false;
+        if(imageChange){
+            ImageUploadData imageUploadData = imageService.imageToUrl(multipartFile, userEmail);
+            user.setImageId(imageUploadData.getImageId());
+            changeSuccess = imageUploadData.isSuccess();
+        }
+
+        Link link=new Link(name,image.getId(),url,keywords,isPublic);
         folderRepository.linkCreate(user.getRootFolderId(), path, link);
+        return changeSuccess;
     }
 
     public Link linkRead(String userEmail,String path,String id){
@@ -85,10 +100,20 @@ public class FolderService {
         return folderRepository.linkRead(user.getRootFolderId(),path,new ObjectId(id));
     }
 
-    public void linkUpdate(String id,String email,String path,String name,String url,String imageUrl,List<String> keywords,String isPublic){
+    public boolean linkUpdate(String id,String email,String path,String name,String url,MultipartFile multipartFile,List<String> keywords,String isPublic,Boolean imageChange){
         User user = getUserByEmail(email);
-        Link link=new Link(name,imageUrl,url,keywords,isPublic);
+
+        Image image = imageService.upLoad(multipartFile, email);
+        boolean changeSuccess=false;
+        if(imageChange){
+            ImageUploadData imageUploadData = imageService.imageToUrl(multipartFile, email);
+            user.setImageId(imageUploadData.getImageId());
+            changeSuccess = imageUploadData.isSuccess();
+        }
+
+        Link link=new Link(name,image.getId(),url,keywords,isPublic);
         folderRepository.linkUpdate(user.getRootFolderId(), path,new ObjectId(id), link);
+        return changeSuccess;
     }
 
     @Transactional

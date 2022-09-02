@@ -5,6 +5,7 @@ import PoolC.Comect.common.exception.ErrorCode;
 import PoolC.Comect.image.domain.Image;
 import PoolC.Comect.image.domain.ReadImageDomain;
 import PoolC.Comect.image.repository.ImageRepository;
+import PoolC.Comect.user.domain.ImageUploadData;
 import PoolC.Comect.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
@@ -41,6 +42,16 @@ public class ImageService {
 //            throw new CustomException(ErrorCode.NOT_MY_IMAGE);
 //        }
         imageRepository.delete(image);
+    }
+
+    public ImageUploadData imageToUrl(MultipartFile multipartFile, String email){
+        ImageUploadData imageUploadData = new ImageUploadData();
+        if(multipartFile!=null && !multipartFile.isEmpty()){
+            Image image = upLoad(multipartFile, email);
+            imageUploadData.setImageId(image.getId());
+            imageUploadData.setSuccess(true);
+        }
+        return imageUploadData;
     }
 
     public ReadImageDomain readImage(ObjectId id){

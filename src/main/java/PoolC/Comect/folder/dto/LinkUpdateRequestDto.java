@@ -3,6 +3,7 @@ package PoolC.Comect.folder.dto;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -20,19 +21,21 @@ public class LinkUpdateRequestDto {
     @Size(max=50)
     private String name;
     private String url;
-    private String imageUrl;
+    private MultipartFile multipartFile;
     private List<String> keywords;
     private String isPublic;
+    private boolean imageChange;
 
     @Builder
-    public LinkUpdateRequestDto(String id, String email, String path, String name,String url,String imageUrl,List<String> keywords,String isPublic){
+    public LinkUpdateRequestDto(String id, String email, String path, String name,String url,MultipartFile multipartFile,List<String> keywords,String isPublic,boolean imageChange){
         this.id=id;
         this.email=email;
         this.path=path;
         this.name=name;
         this.url=url;
-        this.imageUrl=imageUrl;
+        this.multipartFile=multipartFile;
         this.keywords=keywords;
         this.isPublic=isPublic;
+        this.imageChange=imageChange;
     }
 }

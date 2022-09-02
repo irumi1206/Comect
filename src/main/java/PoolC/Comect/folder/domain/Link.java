@@ -16,15 +16,15 @@ public class Link {
     private ObjectId _id;
 
     private String name;
-    private String imageUrl;
+    private ObjectId imageId;
     private String url;
     private List<String> keywords;
     private String isPublic;
 
-    public Link(String name, String imageUrl, String url,List<String> keywords, String isPublic) {
+    public Link(String name, ObjectId imageId, String url,List<String> keywords, String isPublic) {
         this._id=new ObjectId();
         this.name = name;
-        this.imageUrl = imageUrl;
+        this.imageId = imageId;
         this.url = url;
         this.keywords=keywords;
         this.isPublic=isPublic;
@@ -35,10 +35,14 @@ public class Link {
         return "Link{" +
                 "_id=" + _id +
                 ", title='" + name + '\'' +
-                ", image='" + imageUrl + '\'' +
+                ", image='" + imageId + '\'' +
                 ", url='" + url + '\'' +
                 ", keywords=" + keywords +
                 ", isPublic='" + isPublic + '\'' +
                 '}';
+    }
+
+    public String getImageUrl(){
+        return "http://43.200.175.52:8080/image?id="+imageId.toHexString();
     }
 }

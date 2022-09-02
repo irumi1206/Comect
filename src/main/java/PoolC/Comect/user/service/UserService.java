@@ -44,7 +44,7 @@ public class UserService {
         //validatePassword(password);
 
         //이미지 저장
-        ImageUploadData imageUploadData = imageToUrl(multipartFile, email);
+        ImageUploadData imageUploadData = imageService.imageToUrl(multipartFile, email);
         Folder folder=new Folder("");
         folderRepository.save(folder);
         User user=new User(nickname,email,folder.get_id(),imageUploadData.getImageId(), password);
@@ -52,15 +52,7 @@ public class UserService {
         return imageUploadData.isSuccess();
     }
 
-    public ImageUploadData imageToUrl(MultipartFile multipartFile, String email){
-        ImageUploadData imageUploadData = new ImageUploadData();
-        if(multipartFile!=null && !multipartFile.isEmpty()){
-            Image image = imageService.upLoad(multipartFile, email);
-            imageUploadData.setImageId(image.getId());
-            imageUploadData.setSuccess(true);
-        }
-        return imageUploadData;
-    }
+
 
     public void login(String email, String password){
         //validateEmailUser(email);
@@ -73,14 +65,14 @@ public class UserService {
     public boolean update(String email,String userNickname, MultipartFile newMultipartFile, Boolean imageChange){
         //validateEmailUser(email);
         User user = findOneEmail(email);
-        boolean changeSuccess=false;
         if(!user.getNickname().equals(userNickname)){
             validateDuplicateNickname(userNickname);
             user.setNickname(userNickname);
         }
+        boolean changeSuccess=false;
         if(imageChange){
             imageService.deleteImage(user.getImageId());
-            ImageUploadData imageUploadData = imageToUrl(newMultipartFile, email);
+            ImageUploadData imageUploadData = imageService.imageToUrl(newMultipartFile, email);
             user.setImageId(imageUploadData.getImageId());
             changeSuccess = imageUploadData.isSuccess();
         }

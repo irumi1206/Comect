@@ -113,8 +113,7 @@ public class FolderService {
             Link link=new Link(name,imageUploadData.getImageId(),url,keywords,isPublic);
             folderRepository.linkUpdate(user.getRootFolderId(), path,new ObjectId(id), link);
         }else{
-            String originalImageUrl=linkRead(email,path,id).getImageUrl();
-            Link link=new Link(name,new ObjectId(originalImageUrl),url,keywords,isPublic);
+            Link link=new Link(name,linkRead(email,path,id).getImageId(),url,keywords,isPublic);
             folderRepository.linkUpdate(user.getRootFolderId(), path,new ObjectId(id), link);
         }
         return changeSuccess;

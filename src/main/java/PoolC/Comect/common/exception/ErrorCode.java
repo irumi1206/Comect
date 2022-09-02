@@ -10,7 +10,9 @@ public enum ErrorCode{
 
     //형식 400
     PATH_NOT_VALID(HttpStatus.BAD_REQUEST,"경로가 유효하지 않음"),
+    EMAIL_NOT_VALID(HttpStatus.BAD_REQUEST,"이메일 형식이 맞지 않음"),
     INVALID_KEYWORD(HttpStatus.BAD_REQUEST,"키워드가 형식에맞지 않음"),
+    IMAGE_NOT_VALID(HttpStatus.BAD_REQUEST,"등록할 수 없는 이미지입니다."),
 
     //이미 존재하는 객체 409
     FILE_CONFLICT(HttpStatus.CONFLICT,"이미 같은 이름의 파일이 존재함"),

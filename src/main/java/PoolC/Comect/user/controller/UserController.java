@@ -33,9 +33,9 @@ public class UserController {
             @ApiResponse(responseCode = "409", description = "이미 존재하는 이메일 또는 닉네임")
     })
     @PostMapping("/member")
-    public ResponseEntity<Void> createUser(@Valid @RequestBody CreateUserRequestDto request){
+    public ResponseEntity<Void> createUser(@Valid @ModelAttribute CreateUserRequestDto request){
 
-        userService.join(request.getEmail(),request.getPassword(),request.getNickname(), request.getImageUrl());
+        userService.join(request.getEmail(),request.getPassword(),request.getNickname(),request.getMultipartFile());
         return ResponseEntity.ok().build();
     }
 
@@ -75,9 +75,8 @@ public class UserController {
             @ApiResponse(responseCode = "409", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때")
     })
     @PutMapping("/member/me")
-    public ResponseEntity<Void> updateUser(@Valid @RequestBody UpdateUserRequestDto request){
-
-        userService.update(request.getEmail(), request.getNewNickname(), request.getNewImageUrl());
+    public ResponseEntity<Void> updateUser(@Valid @ModelAttribute UpdateUserRequestDto request){
+        userService.update(request.getEmail(), request.getNewNickname(), request.getNewMultipartFile(),request.getImageChange());
         return ResponseEntity.ok().build();
     }
 
@@ -162,6 +161,23 @@ public class UserController {
     public ResponseEntity<Void> deleteMember(@RequestBody DeleteUserRequestDto request){
         userService.deleteMember(request.getEmail(),request.getPassword());
         return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value="팔로워, 팔로잉 최대 5명 조회", notes="")
+    @ApiResponses({
+    })
+    @GetMapping("/follow/small")
+    public ResponseEntity<ReadFollowSmallResponseDto> readFollow(@ModelAttribute ReadFollowSmallRequestDto request){
+
+        List<FollowInfo> followers = userService.readFollowerSmall(request.getEmail());
+        List<FollowInfo> followings = userService.readFollowingSmall(request.getEmail());
+        ReadFollowSmallResponseDto readFollowSmallResponseDto = ReadFollowSmallResponseDto.builder()
+                .numberOfFollowing(followings.size())
+                .numberOfFollower(followers.size())
+                .followings(followings)
+                .followers(followers)
+                .build();
+        return ResponseEntity.ok(readFollowSmallResponseDto);
     }
 }
 

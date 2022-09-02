@@ -4,6 +4,8 @@ import PoolC.Comect.common.exception.CustomException;
 import PoolC.Comect.common.exception.ErrorCode;
 import PoolC.Comect.folder.domain.Folder;
 import PoolC.Comect.folder.repository.FolderRepository;
+import PoolC.Comect.image.repository.ImageRepository;
+import PoolC.Comect.image.service.ImageService;
 import PoolC.Comect.user.domain.FollowInfo;
 import PoolC.Comect.user.domain.MemberData;
 import PoolC.Comect.user.domain.User;
@@ -13,9 +15,12 @@ import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -24,19 +29,31 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final FolderRepository folderRepository;
+    private final ImageService imageService;
+    private final ImageRepository imageRepository;
 
     //회원 가입
     //@Transactional(rollbackFor={CustomException.class})
-    public ObjectId join(String email, String password,String nickname,String imageUrl){
-        //validateEmailUser(email);
+    public ObjectId join(String email, String password, String nickname, MultipartFile multipartFile){
+        validateEmailUser(email);
         validateDuplicateUser(email);
         validateDuplicateNickname(nickname);
         //validatePassword(password);
+        String imageUrl = imageToUrl(multipartFile,email);
         Folder folder=new Folder("");
         folderRepository.save(folder);
         User user=new User(nickname,email,folder.get_id(),imageUrl, password);
         userRepository.save(user);
         return user.getId();
+    }
+
+    public String imageToUrl(MultipartFile multipartFile,String email){
+        String imageUrl="";
+        if(!multipartFile.isEmpty()){
+            ObjectId imageId = imageService.upLoad(multipartFile, email);
+            imageUrl="http://43.200.175.52:8080/image?id="+imageId.toHexString();
+        }
+        return imageUrl;
     }
 
     public void login(String email, String password){
@@ -47,15 +64,16 @@ public class UserService {
         }
     }
 
-    public void update(String email,String userNickname, String picture){
+    public void update(String email,String userNickname, MultipartFile newMultipartFile, Boolean imageChange){
         //validateEmailUser(email);
         User user = findOneEmail(email);
         if(!user.getNickname().equals(userNickname)){
             validateDuplicateNickname(userNickname);
             user.setNickname(userNickname);
         }
-        if(!user.getImageUrl().equals(picture)){
-            user.setImageUrl(picture);
+        if(imageChange){
+            imageService.deleteImage(imageService.urlToId(user.getImageUrl()));
+            user.setImageUrl(imageToUrl(newMultipartFile,email));
         }
         userRepository.save(user);
     }
@@ -66,6 +84,10 @@ public class UserService {
 
     public User findOneNickname(String nickname){
         return userRepository.findByNickname(nickname).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+    }
+
+    public User findOneId(ObjectId id){
+        return userRepository.findById(id).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
     //@Transactional
@@ -103,6 +125,17 @@ public class UserService {
         }
         return false;
     }
+    public List<ObjectId> readFollowingById(ObjectId id) {
+        User user = findOneId(id);
+        List<ObjectId> followings = user.getFollowings();
+        return followings;
+    }
+
+    public List<ObjectId> readFollowedById(ObjectId id) {
+        User user = findOneId(id);
+        List<ObjectId> followeds = user.getFollowers();
+        return followeds;
+    }
 
     private void validateDuplicateUser(String email){
         if(!userRepository.findByEmail(email).isEmpty()){
@@ -113,7 +146,7 @@ public class UserService {
     //나중에 닉네임 중복 조회 서비스에서 사용
     private void validateDuplicateNickname(String nickname){
         if(!userRepository.findByNickname(nickname).isEmpty()){
-            throw new CustomException(ErrorCode.EMAIL_EXISTS);
+            throw new CustomException(ErrorCode.NICKNAME_EXISTS);
         }
     }
 
@@ -172,23 +205,40 @@ public class UserService {
         userRepository.delete(user);
     }
 
-//    public List<FollowInfo> readFollowerSmall(String email) {
-//        User user = findOneEmail(email);
-//
-//    }
+    public List<FollowInfo> readFollowerSmall(String email) {
+        User user = findOneEmail(email);
+        List<ObjectId> followers = user.getFollowers();
+        List<FollowInfo> followerInfos;
+        if(followers.size()<5){
+            followerInfos=listToInfo(followers);
+        }else{
+            followerInfos=listToInfo(followers.subList(0,5));
+        }
+        return followerInfos;
 
-//    public List<FollowInfo> readFollowingSmall(String email) {
-//    }
+    }
+
+    public List<FollowInfo> readFollowingSmall(String email) {
+        User user = findOneEmail(email);
+        List<ObjectId> followings = user.getFollowings();
+        List<FollowInfo> followingInfos;
+        if(followings.size()<5){
+            followingInfos=listToInfo(followings);
+        }else{
+            followingInfos=listToInfo(followings.subList(0,5));
+        }
+        return followingInfos;
+    }
 
 
-//    private void validateEmailUser(String email){
-//        String regx = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
-//        Pattern pattern = Pattern.compile(regx);
-//        Matcher matcher = pattern.matcher(email);
-//        if(!matcher.matches()){
-//            throw new CustomException(ErrorCode.EMAIL_NOT_VALID);
-//        }
-//    }
+    private void validateEmailUser(String email){
+        String regx = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
+        Pattern pattern = Pattern.compile(regx);
+        Matcher matcher = pattern.matcher(email);
+        if(!matcher.matches()){
+            throw new CustomException(ErrorCode.EMAIL_NOT_VALID);
+        }
+    }
 
 //    private void validatePassword(String password){
 //

@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class ReadFollowResponseDto {
+public class ReadFollowSmallResponseDto {
     private int numberOfFollowing;
     private int numberOfFollower;
     private List<FollowInfo> followings;

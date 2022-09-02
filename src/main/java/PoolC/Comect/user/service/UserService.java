@@ -155,14 +155,15 @@ public class UserService {
     public List<FollowInfo> readFollower(String email) {
         User user = findOneEmail(email);
         List<ObjectId> followers = user.getFollowers();
-        List<FollowInfo> followerInfos=listToInfo(followers);
+        List<ObjectId> followings = user.getFollowings();
+        List<FollowInfo> followerInfos=listToInfo(followers,followings);
         return followerInfos;
     }
 
     public List<FollowInfo> readFollowing(String email) {
         User user = findOneEmail(email);
         List<ObjectId> followings = user.getFollowings();
-        List<FollowInfo> followingInfos=listToInfo(followings);
+        List<FollowInfo> followingInfos=listToInfo(followings, followings);
         return followingInfos;
     }
 
@@ -176,7 +177,7 @@ public class UserService {
         userRepository.save(followed);
     }
 
-    private List<FollowInfo> listToInfo(List<ObjectId> list){
+    private List<FollowInfo> listToInfo(List<ObjectId> list, List<ObjectId> followings){
         List<FollowInfo> followInfos=new ArrayList<>();
         for (ObjectId followId : list) {
             userRepository.findById(followId).ifPresent((following)->{
@@ -184,6 +185,7 @@ public class UserService {
                         .email(following.getEmail())
                         .nickname(following.getNickname())
                         .imageUrl(following.getUrl())
+                        .isFollowing(followings.contains(followId))
                         .build();
                 followInfos.add(followInfo);
             });
@@ -210,11 +212,12 @@ public class UserService {
     public List<FollowInfo> readFollowerSmall(String email) {
         User user = findOneEmail(email);
         List<ObjectId> followers = user.getFollowers();
+        List<ObjectId> followings = user.getFollowings();
         List<FollowInfo> followerInfos;
         if(followers.size()<5){
-            followerInfos=listToInfo(followers);
+            followerInfos=listToInfo(followers,followings);
         }else{
-            followerInfos=listToInfo(followers.subList(0,5));
+            followerInfos=listToInfo(followers.subList(0,5),followings);
         }
         return followerInfos;
 
@@ -225,9 +228,9 @@ public class UserService {
         List<ObjectId> followings = user.getFollowings();
         List<FollowInfo> followingInfos;
         if(followings.size()<5){
-            followingInfos=listToInfo(followings);
+            followingInfos=listToInfo(followings,followings);
         }else{
-            followingInfos=listToInfo(followings.subList(0,5));
+            followingInfos=listToInfo(followings.subList(0,5),followings);
         }
         return followingInfos;
     }

@@ -1,4 +1,4 @@
-package PoolC.Comect.user.dto;
+package PoolC.Comect.user.dto.follow;
 
 import lombok.Data;
 

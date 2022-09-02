@@ -1,4 +1,4 @@
-package PoolC.Comect.user.dto;
+package PoolC.Comect.user.dto.member;
 
 import PoolC.Comect.user.domain.User;
 import lombok.Data;

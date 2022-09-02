@@ -1,6 +1,8 @@
 package PoolC.Comect.user.controller;
 
 import PoolC.Comect.user.domain.FollowInfo;
+import PoolC.Comect.user.dto.follow.*;
+import PoolC.Comect.user.dto.member.*;
 import PoolC.Comect.user.service.UserService;
 import PoolC.Comect.user.domain.MemberData;
 import PoolC.Comect.user.domain.User;
@@ -101,25 +103,40 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperation(value="팔로워 조회", notes="")
+    @ApiOperation(value="팔로워 조회", notes="나를 팔로우 하는 사람들을 조회합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "유저 잘 생성됨."),
             @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식"),
             @ApiResponse(responseCode = "401", description = "쿠키가 유효하지 않음"),
             @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때"),
     })
-    @GetMapping("/follow")
-    public ResponseEntity<ReadFollowResponseDto> readFollow(@ModelAttribute ReadFollowRequestDto request){
+    @GetMapping("/follower")
+    public ResponseEntity<ReadFollowerResponseDto> readFollower(@ModelAttribute ReadFollowRequestDto request){
 
         List<FollowInfo> followers = userService.readFollower(request.getEmail());
-        List<FollowInfo> followings = userService.readFollowing(request.getEmail());
-        ReadFollowResponseDto readFollowResponseDto = ReadFollowResponseDto.builder()
-                .numberOfFollowing(followings.size())
+        ReadFollowerResponseDto readFollowResponseDto = ReadFollowerResponseDto.builder()
                 .numberOfFollower(followers.size())
-                .followings(followings)
                 .followers(followers)
                 .build();
         return ResponseEntity.ok(readFollowResponseDto);
+    }
+
+    @ApiOperation(value="팔로잉 조회", notes="내가 팔로잉 하는 사람들을 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "유저 잘 생성됨."),
+            @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식"),
+            @ApiResponse(responseCode = "401", description = "쿠키가 유효하지 않음"),
+            @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때"),
+    })
+    @GetMapping("/following")
+    public ResponseEntity<ReadFollowingResponseDto> readFollowing(@ModelAttribute ReadFollowRequestDto request){
+
+        List<FollowInfo> followings = userService.readFollowing(request.getEmail());
+        ReadFollowingResponseDto readFollowingResponseDto = ReadFollowingResponseDto.builder()
+                .numberOfFollowing(followings.size())
+                .followings(followings)
+                .build();
+        return ResponseEntity.ok(readFollowingResponseDto);
     }
 
     @ApiOperation(value="팔로워 취소", notes="")

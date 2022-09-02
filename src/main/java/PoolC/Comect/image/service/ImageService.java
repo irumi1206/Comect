@@ -38,11 +38,10 @@ public class ImageService {
         }catch(Exception e){
 
         }
-        Image image = imageRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.IMAGE_NOT_FOUND));
+        imageRepository.findById(id).ifPresent((image)->imageRepository.delete(image));
 //        if(!image.getEmail().equals(email)){
 //            throw new CustomException(ErrorCode.NOT_MY_IMAGE);
 //        }
-        imageRepository.delete(image);
     }
 
     public ImageUploadData createImage(MultipartFile multipartFile,String email){

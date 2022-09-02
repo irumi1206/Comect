@@ -1,6 +1,9 @@
 package PoolC.Comect.user.dto;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
 import lombok.Data;
+import org.springframework.http.MediaType;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Email;
@@ -23,5 +26,9 @@ public class CreateUserRequestDto {
     @Pattern(regexp="^[a-zA-z가-힣 ]+$")
     private String nickname;
 
+    @Parameter(
+            description = "Files to be uploaded",
+            content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)  // Won't work without OCTET_STREAM as the mediaType.
+    )
     private MultipartFile multipartFile;
 }

@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +35,7 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식 또는 비밀번호 형식 또는 닉네임"),
             @ApiResponse(responseCode = "409", description = "이미 존재하는 이메일 또는 닉네임")
     })
-    @PostMapping("/member")
+    @PostMapping(path="/member", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CreateUserResponseDto> createUser(@Valid @ModelAttribute CreateUserRequestDto request){
         boolean success = userService.join(request.getEmail(), request.getPassword(), request.getNickname(), request.getMultipartFile());
         CreateUserResponseDto createUserResponseDto = CreateUserResponseDto.builder()

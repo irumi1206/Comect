@@ -198,7 +198,7 @@ public class FolderController {
         MultipartFile multipartFile=linkUpdateRequestDto.getMultipartFile();
         List<String> keywords=linkUpdateRequestDto.getKeywords();
         String isPublic=linkUpdateRequestDto.getIsPublic();
-        Boolean imageChage = linkUpdateRequestDto.isImageChange();
+        String imageChage = linkUpdateRequestDto.getImageChange();
         boolean imageSuccess = folderService.linkUpdate(id, email, path, name, url, multipartFile, keywords, isPublic, imageChage);
 
         LinkUpdateResponseDto linkUpdateResponseDto = new LinkUpdateResponseDto();

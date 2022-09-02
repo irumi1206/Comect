@@ -103,11 +103,11 @@ public class FolderService {
         return folderRepository.linkRead(user.getRootFolderId(),path,new ObjectId(id));
     }
 
-    public boolean linkUpdate(String id,String email,String path,String name,String url,MultipartFile multipartFile,List<String> keywords,String isPublic,Boolean imageChange){
+    public boolean linkUpdate(String id,String email,String path,String name,String url,MultipartFile multipartFile,List<String> keywords,String isPublic,String imageChange){
         User user = getUserByEmail(email);
 
         boolean changeSuccess=false;
-        if(imageChange){
+        if(imageChange.equals("true")){
             ImageUploadData imageUploadData = imageService.createImage(multipartFile, email);
             //user.setImageId(imageUploadData.getImageId());
             changeSuccess = imageUploadData.isSuccess();

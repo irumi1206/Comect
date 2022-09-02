@@ -35,7 +35,7 @@ public class UserService {
     private final ImageRepository imageRepository;
 
     //회원 가입
-    //@Transactional(rollbackFor={CustomException.class})
+    @Transactional
     public boolean join(String email, String password, String nickname, MultipartFile multipartFile){
         //validation check
         validateEmailUser(email);
@@ -47,6 +47,9 @@ public class UserService {
         ImageUploadData imageUploadData = imageService.createImage(multipartFile, email);
         Folder folder=new Folder("");
         folderRepository.save(folder);
+        if(true){
+            throw new CustomException(ErrorCode.IMAGE_SAVE_CANCELED);
+        }
         User user=new User(nickname,email,folder.get_id(),imageUploadData.getImageId(), password);
         userRepository.save(user);
         return imageUploadData.isSuccess();
@@ -62,7 +65,7 @@ public class UserService {
         }
     }
 
-    public boolean update(String email,String userNickname, MultipartFile newMultipartFile, Boolean imageChange){
+    public boolean update(String email,String userNickname, MultipartFile newMultipartFile, String imageChange){
         //validateEmailUser(email);
         User user = findOneEmail(email);
         if(!user.getNickname().equals(userNickname)){
@@ -70,7 +73,7 @@ public class UserService {
             user.setNickname(userNickname);
         }
         boolean changeSuccess=false;
-        if(imageChange){
+        if(imageChange.equals("true")){
             imageService.deleteImage(user.getImageId());
             ImageUploadData imageUploadData = imageService.createImage(newMultipartFile, email);
             user.setImageId(imageUploadData.getImageId());

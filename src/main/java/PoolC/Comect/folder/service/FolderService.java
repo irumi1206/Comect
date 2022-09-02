@@ -78,18 +78,15 @@ public class FolderService {
         return folderRepository.checkPathFolder(user.getRootFolderId(), path);
     }
 
-    public boolean linkCreate(String userEmail, String path, String name, String url, MultipartFile multipartFile, List<String> keywords, String isPublic,Boolean imageChange){
+    public boolean linkCreate(String userEmail, String path, String name, String url, MultipartFile multipartFile, List<String> keywords, String isPublic){
         User user = getUserByEmail(userEmail);
 
-        Image image = imageService.upLoad(multipartFile, userEmail);
         boolean changeSuccess=false;
-        if(imageChange){
-            ImageUploadData imageUploadData = imageService.imageToUrl(multipartFile, userEmail);
-            user.setImageId(imageUploadData.getImageId());
-            changeSuccess = imageUploadData.isSuccess();
-        }
+        ImageUploadData imageUploadData = imageService.createImage(multipartFile, userEmail);
+        user.setImageId(imageUploadData.getImageId());
+        changeSuccess = imageUploadData.isSuccess();
 
-        Link link=new Link(name,image.getId(),url,keywords,isPublic);
+        Link link=new Link(name,imageUploadData.getImageId(),url,keywords,isPublic);
         folderRepository.linkCreate(user.getRootFolderId(), path, link);
         return changeSuccess;
     }
@@ -103,16 +100,19 @@ public class FolderService {
     public boolean linkUpdate(String id,String email,String path,String name,String url,MultipartFile multipartFile,List<String> keywords,String isPublic,Boolean imageChange){
         User user = getUserByEmail(email);
 
-        Image image = imageService.upLoad(multipartFile, email);
+
         boolean changeSuccess=false;
         if(imageChange){
-            ImageUploadData imageUploadData = imageService.imageToUrl(multipartFile, email);
+            ImageUploadData imageUploadData = imageService.createImage(multipartFile, email);
             user.setImageId(imageUploadData.getImageId());
             changeSuccess = imageUploadData.isSuccess();
+            Link link=new Link(name,imageUploadData.getImageId(),url,keywords,isPublic);
+            folderRepository.linkUpdate(user.getRootFolderId(), path,new ObjectId(id), link);
+        }else{
+            //////////////////////
+            Link link=new Link(name,user.getImageId(),url,keywords,isPublic);
+            folderRepository.linkUpdate(user.getRootFolderId(), path,new ObjectId(id), link);
         }
-
-        Link link=new Link(name,image.getId(),url,keywords,isPublic);
-        folderRepository.linkUpdate(user.getRootFolderId(), path,new ObjectId(id), link);
         return changeSuccess;
     }
 

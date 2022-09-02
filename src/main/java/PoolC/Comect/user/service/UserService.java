@@ -44,7 +44,7 @@ public class UserService {
         //validatePassword(password);
 
         //이미지 저장
-        ImageUploadData imageUploadData = imageService.imageToUrl(multipartFile, email);
+        ImageUploadData imageUploadData = imageService.createImage(multipartFile, email);
         Folder folder=new Folder("");
         folderRepository.save(folder);
         User user=new User(nickname,email,folder.get_id(),imageUploadData.getImageId(), password);
@@ -72,7 +72,7 @@ public class UserService {
         boolean changeSuccess=false;
         if(imageChange){
             imageService.deleteImage(user.getImageId());
-            ImageUploadData imageUploadData = imageService.imageToUrl(newMultipartFile, email);
+            ImageUploadData imageUploadData = imageService.createImage(newMultipartFile, email);
             user.setImageId(imageUploadData.getImageId());
             changeSuccess = imageUploadData.isSuccess();
         }
@@ -196,7 +196,6 @@ public class UserService {
         if(!user.getPassword().equals(password)){
             throw new CustomException(ErrorCode.LOGIN_FAIL);
         }
-
         for (ObjectId followerId : user.getFollowers()) {
             userRepository.findById(followerId).ifPresent((follower)->follower.getFollowings().remove(user.getId()));
         }

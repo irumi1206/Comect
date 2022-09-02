@@ -148,10 +148,9 @@ public class FolderController {
         String url=linkCreateRequestDto.getUrl();
         MultipartFile multipartFile = linkCreateRequestDto.getMultipartFile();
         List<String> keywords=linkCreateRequestDto.getKeywords();
-        Boolean imageChange = linkCreateRequestDto.getImageChange();
         for(String keyword:keywords) if(keyword.length()>30 || keyword.contains(" ") ) throw new CustomException(ErrorCode.INVALID_KEYWORD);
         String isPublic = linkCreateRequestDto.getIsPublic();
-        boolean imageSuccess = folderService.linkCreate(email, path, name, url, multipartFile, keywords, isPublic, imageChange);
+        boolean imageSuccess = folderService.linkCreate(email, path, name, url, multipartFile, keywords, isPublic);
         LinkCreateResponseDto linkCreateResponseDto = new LinkCreateResponseDto();
         linkCreateResponseDto.setImageSuccess(imageSuccess);
         return ResponseEntity.ok(linkCreateResponseDto);

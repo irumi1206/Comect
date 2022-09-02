@@ -2,10 +2,10 @@ package PoolC.Comect.image.controller;
 
 import PoolC.Comect.common.exception.CustomException;
 import PoolC.Comect.common.exception.ErrorCode;
-import PoolC.Comect.image.domain.Image;
 import PoolC.Comect.image.domain.ReadImageDomain;
 import PoolC.Comect.image.dto.*;
 import PoolC.Comect.image.service.ImageService;
+import PoolC.Comect.user.domain.ImageUploadData;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -26,19 +26,19 @@ public class ImageController {
     @Autowired
     private ImageService imageService;
 
-    @ApiOperation(value="이미지 추가", notes="")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "유저 잘 생성됨."),
-            @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식"),
-            @ApiResponse(responseCode = "401", description = "쿠키가 유효하지 않음"),
-            @ApiResponse(responseCode = "404", description = "해당 이메일의 유저가 없을때"),
-    })
-    @PostMapping("/image")
-    public ResponseEntity<CreateImageResponseDto> createImage(@ModelAttribute CreateImageRequestDto createImageRequestDto){
-        Image image = imageService.upLoad(createImageRequestDto.getMultipartFile(), createImageRequestDto.getEmail());
-        CreateImageResponseDto createImageResponseDto = new CreateImageResponseDto(image.toString());
-        return ResponseEntity.ok(createImageResponseDto);
-    }
+//    @ApiOperation(value="이미지 추가", notes="")
+//    @ApiResponses({
+//            @ApiResponse(responseCode = "200", description = "유저 잘 생성됨."),
+//            @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식"),
+//            @ApiResponse(responseCode = "401", description = "쿠키가 유효하지 않음"),
+//            @ApiResponse(responseCode = "404", description = "해당 이메일의 유저가 없을때"),
+//    })
+//    @PostMapping("/image")
+//    public ResponseEntity<CreateImageResponseDto> createImage(@ModelAttribute CreateImageRequestDto createImageRequestDto){
+//        ImageUploadData imageUpLoadData = imageService.createImage(createImageRequestDto.getMultipartFile(), createImageRequestDto.getEmail());
+//        CreateImageResponseDto createImageResponseDto = new CreateImageResponseDto(imageUpLoadData.isSuccess());
+//        return ResponseEntity.ok(createImageResponseDto);
+//    }
 
     @ApiOperation(value="이미지 조회", notes="")
     @ApiResponses({

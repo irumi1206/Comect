@@ -43,6 +43,10 @@ public class Link {
     }
 
     public String getImageUrl(){
-        return "http://43.200.175.52:8080/image?id="+imageId.toHexString();
+        if(imageId==null){
+            return "";
+        }else{
+            return "http://43.200.175.52:8080/image?id="+imageId.toHexString();
+        }
     }
 }

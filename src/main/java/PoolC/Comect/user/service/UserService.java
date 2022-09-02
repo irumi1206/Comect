@@ -37,23 +37,26 @@ public class UserService {
     //회원 가입
     //@Transactional(rollbackFor={CustomException.class})
     public boolean join(String email, String password, String nickname, MultipartFile multipartFile){
+        //validation check
         validateEmailUser(email);
         validateDuplicateUser(email);
         validateDuplicateNickname(nickname);
         //validatePassword(password);
+
+        //이미지 저장
         ImageUploadData imageUploadData = imageToUrl(multipartFile, email);
         Folder folder=new Folder("");
         folderRepository.save(folder);
-        User user=new User(nickname,email,folder.get_id(),imageUploadData.getImage(), password);
+        User user=new User(nickname,email,folder.get_id(),imageUploadData.getImageId(), password);
         userRepository.save(user);
         return imageUploadData.isSuccess();
     }
 
     public ImageUploadData imageToUrl(MultipartFile multipartFile, String email){
         ImageUploadData imageUploadData = new ImageUploadData();
-        if(multipartFile!=null){
+        if(multipartFile!=null && !multipartFile.isEmpty()){
             Image image = imageService.upLoad(multipartFile, email);
-            imageUploadData.setImage(image);
+            imageUploadData.setImageId(image.getId());
             imageUploadData.setSuccess(true);
         }
         return imageUploadData;
@@ -76,9 +79,9 @@ public class UserService {
             user.setNickname(userNickname);
         }
         if(imageChange){
-            imageService.deleteImage(user.getImage().getId());
+            imageService.deleteImage(user.getImageId());
             ImageUploadData imageUploadData = imageToUrl(newMultipartFile, email);
-            user.setImage(imageUploadData.getImage());
+            user.setImageId(imageUploadData.getImageId());
             changeSuccess = imageUploadData.isSuccess();
         }
         userRepository.save(user);
@@ -116,7 +119,7 @@ public class UserService {
                 .follower(user.getFollowers().size())
                 .following(user.getFollowings().size())
                 .nickname(user.getNickname())
-                .imageUrl(user.getImage().toString())
+                .imageUrl(user.getUrl())
                 .build();
         return memberData;
     }
@@ -188,7 +191,7 @@ public class UserService {
                 FollowInfo followInfo = FollowInfo.builder()
                         .email(following.getEmail())
                         .nickname(following.getNickname())
-                        .imageUrl(following.getImage().toString())
+                        .imageUrl(following.getUrl())
                         .build();
                 followInfos.add(followInfo);
             });
@@ -209,7 +212,7 @@ public class UserService {
             userRepository.findById(followingId).ifPresent((following) -> following.getFollowers().remove(user.getId()));
         }
         folderRepository.findById(user.getRootFolderId()).ifPresent((folder)->folderRepository.delete(folder));
-        imageService.deleteImage(user.getImage().getId());
+        imageService.deleteImage(user.getImageId());
         userRepository.delete(user);
     }
 

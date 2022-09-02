@@ -23,33 +23,23 @@ public class User {
     private String nickname;
     private String email;
     private ObjectId rootFolderId;
-    private Image image;
+    private ObjectId imageId;
     private List<ObjectId> followings;
     private List<ObjectId> followers;
     private String password;
 
-    public User(String nickname, String email, ObjectId rootFolderId, Image image, String password) {
+    public User(String nickname, String email, ObjectId rootFolderId, ObjectId imageId, String password) {
         this.id=new ObjectId();
         this.nickname = nickname;
         this.email = email;
         this.rootFolderId = rootFolderId;
-        this.image = image;
+        this.imageId = imageId;
         this.password = password;
         this.followings=new ArrayList<>();
         this.followers=new ArrayList<>();
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", nickname='" + nickname + '\'' +
-                ", email='" + email + '\'' +
-                ", rootFolderId=" + rootFolderId +
-                ", imageUrl='" + image.toString() + '\'' +
-                ", followings=" + followings +
-                ", followers=" + followers +
-                ", password='" + password + '\'' +
-                '}';
+    public String getUrl(){
+        return "http://43.200.175.52:8080/image?id="+imageId.toHexString();
     }
 }

@@ -22,4 +22,9 @@ public class Image {
         this.extender=extender;
         this.email=email;
     }
+
+    @Override
+    public String toString() {
+        return "http://43.200.175.52:8080/image?id="+id;
+    }
 }

@@ -1,5 +1,6 @@
 package PoolC.Comect.user.domain;
 
+import PoolC.Comect.image.domain.Image;
 import lombok.Generated;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,17 +23,17 @@ public class User {
     private String nickname;
     private String email;
     private ObjectId rootFolderId;
-    private String imageUrl;
+    private Image image;
     private List<ObjectId> followings;
     private List<ObjectId> followers;
     private String password;
 
-    public User(String nickname, String email, ObjectId rootFolderId, String imageUrl, String password) {
+    public User(String nickname, String email, ObjectId rootFolderId, Image image, String password) {
         this.id=new ObjectId();
         this.nickname = nickname;
         this.email = email;
         this.rootFolderId = rootFolderId;
-        this.imageUrl = imageUrl;
+        this.image = image;
         this.password = password;
         this.followings=new ArrayList<>();
         this.followers=new ArrayList<>();
@@ -45,7 +46,7 @@ public class User {
                 ", nickname='" + nickname + '\'' +
                 ", email='" + email + '\'' +
                 ", rootFolderId=" + rootFolderId +
-                ", imageUrl='" + imageUrl + '\'' +
+                ", imageUrl='" + image.toString() + '\'' +
                 ", followings=" + followings +
                 ", followers=" + followers +
                 ", password='" + password + '\'' +

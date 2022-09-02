@@ -208,7 +208,7 @@ public class UserService {
     public List<FollowInfo> readFollowerSmall(String email) {
         User user = findOneEmail(email);
         List<ObjectId> followers = user.getFollowers();
-        List<FollowInfo> followerInfos=new ArrayList<>();
+        List<FollowInfo> followerInfos;
         if(followers.size()<5){
             followerInfos=listToInfo(followers);
         }else{
@@ -221,7 +221,7 @@ public class UserService {
     public List<FollowInfo> readFollowingSmall(String email) {
         User user = findOneEmail(email);
         List<ObjectId> followings = user.getFollowings();
-        List<FollowInfo> followingInfos=new ArrayList<>();
+        List<FollowInfo> followingInfos;
         if(followings.size()<5){
             followingInfos=listToInfo(followings);
         }else{

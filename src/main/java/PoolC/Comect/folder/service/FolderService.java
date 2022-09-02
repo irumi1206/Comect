@@ -123,6 +123,10 @@ public class FolderService {
     public void linkDelete(String email,String path,List<String> ids){
         User user = getUserByEmail(email);
         for(int i=0;i<ids.size();++i){
+            ObjectId imageId = linkRead(email,path,ids.get(i)).getImageId();
+            if(imageId!=null){
+                imageService.deleteImage(imageId);
+            }
             folderRepository.linkDelete(user.getRootFolderId(), path,new ObjectId(ids.get(i)));
         }
     }

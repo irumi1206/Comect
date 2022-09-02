@@ -50,7 +50,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "해당 유저가 존재하지 않음, 로그인 실패")
     })
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto request){
+    public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request){
 
         userService.login(request.getEmail(), request.getPassword());
         LoginResponseDto loginResponseDto = new LoginResponseDto(request.getEmail());

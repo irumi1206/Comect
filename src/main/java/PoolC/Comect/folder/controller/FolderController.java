@@ -141,7 +141,7 @@ public class FolderController {
             @ApiResponse(responseCode = "404", description = "경로를 못찾음")
     })
     @PostMapping(value="/link")
-    public ResponseEntity<LinkCreateResponseDto> linkCreate(@Valid @RequestBody LinkCreateRequestDto linkCreateRequestDto){
+    public ResponseEntity<LinkCreateResponseDto> linkCreate(@Valid @ModelAttribute LinkCreateRequestDto linkCreateRequestDto){
         String email=linkCreateRequestDto.getEmail();
         String path=linkCreateRequestDto.getPath();
         String name=linkCreateRequestDto.getName();

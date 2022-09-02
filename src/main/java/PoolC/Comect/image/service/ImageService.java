@@ -30,6 +30,7 @@ public class ImageService {
 
     private final ImageRepository imageRepository;
 
+
     @Transactional
     public void deleteImage(ObjectId id){
         try{
@@ -44,14 +45,25 @@ public class ImageService {
         imageRepository.delete(image);
     }
 
-    public ImageUploadData imageToUrl(MultipartFile multipartFile, String email){
+    public ImageUploadData createImage(MultipartFile multipartFile,String email){
         ImageUploadData imageUploadData = new ImageUploadData();
-        if(multipartFile!=null && !multipartFile.isEmpty()){
-            Image image = upLoad(multipartFile, email);
+        if(multipartFile!=null && multipartFile.isEmpty()){
+            Image image = new Image(multipartFile.getContentType(),email);
+            String upLoadDir = "imageStorage";
+            try{
+                saveFile(upLoadDir,image.getId().toHexString(),multipartFile);
+            }catch(Exception e){
+                throw new CustomException(ErrorCode.IMAGE_SAVE_CANCELED);
+            }
+            imageRepository.save(image);
             imageUploadData.setImageId(image.getId());
             imageUploadData.setSuccess(true);
         }
         return imageUploadData;
+    }
+
+    public Image findById(ObjectId id){
+        return imageRepository.findById(id).orElseThrow(()->new CustomException(ErrorCode.IMAGE_NOT_FOUND));
     }
 
     public ReadImageDomain readImage(ObjectId id){
@@ -68,19 +80,6 @@ public class ImageService {
             throw new CustomException(ErrorCode.FILE_NOT_FOUND);
         }
         return new ReadImageDomain(contentType,resource);
-    }
-
-    public Image upLoad(MultipartFile multipartFile, String email){
-        //validate check
-        Image image = new Image(multipartFile.getContentType(),email);
-        String upLoadDir = "imageStorage";
-        imageRepository.save(image);
-        try{
-            saveFile(upLoadDir,image.getId().toHexString(),multipartFile);
-        }catch(Exception e){
-            throw new CustomException(ErrorCode.IMAGE_SAVE_CANCELED);
-        }
-        return image;
     }
 
     public static void saveFile(String uploadDir, String fileName,

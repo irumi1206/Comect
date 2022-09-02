@@ -2,10 +2,10 @@ package PoolC.Comect.folder.service;
 
 import PoolC.Comect.common.exception.CustomException;
 import PoolC.Comect.common.exception.ErrorCode;
-import PoolC.Comect.elasticFolder.domain.ElasticFolder;
-import PoolC.Comect.elasticFolder.domain.ElasticLink;
-import PoolC.Comect.elasticFolder.repository.ElasticFolderRepository;
-import PoolC.Comect.elasticFolder.repository.ElasticLinkRepository;
+//import PoolC.Comect.elasticFolder.domain.ElasticFolder;
+//import PoolC.Comect.elasticFolder.domain.ElasticLink;
+//import PoolC.Comect.elasticFolder.repository.ElasticFolderRepository;
+//import PoolC.Comect.elasticFolder.repository.ElasticLinkRepository;
 import PoolC.Comect.folder.domain.Link;
 import PoolC.Comect.folder.domain.Folder;
 import PoolC.Comect.folder.repository.FolderRepository;
@@ -31,15 +31,15 @@ public class FolderService {
     private final FolderRepository folderRepository;
     private final UserRepository userRepository;
     private final ImageService imageService;
-    private final ElasticFolderRepository elasticFolderRepository;
-    private final ElasticLinkRepository elasticLinkRepository;
+//    private final ElasticFolderRepository elasticFolderRepository;
+//    private final ElasticLinkRepository elasticLinkRepository;
 
     public void folderCreate(String userEmail, String path, String folderName){
         User user = getUserByEmail(userEmail);
         Folder folder = new Folder(folderName);
         folderRepository.folderCreate(user.getRootFolderId(), path, folder);
-        ElasticFolder elasticFolder=new ElasticFolder(user.getId().toString(),path+folderName+"/",folderName);
-        elasticFolderRepository.save(elasticFolder);
+//        ElasticFolder elasticFolder=new ElasticFolder(user.getId().toString(),path+folderName+"/",folderName);
+//        elasticFolderRepository.save(elasticFolder);
     }
 
     public Folder folderRead(String userEmail, String path){
@@ -51,7 +51,7 @@ public class FolderService {
     public void folderUpdate(String userEmail, String path, String folderName){
         User user = getUserByEmail(userEmail);
         folderRepository.folderUpdate(user.getRootFolderId(),path,folderName);
-        elasticFolderRepository.update(user.getId().toString(),path,folderName);
+        //elasticFolderRepository.update(user.getId().toString(),path,folderName);
     }
 
     @Transactional
@@ -59,7 +59,7 @@ public class FolderService {
         User user = getUserByEmail(userEmail);
         for(String path:paths) {
             folderRepository.folderDelete(user.getRootFolderId(), path);
-            elasticFolderRepository.delete(user.getId().toString(),path);
+            //elasticFolderRepository.delete(user.getId().toString(),path);
         }
         //하위 이미지 삭제해야됨
     }
@@ -72,7 +72,7 @@ public class FolderService {
             if(folderRepository.checkPathFolder(user.getRootFolderId(),modifiedPath+"/"+folder.getName())) throw new CustomException(ErrorCode.FILE_CONFLICT);
             folderRepository.folderDelete(user.getRootFolderId(),originalPath);
             folderRepository.folderCreate(user.getRootFolderId(),modifiedPath,folder);
-            elasticFolderRepository.move(user.getId().toString(),originalPath,modifiedPath);
+            //elasticFolderRepository.move(user.getId().toString(),originalPath,modifiedPath);
         }
     }
 
@@ -86,34 +86,36 @@ public class FolderService {
 
         boolean changeSuccess=false;
         ImageUploadData imageUploadData = imageService.createImage(multipartFile, userEmail);
-        user.setImageId(imageUploadData.getImageId());
+        //user.setImageId(imageUploadData.getImageId());
         changeSuccess = imageUploadData.isSuccess();
 
         Link link=new Link(name,imageUploadData.getImageId(),url,keywords,isPublic);
         folderRepository.linkCreate(user.getRootFolderId(), path, link);
-        ElasticLink elasticLink= new ElasticLink(user.getId().toString(),path,link.get_id().toString(),isPublic,name);
-        elasticLinkRepository.save(elasticLink);
+//        ElasticLink elasticLink= new ElasticLink(user.getId().toString(),path,isPublic,link.get_id().toString(),name);
+//        elasticLinkRepository.save(elasticLink);
         return changeSuccess;
     }
 
     public Link linkRead(String userEmail,String path,String id){
         User user=getUserByEmail(userEmail);
+        System.out.println(user);
+        System.out.println(userEmail);
         return folderRepository.linkRead(user.getRootFolderId(),path,new ObjectId(id));
     }
 
     public boolean linkUpdate(String id,String email,String path,String name,String url,MultipartFile multipartFile,List<String> keywords,String isPublic,Boolean imageChange){
         User user = getUserByEmail(email);
 
-
         boolean changeSuccess=false;
         if(imageChange){
             ImageUploadData imageUploadData = imageService.createImage(multipartFile, email);
-            user.setImageId(imageUploadData.getImageId());
+            //user.setImageId(imageUploadData.getImageId());
             changeSuccess = imageUploadData.isSuccess();
             Link link=new Link(name,imageUploadData.getImageId(),url,keywords,isPublic);
             folderRepository.linkUpdate(user.getRootFolderId(), path,new ObjectId(id), link);
         }else{
-            Link link=new Link(name,linkRead(email,path,id).getImageId(),url,keywords,isPublic);
+            ObjectId originalImageId=linkRead(email,path,id).getImageId();
+            Link link=new Link(name,originalImageId,url,keywords,isPublic);
             folderRepository.linkUpdate(user.getRootFolderId(), path,new ObjectId(id), link);
         }
         return changeSuccess;
@@ -121,11 +123,16 @@ public class FolderService {
 
     @Transactional
     public void linkDelete(String email,String path,List<String> ids){
+        System.out.println(email);
         User user = getUserByEmail(email);
+        System.out.println(user);
         for(int i=0;i<ids.size();++i){
-            ObjectId imageId = linkRead(email,path,ids.get(i)).getImageId();
+            System.out.println(email);
+            ObjectId imageId=linkRead(email,path,ids.get(i)).getImageId();
+            System.out.println(imageId);
             if(imageId!=null){
                 imageService.deleteImage(imageId);
+                System.out.println("!");
             }
             folderRepository.linkDelete(user.getRootFolderId(), path,new ObjectId(ids.get(i)));
         }

@@ -65,9 +65,9 @@ public class FolderTest {
         folderRepository.folderCreate(userRootFolder.get_id(),"",folder12);
 //        Folder folder13=new Folder("folder21");
 //        folderRepository.folderCreate(userRootFolder.get_id(),"",folder13);
-        Link link11=new Link("link11",new ObjectId(),"url",null,"true");
+        Link link11=new Link("link11",null,"url",null,"true");
         folderRepository.linkCreate(userRootFolder.get_id(),"",link11);
-        Link link12=new Link("link12",new ObjectId(),"url",null,"true");
+        Link link12=new Link("link12",null,"url",null,"true");
         folderRepository.linkCreate(userRootFolder.get_id(),"",link12);
 
 
@@ -75,9 +75,9 @@ public class FolderTest {
         folderRepository.folderCreate(userRootFolder.get_id(),"folder11",folder21);
         Folder folder22=new Folder("folder22");
         folderRepository.folderCreate(userRootFolder.get_id(),"folder11",folder22);
-        Link link21=new Link("link21",new ObjectId(),"url",null,"true");
+        Link link21=new Link("link21",null,"url",null,"true");
         folderRepository.linkCreate(userRootFolder.get_id(),"folder11",link21);
-        Link link22=new Link("link22",new ObjectId(),"url",null,"true");
+        Link link22=new Link("link22",null,"url",null,"true");
         folderRepository.linkCreate(userRootFolder.get_id(),"folder11",link22);
 
 
@@ -85,10 +85,10 @@ public class FolderTest {
         folderRepository.folderCreate(userRootFolder.get_id(),"folder11/folder21",folder31);
         Folder folder32=new Folder("folder32");
         folderRepository.folderCreate(userRootFolder.get_id(),"folder11/folder21",folder32);
-        Link link31=new Link("link31",new ObjectId(),"url",null,"true");
+        Link link31=new Link("link31",null,"url",null,"true");
         idUpdate=link31.get_id();
         folderRepository.linkCreate(userRootFolder.get_id(),"folder11/folder21",link31);
-        Link link32=new Link("link32",new ObjectId(),"url",null,"true");
+        Link link32=new Link("link32",null,"url",null,"true");
         folderRepository.linkCreate(userRootFolder.get_id(),"folder11/folder21",link32);
 
 

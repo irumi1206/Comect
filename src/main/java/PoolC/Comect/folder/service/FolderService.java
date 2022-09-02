@@ -98,6 +98,8 @@ public class FolderService {
 
     public Link linkRead(String userEmail,String path,String id){
         User user=getUserByEmail(userEmail);
+        System.out.println(user);
+        System.out.println(userEmail);
         return folderRepository.linkRead(user.getRootFolderId(),path,new ObjectId(id));
     }
 
@@ -121,11 +123,16 @@ public class FolderService {
 
     @Transactional
     public void linkDelete(String email,String path,List<String> ids){
+        System.out.println(email);
         User user = getUserByEmail(email);
+        System.out.println(user);
         for(int i=0;i<ids.size();++i){
+            System.out.println(email);
             ObjectId imageId=linkRead(email,path,ids.get(i)).getImageId();
+            System.out.println(imageId);
             if(imageId!=null){
                 imageService.deleteImage(imageId);
+                System.out.println("!");
             }
             folderRepository.linkDelete(user.getRootFolderId(), path,new ObjectId(ids.get(i)));
         }

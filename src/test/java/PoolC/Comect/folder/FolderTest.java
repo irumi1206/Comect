@@ -23,6 +23,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -64,9 +65,9 @@ public class FolderTest {
         folderRepository.folderCreate(userRootFolder.get_id(),"",folder12);
 //        Folder folder13=new Folder("folder21");
 //        folderRepository.folderCreate(userRootFolder.get_id(),"",folder13);
-        Link link11=new Link("link11","imageUrl","url",null,"true");
+        Link link11=new Link("link11",new ObjectId(),"url",null,"true");
         folderRepository.linkCreate(userRootFolder.get_id(),"",link11);
-        Link link12=new Link("link12","imageUrl","url",null,"true");
+        Link link12=new Link("link12",new ObjectId(),"url",null,"true");
         folderRepository.linkCreate(userRootFolder.get_id(),"",link12);
 
 
@@ -74,9 +75,9 @@ public class FolderTest {
         folderRepository.folderCreate(userRootFolder.get_id(),"folder11",folder21);
         Folder folder22=new Folder("folder22");
         folderRepository.folderCreate(userRootFolder.get_id(),"folder11",folder22);
-        Link link21=new Link("link21","imageUrl","url",null,"true");
+        Link link21=new Link("link21",new ObjectId(),"url",null,"true");
         folderRepository.linkCreate(userRootFolder.get_id(),"folder11",link21);
-        Link link22=new Link("link22","imageUrl","url",null,"true");
+        Link link22=new Link("link22",new ObjectId(),"url",null,"true");
         folderRepository.linkCreate(userRootFolder.get_id(),"folder11",link22);
 
 
@@ -84,10 +85,10 @@ public class FolderTest {
         folderRepository.folderCreate(userRootFolder.get_id(),"folder11/folder21",folder31);
         Folder folder32=new Folder("folder32");
         folderRepository.folderCreate(userRootFolder.get_id(),"folder11/folder21",folder32);
-        Link link31=new Link("link31","imageUrl","url",null,"true");
+        Link link31=new Link("link31",new ObjectId(),"url",null,"true");
         idUpdate=link31.get_id();
         folderRepository.linkCreate(userRootFolder.get_id(),"folder11/folder21",link31);
-        Link link32=new Link("link32","imageUrl","url",null,"true");
+        Link link32=new Link("link32",new ObjectId(),"url",null,"true");
         folderRepository.linkCreate(userRootFolder.get_id(),"folder11/folder21",link32);
 
 
@@ -1031,7 +1032,7 @@ public class FolderTest {
                 .path(path)
                 .name(name)
                 .url(url)
-                .imageUrl(imageUrl)
+                .multipartFile(null)
                 .keywords(keywords)
                 .isPublic(isPublic)
                 .build();
@@ -1073,7 +1074,7 @@ public class FolderTest {
                 .path(path)
                 .name(name)
                 .url(url)
-                .imageUrl(imageUrl)
+                .multipartFile(null)
                 .keywords(keywords)
                 .isPublic(isPublic)
                 .build();
@@ -1115,7 +1116,7 @@ public class FolderTest {
                 .path(path)
                 .name(name)
                 .url(url)
-                .imageUrl(imageUrl)
+                .multipartFile(null)
                 .keywords(keywords)
                 .isPublic(isPublic)
                 .build();
@@ -1156,7 +1157,7 @@ public class FolderTest {
                 .path(path)
                 .name(name)
                 .url(url)
-                .imageUrl(imageUrl)
+                .multipartFile(null)
                 .keywords(keywords)
                 .isPublic(isPublic)
                 .build();
@@ -1198,9 +1199,10 @@ public class FolderTest {
                 .path(path)
                 .name(name)
                 .url(url)
-                .imageUrl(imageUrl)
+                .multipartFile(null)
                 .keywords(keywords)
                 .isPublic(isPublic)
+                .imageChange(false)
                 .build();
 
         //when
@@ -1241,9 +1243,10 @@ public class FolderTest {
                 .path(path)
                 .name(name)
                 .url(url)
-                .imageUrl(imageUrl)
+                .multipartFile(null)
                 .keywords(keywords)
                 .isPublic(isPublic)
+                .imageChange(false)
                 .build();
 
         //when
@@ -1283,9 +1286,10 @@ public class FolderTest {
                 .path(path)
                 .name(name)
                 .url(url)
-                .imageUrl(imageUrl)
+                .multipartFile(null)
                 .keywords(keywords)
                 .isPublic(isPublic)
+                .imageChange(false)
                 .build();
 
         //when

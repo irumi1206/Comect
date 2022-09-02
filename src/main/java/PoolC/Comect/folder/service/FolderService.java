@@ -86,7 +86,7 @@ public class FolderService {
 
         boolean changeSuccess=false;
         ImageUploadData imageUploadData = imageService.createImage(multipartFile, userEmail);
-        user.setImageId(imageUploadData.getImageId());
+        //user.setImageId(imageUploadData.getImageId());
         changeSuccess = imageUploadData.isSuccess();
 
         Link link=new Link(name,imageUploadData.getImageId(),url,keywords,isPublic);
@@ -109,7 +109,7 @@ public class FolderService {
         boolean changeSuccess=false;
         if(imageChange){
             ImageUploadData imageUploadData = imageService.createImage(multipartFile, email);
-            user.setImageId(imageUploadData.getImageId());
+            //user.setImageId(imageUploadData.getImageId());
             changeSuccess = imageUploadData.isSuccess();
             Link link=new Link(name,imageUploadData.getImageId(),url,keywords,isPublic);
             folderRepository.linkUpdate(user.getRootFolderId(), path,new ObjectId(id), link);

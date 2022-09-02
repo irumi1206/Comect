@@ -47,7 +47,7 @@ public class ImageService {
 
     public ImageUploadData createImage(MultipartFile multipartFile,String email){
         ImageUploadData imageUploadData = new ImageUploadData();
-        if(multipartFile!=null && multipartFile.isEmpty()){
+        if(multipartFile!=null && !multipartFile.isEmpty()){
             Image image = new Image(multipartFile.getContentType(),email);
             String upLoadDir = "imageStorage";
             try{

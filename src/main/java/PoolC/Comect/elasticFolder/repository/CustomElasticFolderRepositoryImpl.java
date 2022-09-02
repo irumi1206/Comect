@@ -25,6 +25,26 @@
 //
 //    private final ElasticsearchOperations elasticsearchOperations;
 //
+//    public List<ElasticFolder> searchFolder(List<String> ids,String keyword){
+//
+//        Criteria criteria=Criteria.where("ownerId").in(ids)
+//                .and(Criteria.where("folderName").matches(keyword));
+//        Query query=new CriteriaQuery(criteria);
+//        SearchHits<ElasticFolder> elasticFolderList=elasticsearchOperations.search(query,ElasticFolder.class);
+//        return elasticFolderList.stream().map(SearchHit::getContent).collect(Collectors.toList());
+//
+//    }
+//
+//    public List<ElasticFolder> searchExcludeFolder(List<String> ids,String keyword){
+//
+//        Criteria criteria=Criteria.where("ownerId").notIn(ids)
+//                .and(Criteria.where("folderName").matches(keyword));
+//        Query query=new CriteriaQuery(criteria);
+//        SearchHits<ElasticFolder> elasticFolderList=elasticsearchOperations.search(query,ElasticFolder.class);
+//        return elasticFolderList.stream().map(SearchHit::getContent).collect(Collectors.toList());
+//
+//    }
+//
 //    public void delete(String ownerId, String path){
 //        Criteria criteria = Criteria.where("path").startsWith(path)
 //                .and(Criteria.where("ownerId").matches(ownerId));

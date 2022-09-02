@@ -3,8 +3,9 @@ package PoolC.Comect.folder.service;
 import PoolC.Comect.common.exception.CustomException;
 import PoolC.Comect.common.exception.ErrorCode;
 //import PoolC.Comect.elasticFolder.domain.ElasticFolder;
+//import PoolC.Comect.elasticFolder.domain.ElasticLink;
 //import PoolC.Comect.elasticFolder.repository.ElasticFolderRepository;
-//import PoolC.Comect.elasticFolder.service.ElasticFolderService;
+//import PoolC.Comect.elasticFolder.repository.ElasticLinkRepository;
 import PoolC.Comect.folder.domain.Link;
 import PoolC.Comect.folder.domain.Folder;
 import PoolC.Comect.folder.repository.FolderRepository;
@@ -25,14 +26,15 @@ public class FolderService {
 
     private final FolderRepository folderRepository;
     private final UserRepository userRepository;
-    //private final ElasticFolderRepository elasticFolderRepository;
+//    private final ElasticFolderRepository elasticFolderRepository;
+//    private final ElasticLinkRepository elasticLinkRepository;
 
     public void folderCreate(String userEmail, String path, String folderName){
         User user = getUserByEmail(userEmail);
         Folder folder = new Folder(folderName);
         folderRepository.folderCreate(user.getRootFolderId(), path, folder);
-        //ElasticFolder elasticFolder=new ElasticFolder(user.getId().toString(),path+folderName+"/",folderName);
-        //elasticFolderRepository.save(elasticFolder);
+//        ElasticFolder elasticFolder=new ElasticFolder(user.getId().toString(),path+folderName+"/",folderName);
+//        elasticFolderRepository.save(elasticFolder);
     }
 
     public Folder folderRead(String userEmail, String path){
@@ -77,6 +79,8 @@ public class FolderService {
         User user = getUserByEmail(userEmail);
         Link link=new Link(name,imageUrl,url,keywords,isPublic);
         folderRepository.linkCreate(user.getRootFolderId(), path, link);
+//        ElasticLink elasticLink= new ElasticLink(user.getId().toString(),path,link.get_id().toString(),isPublic,name);
+//        elasticLinkRepository.save(elasticLink);
     }
 
     public Link linkRead(String userEmail,String path,String id){

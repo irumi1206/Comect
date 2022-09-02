@@ -139,7 +139,7 @@ public class UserService {
         return followeds;
     }
 
-    private void validateDuplicateUser(String email){
+    public void validateDuplicateUser(String email){
         if(!userRepository.findByEmail(email).isEmpty()){
             throw new CustomException(ErrorCode.EMAIL_EXISTS);
         }

@@ -185,5 +185,15 @@ public class UserController {
                 .build();
         return ResponseEntity.ok(readFollowSmallResponseDto);
     }
+
+    @ApiOperation(value="팔로워, 팔로잉 최대 5명 조회", notes="")
+    @ApiResponses({
+            @ApiResponse(responseCode = "409", description = "이미 존재하는 이메일")
+    })
+    @GetMapping("/email/valid")
+    public ResponseEntity<Void> emailCheck(@ModelAttribute EmailValidRequestDto request){
+        userService.validateDuplicateUser(request.getEmail());
+        return ResponseEntity.ok().build();
+    }
 }
 

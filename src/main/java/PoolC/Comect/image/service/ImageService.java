@@ -35,8 +35,8 @@ public class ImageService {
     public void deleteImage(ObjectId id){
         try{
             Files.delete(Paths.get("imageStorage/"+id.toHexString()));
-        }catch(IOException ioe){
-            throw new CustomException(ErrorCode.FILE_NOT_FOUND);
+        }catch(Exception e){
+
         }
         Image image = imageRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.IMAGE_NOT_FOUND));
 //        if(!image.getEmail().equals(email)){

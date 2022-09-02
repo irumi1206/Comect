@@ -49,7 +49,7 @@ public class UserService {
 
     public String imageToUrl(MultipartFile multipartFile,String email){
         String imageUrl="";
-        if(!multipartFile.isEmpty()){
+        if(multipartFile!=null){
             ObjectId imageId = imageService.upLoad(multipartFile, email);
             imageUrl="http://43.200.175.52:8080/image?id="+imageId.toHexString();
         }

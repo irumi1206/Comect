@@ -128,11 +128,12 @@ public class FolderService {
                 link=new Link(name,imageUrl,url,keywords,isPublic);
             }
             folderRepository.linkUpdate(user.getRootFolderId(), path,new ObjectId(id), link);
+            elasticLinkRepository.update(user.getId().toString(),path,id,link.get_id().toString(),name);
         }else{
             String originalImageUrl=linkRead(email,path,id).getImageUrl();
             Link link=new Link(name,originalImageUrl,url,keywords,isPublic);
             folderRepository.linkUpdate(user.getRootFolderId(), path,new ObjectId(id), link);
-            elasticLinkRepository.update(user.getId().toString(),path,id,newId,name);
+            elasticLinkRepository.update(user.getId().toString(),path,id,link.get_id().toString(),name);
         }
         return changeSuccess;
     }

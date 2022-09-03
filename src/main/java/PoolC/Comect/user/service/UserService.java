@@ -81,7 +81,6 @@ public class UserService {
         }else{
             changeSuccess=true;
         }
-        else changeSuccess=true;
 
         userRepository.save(user);
         return changeSuccess;

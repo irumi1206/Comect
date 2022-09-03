@@ -30,15 +30,15 @@ public class ImageService {
 
     private final ImageRepository imageRepository;
 
-
-    @Transactional
     public void deleteImage(ObjectId id){
         try{
             Files.delete(Paths.get("imageStorage/"+id.toHexString()));
         }catch(Exception e){
-
+            System.out.println("exception1");
         }
-        imageRepository.findById(id).ifPresent((image)->imageRepository.delete(image));
+
+        imageRepository.deleteById(id);
+
 //        if(!image.getEmail().equals(email)){
 //            throw new CustomException(ErrorCode.NOT_MY_IMAGE);
 //        }

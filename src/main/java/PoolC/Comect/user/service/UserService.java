@@ -47,9 +47,6 @@ public class UserService {
         ImageUploadData imageUploadData = imageService.createImage(multipartFile, email);
         Folder folder=new Folder("");
         folderRepository.save(folder);
-        if(true){
-            throw new CustomException(ErrorCode.IMAGE_SAVE_CANCELED);
-        }
         User user=new User(nickname,email,folder.get_id(),imageUploadData.getImageId(), password);
         userRepository.save(user);
         return imageUploadData.isSuccess();
@@ -72,13 +69,15 @@ public class UserService {
             validateDuplicateNickname(userNickname);
             user.setNickname(userNickname);
         }
-        boolean changeSuccess=false;
+        boolean changeSuccess;
         if(imageChange.equals("true")){
-            imageService.deleteImage(user.getImageId());
+            if(user.getImageId()!=null) imageService.deleteImage(user.getImageId());
             ImageUploadData imageUploadData = imageService.createImage(newMultipartFile, email);
             user.setImageId(imageUploadData.getImageId());
             changeSuccess = imageUploadData.isSuccess();
         }
+        else changeSuccess=true;
+
         userRepository.save(user);
         return changeSuccess;
     }

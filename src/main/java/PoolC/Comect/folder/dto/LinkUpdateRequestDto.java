@@ -25,9 +25,10 @@ public class LinkUpdateRequestDto {
     private List<String> keywords;
     private String isPublic;
     private String imageChange;
+    private String imageUrl;
 
     @Builder
-    public LinkUpdateRequestDto(String id, String email, String path, String name,String url,MultipartFile multipartFile,List<String> keywords,String isPublic,String imageChange){
+    public LinkUpdateRequestDto(String id, String email, String path, String name,String url,MultipartFile multipartFile,List<String> keywords,String isPublic,String imageChange,String imageUrl){
         this.id=id;
         this.email=email;
         this.path=path;
@@ -37,5 +38,6 @@ public class LinkUpdateRequestDto {
         this.keywords=keywords;
         this.isPublic=isPublic;
         this.imageChange=imageChange;
+        this.imageUrl=imageUrl;
     }
 }

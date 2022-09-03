@@ -23,27 +23,28 @@ public class User {
     private String nickname;
     private String email;
     private ObjectId rootFolderId;
-    private ObjectId imageId;
+    private String imageUrl;
     private List<ObjectId> followings;
     private List<ObjectId> followers;
     private String password;
 
-    public User(String nickname, String email, ObjectId rootFolderId, ObjectId imageId, String password) {
+    public User(String nickname, String email, ObjectId rootFolderId, String imageUrl, String password) {
         this.id=new ObjectId();
         this.nickname = nickname;
         this.email = email;
         this.rootFolderId = rootFolderId;
-        this.imageId = imageId;
+        this.imageUrl = imageUrl;
         this.password = password;
         this.followings=new ArrayList<>();
         this.followers=new ArrayList<>();
     }
-
-    public String getUrl(){
-        if(imageId==null){
-            return "";
-        }else{
-            return "http://43.200.175.52:8080/image?id="+imageId.toHexString();
+    public ObjectId getImageId(){
+        if(this.imageUrl==null){
+            return null;
         }
+        String[] split = imageUrl.split("id=");
+        String s = split[split.length - 1];
+        return new ObjectId(s);
     }
+
 }

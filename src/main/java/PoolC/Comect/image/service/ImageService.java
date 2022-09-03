@@ -36,12 +36,11 @@ public class ImageService {
         }catch(Exception e){
             System.out.println("exception1");
         }
+        try{
+            imageRepository.deleteById(id);
+        }catch(Exception e){
 
-        imageRepository.deleteById(id);
-
-//        if(!image.getEmail().equals(email)){
-//            throw new CustomException(ErrorCode.NOT_MY_IMAGE);
-//        }
+        }
     }
 
     public ImageUploadData createImage(MultipartFile multipartFile,String email){
@@ -51,12 +50,11 @@ public class ImageService {
             String upLoadDir = "imageStorage";
             try{
                 saveFile(upLoadDir,image.getId().toHexString(),multipartFile);
+                imageRepository.save(image);
+                imageUploadData.setImageUrl("http://43.200.175.52:8080/image?id="+image.getId().toHexString());
             }catch(Exception e){
-                throw new CustomException(ErrorCode.IMAGE_SAVE_CANCELED);
+                imageUploadData.setSuccess(false);
             }
-            imageRepository.save(image);
-            imageUploadData.setImageId(image.getId());
-            imageUploadData.setSuccess(true);
         }
         return imageUploadData;
     }

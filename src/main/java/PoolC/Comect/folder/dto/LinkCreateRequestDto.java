@@ -23,9 +23,10 @@ public class LinkCreateRequestDto {
     private MultipartFile multipartFile;
     private List<String> keywords;
     private String isPublic;
+    private String imageUrl;
 
     @Builder
-    public LinkCreateRequestDto(String email, String path, String name, MultipartFile multipartFile, String url, List<String> keywords, String isPublic){
+    public LinkCreateRequestDto(String email, String path, String name, MultipartFile multipartFile, String url, List<String> keywords, String isPublic,String imageUrl){
         this.email=email;
         this.path=path;
         this.name= name;
@@ -33,5 +34,6 @@ public class LinkCreateRequestDto {
         this.multipartFile=multipartFile;
         this.keywords=keywords;
         this.isPublic=isPublic;
+        this.imageUrl=imageUrl;
     }
 }

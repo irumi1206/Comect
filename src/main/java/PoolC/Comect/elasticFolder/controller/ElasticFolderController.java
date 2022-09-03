@@ -94,19 +94,15 @@ public class ElasticFolderController {
 
         if(searchMe.equals("true")){
             List<ElasticLink> searchMeList= elasticService.searchLinkMe(ownerId.toString(),keyword);
-            System.out.println(searchMeList);
+            System.out.println(searchMeList.size());
             for(ElasticLink elasticLink:searchMeList){
                 String linkOwnerId=elasticLink.getOwnerId();
-                System.out.println(linkOwnerId);
                 String linkOwnerNickName=userService.findOneId(new ObjectId(linkOwnerId)).getNickname();
-                System.out.println(linkOwnerNickName);
                 String linkPath=elasticLink.getPath();
-                System.out.println(linkPath);
                 String linkName=elasticLink.getLinkName();
-                System.out.println(linkName);
                 String linkId=elasticLink.getLinkId();
-                System.out.println(linkId);
-                Link link=folderService.linkRead(email,linkPath,linkId);
+                String linkEmail=userService.findOneId(new ObjectId(linkOwnerId)).getEmail();
+                Link link=folderService.linkRead(linkEmail,linkPath,linkId);
                 myLinks.add(new ElasticLinkSearchInfo(linkOwnerId,linkOwnerNickName,linkPath,linkId,linkName,link.getImageUrl(),link.getUrl(),link.getKeywords()));
             }
         }
@@ -115,13 +111,16 @@ public class ElasticFolderController {
             List<ElasticLink> searchFollowingList= elasticService.searchLink(followingIds,keyword);
             followingIds.add(ownerId.toString());
             List<ElasticLink> searchNotFollowingList= elasticService.searchExcludeLink(followingIds,keyword);
+            System.out.println(searchFollowingList.size());
+            System.out.println(searchNotFollowingList.size());
             for(ElasticLink elasticLink:searchFollowingList){
                 String linkOwnerId=elasticLink.getOwnerId();
                 String linkOwnerNickName=userService.findOneId(new ObjectId(linkOwnerId)).getNickname();
                 String linkPath=elasticLink.getPath();
                 String linkName=elasticLink.getLinkName();
                 String linkId=elasticLink.getLinkId();
-                Link link=folderService.linkRead(email,linkPath,linkId);
+                String linkEmail=userService.findOneId(new ObjectId(linkOwnerId)).getEmail();
+                Link link=folderService.linkRead(linkEmail,linkPath,linkId);
                 followingLinks.add(new ElasticLinkSearchInfo(linkOwnerId,linkOwnerNickName,linkPath,linkId,linkName,link.getImageUrl(),link.getUrl(),link.getKeywords()));
             }
             for(ElasticLink elasticLink:searchNotFollowingList){
@@ -130,7 +129,8 @@ public class ElasticFolderController {
                 String linkPath=elasticLink.getPath();
                 String linkName=elasticLink.getLinkName();
                 String linkId=elasticLink.getLinkId();
-                Link link=folderService.linkRead(email,linkPath,linkId);
+                String linkEmail=userService.findOneId(new ObjectId(linkOwnerId)).getEmail();
+                Link link=folderService.linkRead(linkEmail,linkPath,linkId);
                 notFollowingLinks.add(new ElasticLinkSearchInfo(linkOwnerId,linkOwnerNickName,linkPath,linkId,linkName,link.getImageUrl(),link.getUrl(),link.getKeywords()));
             }
         }

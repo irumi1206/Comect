@@ -30,23 +30,17 @@ public class ElasticLink {
     @Field(type=FieldType.Text, analyzer="nori_analyzer")
     private String linkName;
 
-    public ElasticLink(String ownerId, String path, String isPublic, String linkId, String linkName) {
+    @Field(type=FieldType.Text, analyzer="standard")
+    private String keywords;
+
+    public ElasticLink(String ownerId, String path, String isPublic, String linkId, String linkName, String keywords) {
         this.id = new ObjectId().toString();
         this.ownerId = ownerId;
         this.path = path;
         this.isPublic=isPublic;
         this.linkId=linkId;
         this.linkName = linkName;
+        this.keywords=keywords;
     }
 
-    @Override
-    public String toString() {
-        return "ElasticLink{" +
-                "id='" + id + '\'' +
-                ", ownerId='" + ownerId + '\'' +
-                ", path='" + path + '\'' +
-                ", isPublic='" + isPublic + '\'' +
-                ", linkName='" + linkName + '\'' +
-                '}';
-    }
 }

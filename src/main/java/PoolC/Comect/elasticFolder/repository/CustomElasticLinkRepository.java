@@ -12,7 +12,7 @@ public interface CustomElasticLinkRepository {
     public List<ElasticLink> searchExcludeLink(List<String> ids, String keyword);
 
     public void delete(String ownerId, String path,String id);
-    public void update(String ownerId, String path, String id, String newId,String newName);
+    public void update(String ownerId, String path, String id, String newId,String newName,String keywords);
     public void move(String ownerId, String originalPath, String id, String destinationPath);
 
     public void deleteFolder(String ownerId, String path);

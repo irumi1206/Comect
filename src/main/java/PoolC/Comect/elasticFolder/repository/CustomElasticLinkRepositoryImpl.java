@@ -2,8 +2,14 @@ package PoolC.Comect.elasticFolder.repository;
 
 import PoolC.Comect.elasticFolder.domain.ElasticFolder;
 import PoolC.Comect.elasticFolder.domain.ElasticLink;
+import PoolC.Comect.folder.domain.Link;
+import PoolC.Comect.folder.repository.FolderRepository;
+import PoolC.Comect.folder.service.FolderService;
+import PoolC.Comect.image.service.ImageService;
+import PoolC.Comect.user.service.UserService;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
@@ -13,9 +19,11 @@ import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Repository
 @RequiredArgsConstructor
@@ -24,32 +32,84 @@ public class CustomElasticLinkRepositoryImpl implements  CustomElasticLinkReposi
     private final ElasticsearchOperations elasticsearchOperations;
 
     public List<ElasticLink> searchLinkMe(String id, String keyword){
-        Criteria criteria=Criteria.where("ownerId").matches(id)
+        Criteria criteriaLinkName=Criteria.where("ownerId").matches(id)
                 .and(Criteria.where("linkName").matches(keyword));
-        Query query=new CriteriaQuery(criteria);
-        SearchHits<ElasticLink> elasticLinkSearchHits=elasticsearchOperations.search(query,ElasticLink.class);
-        return elasticLinkSearchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
+        Query queryLinkName=new CriteriaQuery(criteriaLinkName);
+        SearchHits<ElasticLink> elasticLinkSearchHitsLinkName=elasticsearchOperations.search(queryLinkName,ElasticLink.class);
+
+        Criteria criteriaKeyword=Criteria.where("ownerId").matches(id)
+                .and(Criteria.where("keywords").matches(keyword));
+        Query queryKeyword=new CriteriaQuery(criteriaKeyword);
+        SearchHits<ElasticLink> elasticLinkSearchHitsKeyword=elasticsearchOperations.search(queryKeyword,ElasticLink.class);
+
+        List<ElasticLink> elasticLinkList = new ArrayList<>(
+                Stream.of(elasticLinkSearchHitsLinkName.stream().map(SearchHit::getContent).collect(Collectors.toList()),elasticLinkSearchHitsKeyword.stream().map(SearchHit::getContent).collect(Collectors.toList()))
+                        .flatMap(List::stream)
+                        .collect(Collectors.toMap(ElasticLink::getId,
+                                d -> d,
+                                (ElasticLink x, ElasticLink y) -> x == null ? y : x))
+                        .values());
+
+        return elasticLinkList;
     }
 
     public List<ElasticLink> searchLink(List<String> ids, String keyword){
 
-        Criteria criteria=Criteria.where("ownerId").in(ids)
-                .and(Criteria.where("linkName").matches(keyword))
-                .and(Criteria.where("isPublic").matches("true"));
-        Query query=new CriteriaQuery(criteria);
-        SearchHits<ElasticLink> elasticLinkSearchHits=elasticsearchOperations.search(query,ElasticLink.class);
-        return elasticLinkSearchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
+        Criteria criteriaLinkName=Criteria.where("ownerId").in(ids)
+                .and(Criteria.where("linkName").matches(keyword));
+        Query queryLinkName=new CriteriaQuery(criteriaLinkName);
+        SearchHits<ElasticLink> elasticLinkSearchHitsLinkName=elasticsearchOperations.search(queryLinkName,ElasticLink.class);
+
+        Criteria criteriaKeyword=Criteria.where("ownerId").in(ids)
+                .and(Criteria.where("keywords").matches(keyword));
+        Query queryKeyword=new CriteriaQuery(criteriaKeyword);
+        SearchHits<ElasticLink> elasticLinkSearchHitsKeyword=elasticsearchOperations.search(queryKeyword,ElasticLink.class);
+
+        List<ElasticLink> elasticLinkList = new ArrayList<>(
+                Stream.of(elasticLinkSearchHitsLinkName.stream().map(SearchHit::getContent).collect(Collectors.toList()),elasticLinkSearchHitsKeyword.stream().map(SearchHit::getContent).collect(Collectors.toList()))
+                        .flatMap(List::stream)
+                        .collect(Collectors.toMap(ElasticLink::getId,
+                                d -> d,
+                                (ElasticLink x, ElasticLink y) -> x == null ? y : x))
+                        .values());
+
+        return elasticLinkList;
+
+//        Criteria criteria=Criteria.where("ownerId").in(ids)
+//                .and(Criteria.where("linkName").matches(keyword));
+//        Query query=new CriteriaQuery(criteria);
+//        SearchHits<ElasticLink> elasticLinkSearchHits=elasticsearchOperations.search(query,ElasticLink.class);
+//        return elasticLinkSearchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
 
     }
 
     public List<ElasticLink> searchExcludeLink(List<String> ids,String keyword){
 
-        Criteria criteria=Criteria.where("ownerId").notIn(ids)
-                .and(Criteria.where("linkName").matches(keyword))
-                .and(Criteria.where("isPublic").matches("true"));
-        Query query=new CriteriaQuery(criteria);
-        SearchHits<ElasticLink> elasticLinkSearchHits=elasticsearchOperations.search(query,ElasticLink.class);
-        return elasticLinkSearchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
+        Criteria criteriaLinkName=Criteria.where("ownerId").notIn(ids)
+                .and(Criteria.where("linkName").matches(keyword));
+        Query queryLinkName=new CriteriaQuery(criteriaLinkName);
+        SearchHits<ElasticLink> elasticLinkSearchHitsLinkName=elasticsearchOperations.search(queryLinkName,ElasticLink.class);
+
+        Criteria criteriaKeyword=Criteria.where("ownerId").notIn(ids)
+                .and(Criteria.where("keywords").matches(keyword));
+        Query queryKeyword=new CriteriaQuery(criteriaKeyword);
+        SearchHits<ElasticLink> elasticLinkSearchHitsKeyword=elasticsearchOperations.search(queryKeyword,ElasticLink.class);
+
+        List<ElasticLink> elasticLinkList = new ArrayList<>(
+                Stream.of(elasticLinkSearchHitsLinkName.stream().map(SearchHit::getContent).collect(Collectors.toList()),elasticLinkSearchHitsKeyword.stream().map(SearchHit::getContent).collect(Collectors.toList()))
+                        .flatMap(List::stream)
+                        .collect(Collectors.toMap(ElasticLink::getId,
+                                d -> d,
+                                (ElasticLink x, ElasticLink y) -> x == null ? y : x))
+                        .values());
+
+        return elasticLinkList;
+
+//        Criteria criteria=Criteria.where("ownerId").notIn(ids)
+//                .and(Criteria.where("linkName").matches(keyword));
+//        Query query=new CriteriaQuery(criteria);
+//        SearchHits<ElasticLink> elasticLinkSearchHits=elasticsearchOperations.search(query,ElasticLink.class);
+//        return elasticLinkSearchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
 
     }
 
@@ -65,7 +125,7 @@ public class CustomElasticLinkRepositoryImpl implements  CustomElasticLinkReposi
         System.out.println(a.getDeleted());
     }
 
-    public void update(String ownerId, String path, String id, String newId, String newName){
+    public void update(String ownerId, String path, String id, String newId, String newName,String keywords){
         Criteria criteria = Criteria.where("path").matches(path)
                 .and(Criteria.where("ownerId").matches(ownerId))
                 .and(Criteria.where("linkId").matches(id));
@@ -76,6 +136,7 @@ public class CustomElasticLinkRepositoryImpl implements  CustomElasticLinkReposi
             ElasticLink elasticLink=elasticLinkSearchHit.getContent();
             elasticLink.setLinkName(newName);
             elasticLink.setLinkId(newId);
+            elasticLink.setKeywords(keywords);
             elasticsearchOperations.save(elasticLink);
         }
     }
@@ -97,12 +158,11 @@ public class CustomElasticLinkRepositoryImpl implements  CustomElasticLinkReposi
     }
 
     public void deleteFolder(String ownerId, String path){
-        System.out.println(ownerId);
-        System.out.println(path);
         Criteria criteria = Criteria.where("path").startsWith(path)
                 .and(Criteria.where("ownerId").matches(ownerId));
         Query query=new CriteriaQuery(criteria);
         elasticsearchOperations.delete(query, ElasticLink.class);
+
     }
     public void updateFolder(String ownerId, String path,String newName){
 

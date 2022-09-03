@@ -39,6 +39,7 @@ public class FolderService {
         Folder folder = new Folder(folderName);
         folderRepository.folderCreate(user.getRootFolderId(), path, folder);
         ElasticFolder elasticFolder=new ElasticFolder(user.getId().toString(),path+folderName+"/",folderName);
+        System.out.println(elasticFolder);
         elasticFolderRepository.save(elasticFolder);
     }
 
@@ -98,8 +99,6 @@ public class FolderService {
             changeSuccess=true;
         }
 
-        //user.setImageId(imageUploadData.getImageId());
-
         folderRepository.linkCreate(user.getRootFolderId(), path, link);
         ElasticLink elasticLink= new ElasticLink(user.getId().toString(),path,isPublic,link.get_id().toString(),name);
         elasticLinkRepository.save(elasticLink);
@@ -123,7 +122,6 @@ public class FolderService {
                 ImageUploadData imageUploadData = imageService.createImage(multipartFile, email);
                 changeSuccess = imageUploadData.isSuccess();
                 link=new Link(name,imageUploadData.getImageUrl(),url,keywords,isPublic);
-                //user.setImageId(imageUploadData.getImageId());
             }else{
                 link=new Link(name,imageUrl,url,keywords,isPublic);
             }

@@ -1,4 +1,4 @@
-package PoolC.Comect.configuration;
+package PoolC.Comect.common.configuration;
 
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +27,7 @@ public class ElasticSearchConfig extends AbstractElasticsearchConfiguration {
                 .build();
         return RestClients.create(clientConfiguration).rest();
     }
+    //.connectedTo("13.125.106.9:9200")
 
     @Bean(name = { "elasticsearchOperations", "elasticsearchTemplate" })
     public ElasticsearchOperations elasticsearchOperations(ElasticsearchConverter elasticsearchConverter,

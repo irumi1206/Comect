@@ -77,12 +77,12 @@ public class elasticFolderTest {
         folderService.folderCreate("sungha.kim123@gmail.com","로아/직업/","디트");
         folderService.folderCreate("sungha.kim123@gmail.com","로아/직업/디트/","디트 레이드 스킬트리");
 
-        folderService.linkCreate("sungha.kim123@gmail.com","로아/직업/블래/","블래스터링크","링크",null,null,"true");
-        folderService.linkCreate("sungha.kim123@gmail.com","로아/직업/블래/","블래스터링크1","링크",null,null,"true");
-        folderService.linkCreate("sungha.kim123@gmail.com","로아/직업/블래/","블래스터링크2","링크",null,null,"true");
-        folderService.linkCreate("sungha.kim123@gmail.com","로아/직업/블래/","블래스터링크3","링크",null,null,"true");
-        folderService.linkCreate("sungha.kim123@gmail.com","로아/직업/블래/","블래스터링크4","링크",null,null,"true");
-        folderService.linkCreate("sungha.kim123@gmail.com","로아/직업/블래/","블래스터링크5","링크",null,null,"true");
+        folderService.linkCreate("sungha.kim123@gmail.com","로아/직업/블래/","블래스터링크","링크",null,null,"true",null);
+        folderService.linkCreate("sungha.kim123@gmail.com","로아/직업/블래/","블래스터링크1","링크",null,null,"true",null);
+        folderService.linkCreate("sungha.kim123@gmail.com","로아/직업/블래/","블래스터링크2","링크",null,null,"true",null);
+        folderService.linkCreate("sungha.kim123@gmail.com","로아/직업/블래/","블래스터링크3","링크",null,null,"true",null);
+        folderService.linkCreate("sungha.kim123@gmail.com","로아/직업/블래/","블래스터링크4","링크",null,null,"true",null);
+//        folderService.linkCreate("sungha.kim123@gmail.com","로아/직업/블래/","블래스터링크5","링크",null,null,"true",null);
 
 //        Folder folder=folderService.folderRead("sungha.kim123@gmail.com","로아/직업/블래/");
 //        String id=folder.getLinks().get(0).get_id().toString();

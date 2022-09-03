@@ -30,15 +30,14 @@ public class ImageService {
 
     private final ImageRepository imageRepository;
 
-
     public void deleteImage(ObjectId id){
         try{
             Files.delete(Paths.get("imageStorage/"+id.toHexString()));
         }catch(Exception e){
-
+            System.out.println("exception1");
         }
         try{
-            imageRepository.delete(imageRepository.findById(id).get());
+            imageRepository.deleteById(id);
         }catch(Exception e){
 
         }

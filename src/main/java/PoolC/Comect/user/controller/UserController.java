@@ -81,6 +81,7 @@ public class UserController {
     })
     @PutMapping("/member/me")
     public ResponseEntity<UpdateUserResponseDto> updateUser(@Valid @ModelAttribute UpdateUserRequestDto request){
+        System.out.println(request);
         boolean success = userService.update(request.getEmail(), request.getNewNickname(), request.getNewMultipartFile(), request.getImageChange());
         UpdateUserResponseDto updateUserResponseDto = UpdateUserResponseDto
                 .builder()

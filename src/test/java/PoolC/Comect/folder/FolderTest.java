@@ -1202,7 +1202,7 @@ public class FolderTest {
                 .multipartFile(null)
                 .keywords(keywords)
                 .isPublic(isPublic)
-                .imageChange(false)
+                .imageChange("false")
                 .build();
 
         //when
@@ -1246,7 +1246,7 @@ public class FolderTest {
                 .multipartFile(null)
                 .keywords(keywords)
                 .isPublic(isPublic)
-                .imageChange(false)
+                .imageChange("false")
                 .build();
 
         //when
@@ -1289,7 +1289,7 @@ public class FolderTest {
                 .multipartFile(null)
                 .keywords(keywords)
                 .isPublic(isPublic)
-                .imageChange(false)
+                .imageChange("false")
                 .build();
 
         //when

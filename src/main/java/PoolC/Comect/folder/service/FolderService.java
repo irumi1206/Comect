@@ -81,15 +81,22 @@ public class FolderService {
         return folderRepository.checkPathFolder(user.getRootFolderId(), path);
     }
 
-    public boolean linkCreate(String userEmail, String path, String name, String url, MultipartFile multipartFile, List<String> keywords, String isPublic){
+    public boolean linkCreate(String userEmail, String path, String name, String url, MultipartFile multipartFile, List<String> keywords, String isPublic, String imageUrl){
         User user = getUserByEmail(userEmail);
 
-        boolean changeSuccess=false;
-        ImageUploadData imageUploadData = imageService.createImage(multipartFile, userEmail);
-        //user.setImageId(imageUploadData.getImageId());
-        changeSuccess = imageUploadData.isSuccess();
+        boolean changeSuccess;
+        Link link;
+        if(multipartFile!=null && !multipartFile.isEmpty()){
+            ImageUploadData imageUploadData = imageService.createImage(multipartFile, userEmail);
+            changeSuccess = imageUploadData.isSuccess();
+            link=new Link(name,imageUploadData.getImageUrl(),url,keywords,isPublic);
+        }else{
+            link=new Link(name,imageUrl,url,keywords,isPublic);
+            changeSuccess=true;
+        }
 
-        Link link=new Link(name,imageUploadData.getImageId(),url,keywords,isPublic);
+        //user.setImageId(imageUploadData.getImageId());
+
         folderRepository.linkCreate(user.getRootFolderId(), path, link);
 //        ElasticLink elasticLink= new ElasticLink(user.getId().toString(),path,isPublic,link.get_id().toString(),name);
 //        elasticLinkRepository.save(elasticLink);
@@ -103,19 +110,24 @@ public class FolderService {
         return folderRepository.linkRead(user.getRootFolderId(),path,new ObjectId(id));
     }
 
-    public boolean linkUpdate(String id,String email,String path,String name,String url,MultipartFile multipartFile,List<String> keywords,String isPublic,String imageChange){
+    public boolean linkUpdate(String id,String email,String path,String name,String url,MultipartFile multipartFile,List<String> keywords,String isPublic,String imageChange,String imageUrl){
         User user = getUserByEmail(email);
 
-        boolean changeSuccess=false;
+        boolean changeSuccess=true;
         if(imageChange.equals("true")){
-            ImageUploadData imageUploadData = imageService.createImage(multipartFile, email);
-            //user.setImageId(imageUploadData.getImageId());
-            changeSuccess = imageUploadData.isSuccess();
-            Link link=new Link(name,imageUploadData.getImageId(),url,keywords,isPublic);
+            Link link;
+            if(multipartFile!=null && !multipartFile.isEmpty()) {
+                ImageUploadData imageUploadData = imageService.createImage(multipartFile, email);
+                changeSuccess = imageUploadData.isSuccess();
+                link=new Link(name,imageUploadData.getImageUrl(),url,keywords,isPublic);
+                //user.setImageId(imageUploadData.getImageId());
+            }else{
+                link=new Link(name,imageUrl,url,keywords,isPublic);
+            }
             folderRepository.linkUpdate(user.getRootFolderId(), path,new ObjectId(id), link);
         }else{
-            ObjectId originalImageId=linkRead(email,path,id).getImageId();
-            Link link=new Link(name,originalImageId,url,keywords,isPublic);
+            String originalImageUrl=linkRead(email,path,id).getImageUrl();
+            Link link=new Link(name,originalImageUrl,url,keywords,isPublic);
             folderRepository.linkUpdate(user.getRootFolderId(), path,new ObjectId(id), link);
         }
         return changeSuccess;

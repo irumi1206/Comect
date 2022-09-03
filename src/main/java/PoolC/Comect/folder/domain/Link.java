@@ -16,18 +16,22 @@ public class Link {
     private ObjectId _id;
 
     private String name;
-    private ObjectId imageId;
+    private String imageUrl;
     private String url;
     private List<String> keywords;
     private String isPublic;
 
-    public Link(String name, ObjectId imageId, String url,List<String> keywords, String isPublic) {
-        this._id=new ObjectId();
+    public Link(String name, String imageUrl, String url, List<String> keywords, String isPublic) {
+        this._id = new ObjectId();
         this.name = name;
-        this.imageId = imageId;
+        this.imageUrl = imageUrl;
         this.url = url;
-        this.keywords=keywords;
-        this.isPublic=isPublic;
+        this.keywords = keywords;
+        this.isPublic = isPublic;
+    }
+
+    public Link(){
+
     }
 
     @Override
@@ -35,18 +39,22 @@ public class Link {
         return "Link{" +
                 "_id=" + _id +
                 ", title='" + name + '\'' +
-                ", image='" + imageId + '\'' +
+                ", image='" + imageUrl + '\'' +
                 ", url='" + url + '\'' +
                 ", keywords=" + keywords +
                 ", isPublic='" + isPublic + '\'' +
                 '}';
     }
 
-    public String getImageUrl(){
-        if(imageId==null){
-            return "";
-        }else{
-            return "http://43.200.175.52:8080/image?id="+imageId.toHexString();
+    public ObjectId getImageId(){
+        if(this.imageUrl==null){
+            return null;
         }
+        String[] split = imageUrl.split("id=");
+        if(split.length==1){
+            return null;
+        }
+        String s = split[split.length - 1];
+        return new ObjectId(s);
     }
 }

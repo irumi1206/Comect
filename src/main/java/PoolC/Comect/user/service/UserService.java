@@ -12,7 +12,7 @@ import PoolC.Comect.user.domain.ImageUploadData;
 import PoolC.Comect.user.domain.MemberData;
 import PoolC.Comect.user.domain.User;
 import PoolC.Comect.user.repository.UserRepository;
-import com.mongodb.session.ClientSession;
+import com.mongodb.client.ClientSession;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
@@ -47,10 +47,7 @@ public class UserService {
         ImageUploadData imageUploadData = imageService.createImage(multipartFile, email);
         Folder folder=new Folder("");
         folderRepository.save(folder);
-        if(true){
-            throw new CustomException(ErrorCode.IMAGE_SAVE_CANCELED);
-        }
-        User user=new User(nickname,email,folder.get_id(),imageUploadData.getImageId(), password);
+        User user=new User(nickname,email,folder.get_id(),imageUploadData.getImageUrl(), password);
         userRepository.save(user);
         return imageUploadData.isSuccess();
     }
@@ -72,12 +69,17 @@ public class UserService {
             validateDuplicateNickname(userNickname);
             user.setNickname(userNickname);
         }
-        boolean changeSuccess=false;
+        boolean changeSuccess;
         if(imageChange.equals("true")){
-            imageService.deleteImage(user.getImageId());
+            ObjectId postImageId=user.getImageId();
             ImageUploadData imageUploadData = imageService.createImage(newMultipartFile, email);
-            user.setImageId(imageUploadData.getImageId());
             changeSuccess = imageUploadData.isSuccess();
+            if(changeSuccess){
+                imageService.deleteImage(postImageId);
+                user.setImageUrl(imageUploadData.getImageUrl());
+            }
+        }else{
+            changeSuccess=true;
         }
         userRepository.save(user);
         return changeSuccess;
@@ -114,7 +116,7 @@ public class UserService {
                 .follower(user.getFollowers().size())
                 .following(user.getFollowings().size())
                 .nickname(user.getNickname())
-                .imageUrl(user.getUrl())
+                .imageUrl(user.getImageUrl())
                 .build();
         return memberData;
     }
@@ -187,7 +189,7 @@ public class UserService {
                 FollowInfo followInfo = FollowInfo.builder()
                         .email(following.getEmail())
                         .nickname(following.getNickname())
-                        .imageUrl(following.getUrl())
+                        .imageUrl(following.getImageUrl())
                         .isFollowing(followings.contains(followId))
                         .build();
                 followInfos.add(followInfo);

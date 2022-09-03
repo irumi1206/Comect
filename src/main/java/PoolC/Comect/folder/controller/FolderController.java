@@ -150,7 +150,8 @@ public class FolderController {
         List<String> keywords=linkCreateRequestDto.getKeywords();
         for(String keyword:keywords) if(keyword.length()>30 || keyword.contains(" ") ) throw new CustomException(ErrorCode.INVALID_KEYWORD);
         String isPublic = linkCreateRequestDto.getIsPublic();
-        boolean imageSuccess = folderService.linkCreate(email, path, name, url, multipartFile, keywords, isPublic);
+        String imageUrl = linkCreateRequestDto.getImageUrl();
+        boolean imageSuccess = folderService.linkCreate(email, path, name, url, multipartFile, keywords, isPublic,imageUrl);
         LinkCreateResponseDto linkCreateResponseDto = new LinkCreateResponseDto();
         linkCreateResponseDto.setImageSuccess(imageSuccess);
         return ResponseEntity.ok(linkCreateResponseDto);
@@ -199,7 +200,8 @@ public class FolderController {
         List<String> keywords=linkUpdateRequestDto.getKeywords();
         String isPublic=linkUpdateRequestDto.getIsPublic();
         String imageChage = linkUpdateRequestDto.getImageChange();
-        boolean imageSuccess = folderService.linkUpdate(id, email, path, name, url, multipartFile, keywords, isPublic, imageChage);
+        String imageUrl=linkUpdateRequestDto.getImageUrl();
+        boolean imageSuccess = folderService.linkUpdate(id, email, path, name, url, multipartFile, keywords, isPublic, imageChage,imageUrl);
 
         LinkUpdateResponseDto linkUpdateResponseDto = new LinkUpdateResponseDto();
         linkUpdateResponseDto.setImageSuccess(imageSuccess);

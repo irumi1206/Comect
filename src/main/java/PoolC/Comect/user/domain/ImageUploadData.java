@@ -6,7 +6,7 @@ import org.bson.types.ObjectId;
 
 @Data
 public class ImageUploadData {
-    private boolean success = false;
-    private ObjectId imageId = null;
+    private boolean success = true;
+    private String imageUrl = null;
 
 }

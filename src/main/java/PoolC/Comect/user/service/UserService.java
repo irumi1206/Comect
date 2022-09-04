@@ -101,6 +101,7 @@ public class UserService {
     //@Transactional
     public void createFollow(String email, String followedNickname){
         User user = findOneEmail(email);
+        if(user.getNickname().equals(followedNickname)) throw new CustomException(ErrorCode.FOLLOW_ME);
         User followed = userRepository.findByNickname(followedNickname).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
         if(user.getFollowings().contains(followed.getId())){
             throw new CustomException(ErrorCode.FOLLOWING_EXIST);

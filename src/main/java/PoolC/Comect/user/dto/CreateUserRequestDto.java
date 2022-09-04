@@ -1,5 +1,6 @@
 package PoolC.Comect.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import lombok.Data;
@@ -31,4 +32,5 @@ public class CreateUserRequestDto {
             content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)  // Won't work without OCTET_STREAM as the mediaType.
     )
     private MultipartFile multipartFile;
+
 }

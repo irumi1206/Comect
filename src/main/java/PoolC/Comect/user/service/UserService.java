@@ -15,6 +15,7 @@ import PoolC.Comect.user.repository.UserRepository;
 import com.mongodb.client.ClientSession;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +34,7 @@ public class UserService {
     private final FolderRepository folderRepository;
     private final ImageService imageService;
     private final ImageRepository imageRepository;
+    private final PasswordEncoder passwordEncoder;
 
     //회원 가입
     @Transactional
@@ -54,12 +56,13 @@ public class UserService {
 
 
 
-    public void login(String email, String password){
+    public User login(String email, String password){
         //validateEmailUser(email);
         User user = userRepository.findByEmail(email).orElseThrow(()->new CustomException(ErrorCode.LOGIN_FAIL));
-        if(!user.getPassword().equals(password)) {
+        if(!passwordEncoder.matches(password,user.getPassword())) {
             throw new CustomException(ErrorCode.LOGIN_FAIL);
         }
+        return user;
     }
 
     public boolean update(String email,String userNickname, MultipartFile newMultipartFile, String imageChange){
@@ -209,7 +212,7 @@ public class UserService {
 
     public void deleteMember(String email, String password) {
         User user = findOneEmail(email);
-        if(!user.getPassword().equals(password)){
+        if(!passwordEncoder.matches(password,user.getPassword())){
             throw new CustomException(ErrorCode.LOGIN_FAIL);
         }
         for (ObjectId followerId : user.getFollowers()) {

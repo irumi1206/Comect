@@ -6,6 +6,7 @@ import PoolC.Comect.elasticFolder.service.ElasticService;
 import PoolC.Comect.folder.domain.Folder;
 import PoolC.Comect.folder.repository.FolderRepository;
 import PoolC.Comect.folder.service.FolderService;
+import PoolC.Comect.image.repository.ImageRepository;
 import PoolC.Comect.user.repository.UserRepository;
 import PoolC.Comect.user.service.UserService;
 import org.junit.Before;
@@ -41,11 +42,17 @@ public class elasticFolderTest {
     UserRepository userRepository;
     @Autowired
     ElasticLinkRepository elasticLinkRepository;
+    @Autowired
+    ImageRepository imageRepository;
 
     @Before
     public void cleaning(){
         elasticFolderRepository.deleteAll();
         elasticLinkRepository.deleteAll();
+        userRepository.deleteAll();
+        folderRepository.deleteAll();
+        imageRepository.deleteAll();
+
     }
 
     @Test

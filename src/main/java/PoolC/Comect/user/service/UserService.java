@@ -99,7 +99,7 @@ public class UserService {
     }
 
     //@Transactional
-    public void createFollow(String email, String followedNickname){
+    public FollowInfo createFollow(String email, String followedNickname){
         User user = findOneEmail(email);
         User followed = userRepository.findByNickname(followedNickname).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
         if(user.getFollowings().contains(followed.getId())){
@@ -109,6 +109,13 @@ public class UserService {
         followed.getFollowers().add(user.getId());
         userRepository.save(user);
         userRepository.save(followed);
+        FollowInfo followInfo = FollowInfo.builder()
+                .isFollowing(true)
+                .imageUrl(followed.getImageUrl())
+                .email(followed.getEmail())
+                .nickname(followed.getNickname())
+                .build();
+        return followInfo;
     }
 
     public MemberData getMemberInfo(String nickname){

@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -101,10 +102,16 @@ public class UserController {
 
     })
     @PostMapping("/follow")
-    public ResponseEntity<Void> createFollow(@RequestBody CreateFollowRequestDto request){
+    public ResponseEntity<CreateFollowResponseDto> createFollow(@RequestBody CreateFollowRequestDto request){
+        FollowInfo follow = userService.createFollow(request.getEmail(), request.getFollowedNickname());
+        CreateFollowResponseDto createFollowResponseDto = CreateFollowResponseDto.builder()
+                .isFollowing(true)
+                .email(follow.getEmail())
+                .imageUrl(follow.getImageUrl())
+                .nickname(follow.getNickname())
+                .build();
 
-        userService.createFollow(request.getEmail(),request.getFollowedNickname());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(createFollowResponseDto);
     }
 
     @ApiOperation(value="팔로워 조회", notes="나를 팔로우 하는 사람들을 조회합니다.")

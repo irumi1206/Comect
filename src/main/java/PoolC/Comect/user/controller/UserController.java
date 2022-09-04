@@ -37,10 +37,7 @@ public class UserController {
             @ApiResponse(responseCode = "409", description = "이미 존재하는 이메일 또는 닉네임")
     })
     @PostMapping(path="/member", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<CreateUserResponseDto> createUser(@Valid @ModelAttribute CreateUserRequestDto request) throws IOException {
-        System.out.println(request.getMultipartFile().getOriginalFilename());
-        System.out.println(request.getMultipartFile().getContentType());
-
+    public ResponseEntity<CreateUserResponseDto> createUser(@Valid @ModelAttribute CreateUserRequestDto request){
         boolean success = userService.join(request.getEmail(), request.getPassword(), request.getNickname(), request.getMultipartFile());
         CreateUserResponseDto createUserResponseDto = CreateUserResponseDto.builder()
                 .imageSuccess(success)

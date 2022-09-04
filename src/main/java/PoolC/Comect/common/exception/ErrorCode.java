@@ -32,7 +32,8 @@ public enum ErrorCode{
     COOKIE_ROTTEN(HttpStatus.UNAUTHORIZED,"쿠키가 유효하지 않음"),
     LOGIN_FAIL(HttpStatus.NOT_FOUND,"로그인 실패"),
     IMAGE_SAVE_CANCELED(HttpStatus.NOT_FOUND,"이미지 저장 실패"),
-    NOT_MY_IMAGE(HttpStatus.BAD_REQUEST,"내가 올린 이미지가 아님");
+    NOT_MY_IMAGE(HttpStatus.BAD_REQUEST,"내가 올린 이미지가 아님"),
+    FOLLOW_ME(HttpStatus.EXPECTATION_FAILED,"내가 나를 팔로우 시도");
 
 
 

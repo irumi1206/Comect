@@ -46,7 +46,7 @@ public class UserController {
 
     @ApiOperation(value="로그인", notes="")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "유저 잘 생성됨."),
+            @ApiResponse(responseCode = "200", description = "로그인 성공."),
             @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식 또는 비밀번호 형식"),
             @ApiResponse(responseCode = "404", description = "해당 유저가 존재하지 않음, 로그인 실패")
     })
@@ -60,7 +60,7 @@ public class UserController {
 
     @ApiOperation(value="내 정보 조회", notes="")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "유저 잘 생성됨."),
+            @ApiResponse(responseCode = "200", description = "유저 정보 조회됨."),
             @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식"),
             @ApiResponse(responseCode = "401", description = "쿠키가 유효하지 않음"),
             @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때")
@@ -73,11 +73,11 @@ public class UserController {
 
     @ApiOperation(value="내 정보 수정", notes="")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "유저 잘 생성됨."),
+            @ApiResponse(responseCode = "200", description = "유저 정보 수정됨."),
             @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식"),
             @ApiResponse(responseCode = "401", description = "쿠키가 유효하지 않음"),
             @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때"),
-            @ApiResponse(responseCode = "409", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때")
+            @ApiResponse(responseCode = "409", description = "이미 존재하는 닉네임")
     })
     @PutMapping("/member/me")
     public ResponseEntity<UpdateUserResponseDto> updateUser(@Valid @ModelAttribute UpdateUserRequestDto request){
@@ -90,13 +90,15 @@ public class UserController {
         return ResponseEntity.ok(updateUserResponseDto);
     }
 
-    @ApiOperation(value="팔로잉", notes="")
+    @ApiOperation(value="팔로우", notes="")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "유저 잘 생성됨."),
+            @ApiResponse(responseCode = "200", description = "팔로우 잘 됨."),
             @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식"),
             @ApiResponse(responseCode = "401", description = "쿠키가 유효하지 않음"),
             @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때"),
-            @ApiResponse(responseCode = "409", description = "이미 존재하는 팔로우")
+            @ApiResponse(responseCode = "409", description = "이미 존재하는 팔로우"),
+            @ApiResponse(responseCode = "417", description = "나를 팔로우 시도")
+
     })
     @PostMapping("/follow")
     public ResponseEntity<Void> createFollow(@RequestBody CreateFollowRequestDto request){
@@ -107,10 +109,10 @@ public class UserController {
 
     @ApiOperation(value="팔로워 조회", notes="나를 팔로우 하는 사람들을 조회합니다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "유저 잘 생성됨."),
+            @ApiResponse(responseCode = "200", description = "팔로워 조회됨"),
             @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식"),
             @ApiResponse(responseCode = "401", description = "쿠키가 유효하지 않음"),
-            @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때"),
+            @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때")
     })
     @GetMapping("/follower")
     public ResponseEntity<ReadFollowerResponseDto> readFollower(@ModelAttribute ReadFollowRequestDto request){
@@ -125,10 +127,10 @@ public class UserController {
 
     @ApiOperation(value="팔로잉 조회", notes="내가 팔로잉 하는 사람들을 조회합니다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "유저 잘 생성됨."),
+            @ApiResponse(responseCode = "200", description = "팔로잉 조회됨."),
             @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식"),
             @ApiResponse(responseCode = "401", description = "쿠키가 유효하지 않음"),
-            @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때"),
+            @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때")
     })
     @GetMapping("/following")
     public ResponseEntity<ReadFollowingResponseDto> readFollowing(@ModelAttribute ReadFollowRequestDto request){
@@ -143,10 +145,10 @@ public class UserController {
 
     @ApiOperation(value="팔로워 취소", notes="")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "유저 잘 생성됨."),
+            @ApiResponse(responseCode = "200", description = "팔로우 취소됨."),
             @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식"),
             @ApiResponse(responseCode = "401", description = "쿠키가 유효하지 않음"),
-            @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때"),
+            @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때, 해당 팔로우가 없을때")
     })
     @DeleteMapping("/follow")
     public ResponseEntity<Void> deleteFollow(@RequestBody DeleteFollowRequestDto request){
@@ -157,10 +159,10 @@ public class UserController {
 
     @ApiOperation(value="유저 검색", notes="")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "유저 잘 생성됨."),
+            @ApiResponse(responseCode = "200", description = "유저 검색됨."),
             @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식"),
             @ApiResponse(responseCode = "401", description = "쿠키가 유효하지 않음"),
-            @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때"),
+            @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때")
     })
     @GetMapping("/member")
     public ResponseEntity<GetMemberResponseDto> getMember(@ModelAttribute GetMemberRequestDto request){
@@ -177,10 +179,10 @@ public class UserController {
 
     @ApiOperation(value="유저 탈퇴", notes="")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "유저 잘 생성됨."),
+            @ApiResponse(responseCode = "200", description = "유저 탈퇴됨."),
             @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식"),
             @ApiResponse(responseCode = "401", description = "쿠키가 유효하지 않음"),
-            @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때, 비밀번호가 틀릴때"),
+            @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때, 비밀번호가 틀릴때")
     })
     @DeleteMapping("/member")
     public ResponseEntity<Void> deleteMember(@RequestBody DeleteUserRequestDto request){
@@ -190,6 +192,10 @@ public class UserController {
 
     @ApiOperation(value="팔로워, 팔로잉 최대 5명 조회", notes="")
     @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "팔로워, 팔로잉 조회됨."),
+            @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식"),
+            @ApiResponse(responseCode = "401", description = "쿠키가 유효하지 않음"),
+            @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때")
     })
     @GetMapping("/follow/small")
     public ResponseEntity<ReadFollowSmallResponseDto> readFollow(@ModelAttribute ReadFollowSmallRequestDto request){

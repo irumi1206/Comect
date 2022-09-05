@@ -1,6 +1,8 @@
 package PoolC.Comect.user.controller;
 
+
 import PoolC.Comect.user.domain.*;
+import PoolC.Comect.common.infra.JwtTokenProvider;
 import PoolC.Comect.user.dto.follow.*;
 import PoolC.Comect.user.dto.member.*;
 import PoolC.Comect.user.service.UserService;
@@ -13,12 +15,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.lang.reflect.Member;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -27,6 +33,8 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @ApiOperation(value="회원가입", notes="")
     @ApiResponses({
@@ -36,7 +44,7 @@ public class UserController {
     })
     @PostMapping(path="/member", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CreateUserResponseDto> createUser(@Valid @ModelAttribute CreateUserRequestDto request){
-        boolean success = userService.join(request.getEmail(), request.getPassword(), request.getNickname(), request.getMultipartFile());
+        boolean success = userService.join(request.getEmail(), passwordEncoder.encode(request.getPassword()), request.getNickname(), request.getMultipartFile());
         CreateUserResponseDto createUserResponseDto = CreateUserResponseDto.builder()
                 .imageSuccess(success)
                 .build();
@@ -52,8 +60,8 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request){
 
-        userService.login(request.getEmail(), request.getPassword());
-        LoginResponseDto loginResponseDto = new LoginResponseDto(request.getEmail());
+        User member=userService.login(request.getEmail(), request.getPassword());
+        LoginResponseDto loginResponseDto = new LoginResponseDto(jwtTokenProvider.createToken(member.getNickname(), member.getRoles()));
         return ResponseEntity.ok(loginResponseDto);
     }
 
@@ -65,7 +73,8 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때")
     })
     @GetMapping("/member/me")
-    public ResponseEntity<ReadUserResponseDto> readUser(@ModelAttribute ReadUserRequestDto request){
+    public ResponseEntity<ReadUserResponseDto> readUser(@ModelAttribute ReadUserRequestDto request, Principal principal){
+        System.out.println(principal.getName());
         User user = userService.findOneEmail(request.getEmail());
         return ResponseEntity.ok(new ReadUserResponseDto(user));
     }
@@ -80,7 +89,6 @@ public class UserController {
     })
     @PutMapping("/member/me")
     public ResponseEntity<UpdateUserResponseDto> updateUser(@Valid @ModelAttribute UpdateUserRequestDto request){
-        System.out.println(request);
         boolean success = userService.update(request.getEmail(), request.getNewNickname(), request.getNewMultipartFile(), request.getImageChange());
         UpdateUserResponseDto updateUserResponseDto = UpdateUserResponseDto
                 .builder()
@@ -191,7 +199,7 @@ public class UserController {
     })
     @DeleteMapping("/member")
     public ResponseEntity<Void> deleteMember(@RequestBody DeleteUserRequestDto request){
-        userService.deleteMember(request.getEmail(),request.getPassword());
+        userService.deleteMember(request.getEmail(), request.getPassword());
         return ResponseEntity.ok().build();
     }
 

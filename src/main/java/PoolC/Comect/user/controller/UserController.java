@@ -120,7 +120,6 @@ public class UserController {
                 .imageUrl(follow.getImageUrl())
                 .nickname(follow.getNickname())
                 .build();
-
         return ResponseEntity.ok(createFollowResponseDto);
     }
 
@@ -151,7 +150,6 @@ public class UserController {
     })
     @GetMapping("/following")
     public ResponseEntity<ReadFollowingResponseDto> readFollowing(@ModelAttribute ReadFollowRequestDto request){
-
         List<FollowInfo> followings = userService.readFollowing(request.getEmail());
         ReadFollowingResponseDto readFollowingResponseDto = ReadFollowingResponseDto.builder()
                 .numberOfFollowing(followings.size())
@@ -169,29 +167,35 @@ public class UserController {
     })
     @DeleteMapping("/follow")
     public ResponseEntity<Void> deleteFollow(@RequestBody DeleteFollowRequestDto request){
-
         userService.deleteFollow(request.getEmail(),request.getFollowedNickname());
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperation(value="유저 검색", notes="")
+    @ApiOperation(value="유저 검색, 닉네임으로", notes="")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "유저 검색됨."),
             @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식"),
             @ApiResponse(responseCode = "401", description = "쿠키가 유효하지 않음"),
             @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때")
     })
-    @GetMapping("/member")
-    public ResponseEntity<GetMemberResponseDto> getMember(@ModelAttribute GetMemberRequestDto request){
-
+    @GetMapping("/member/nickname")
+    public ResponseEntity<MemberData> getMember(@ModelAttribute GetMemberRequestDto request){
         MemberData memberInfo = userService.getMemberInfo(request.getNickname());
-        GetMemberResponseDto getMemberResponseDto = GetMemberResponseDto.builder()
-                .imageUrl(memberInfo.getImageUrl())
-                .nickname(memberInfo.getNickname())
-                .follower(memberInfo.getFollower())
-                .following(memberInfo.getFollowing())
-                .build();
-        return ResponseEntity.ok(getMemberResponseDto);
+        return ResponseEntity.ok(memberInfo);
+    }
+
+    @ApiOperation(value="유저 검색, 이메일로", notes="")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "유저 검색됨."),
+            @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식"),
+            @ApiResponse(responseCode = "401", description = "쿠키가 유효하지 않음"),
+            @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때")
+    })
+    @GetMapping("/member/email")
+    public ResponseEntity<MemberData> getMemberByEmail(@ModelAttribute GetMemberEmailRequestDto request){
+
+        MemberData memberInfo = userService.getMemberInfoByEmail(request.getEmail());
+        return ResponseEntity.ok(memberInfo);
     }
 
     @ApiOperation(value="유저 탈퇴", notes="")

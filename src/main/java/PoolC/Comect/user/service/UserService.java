@@ -133,6 +133,17 @@ public class UserService {
         return memberData;
     }
 
+    public MemberData getMemberInfoByEmail(String email){
+        User user = findOneEmail(email);
+        MemberData memberData = MemberData.builder()
+                .imageUrl(user.getImageUrl())
+                .nickname(user.getNickname())
+                .following(user.getFollowings().size())
+                .follower(user.getFollowers().size())
+                .build();
+        return memberData;
+    }
+
     //user가 followed를 팔로우 중인지 확인하는 함수
     public boolean isFollower(ObjectId id, ObjectId followedId){
         User user = userRepository.findById(id).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));

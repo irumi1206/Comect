@@ -50,8 +50,8 @@ public class FolderController {
             @ApiResponse(responseCode = "401", description = "쿠키가 유효하지 않음"),
             @ApiResponse(responseCode = "404", description = "경로를 못찾음"),
     })
-    @GetMapping(value="/folder")
-    public ResponseEntity<FolderReadResponseDto> folderRead(@ModelAttribute FolderReadRequestDto folderReadRequestDto){
+    @GetMapping(value="/folder/me")
+    public ResponseEntity<FolderReadResponseDto> folderReadMe(@ModelAttribute FolderReadRequestDto folderReadRequestDto){
 
         String email=folderReadRequestDto.getEmail();
         String path=folderReadRequestDto.getPath();
@@ -62,6 +62,23 @@ public class FolderController {
         if(showFolder.equals("true")){
             linkInfos=LinkInfo.toLinkInfo(folder.getLinks());
         }
+
+        return ResponseEntity.ok().body(FolderReadResponseDto.builder()
+                .folderInfos(FolderInfo.toFolderInfo(folder.getFolders()))
+                .linkInfos(linkInfos)
+                .build());
+    }
+
+    @GetMapping(value="/folder")
+    public ResponseEntity<FolderReadResponseDto> folderRead(@ModelAttribute FolderReadPublicRequestDto folderReadRequestDto){
+
+        String email=folderReadRequestDto.getEmail();
+        String path=folderReadRequestDto.getPath();
+        //String showFolder=folderReadRequestDto.getShowLink();
+        Folder folder =folderService.folderRead(email,path);
+
+        List<LinkInfo> linkInfos = new ArrayList<>();
+        linkInfos=LinkInfo.toLinkInfoPublic(folder.getLinks());
 
         return ResponseEntity.ok().body(FolderReadResponseDto.builder()
                 .folderInfos(FolderInfo.toFolderInfo(folder.getFolders()))
@@ -82,6 +99,8 @@ public class FolderController {
         String email = folderUpdateRequestDto.getEmail();
         String path = folderUpdateRequestDto.getPath();
         String newName = folderUpdateRequestDto.getNewName();
+        System.out.println(email);
+        System.out.println(folderUpdateRequestDto);
         folderService.folderUpdate(email,path,newName);
         return ResponseEntity.ok().build();
     }

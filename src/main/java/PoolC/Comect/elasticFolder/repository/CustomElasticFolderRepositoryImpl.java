@@ -5,6 +5,7 @@ import PoolC.Comect.elasticFolder.repository.CustomElasticFolderRepository;
 import co.elastic.clients.elasticsearch._types.query_dsl.GeoDistanceQuery;
 import co.elastic.clients.elasticsearch.core.DeleteByQueryRequest;
 import lombok.RequiredArgsConstructor;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.GeoDistanceQueryBuilder;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.client.elc.QueryBuilders;
@@ -46,17 +47,27 @@ public class CustomElasticFolderRepositoryImpl implements CustomElasticFolderRep
     }
 
     public void delete(String ownerId, String path){
-        Criteria criteria = Criteria.where("path").startsWith(path)
-                .and(Criteria.where("ownerId").matches(ownerId));
+        Criteria criteria =Criteria.where("ownerId").matches(ownerId);
         Query query=new CriteriaQuery(criteria);
-        elasticsearchOperations.delete(query, ElasticFolder.class);
+        SearchHits<ElasticFolder> elasticFolderList = elasticsearchOperations.search(query, ElasticFolder.class);
+
+        for(SearchHit<ElasticFolder> current: elasticFolderList){
+            ElasticFolder elasticFolder=current.getContent();
+            if(!elasticFolder.getPath().startsWith(path)) continue;
+            elasticsearchOperations.delete(elasticFolder);
+        }
     }
 
     public void update(String ownerId, String path,String newName){
-        Criteria criteria = Criteria.where("path").startsWith(path)
-                .and(Criteria.where("ownerId").matches(ownerId));
+
+        System.out.println(ownerId);
+        System.out.println(newName);
+        Criteria criteria = Criteria.where("ownerId").matches(ownerId);
         Query query=new CriteriaQuery(criteria);
         SearchHits<ElasticFolder> elasticFolderList = elasticsearchOperations.search(query, ElasticFolder.class);
+
+        System.out.println(ownerId);
+        System.out.println(newName);
 
         String newPath="";
         String []tokens= Arrays.stream(path.split("/")).filter(e -> e.trim().length() > 0).toArray(String[]::new);
@@ -68,17 +79,20 @@ public class CustomElasticFolderRepositoryImpl implements CustomElasticFolderRep
 
         for(SearchHit<ElasticFolder> current: elasticFolderList){
             ElasticFolder elasticFolder=current.getContent();
+            System.out.println(elasticFolder.getPath());
+            if(!elasticFolder.getPath().startsWith(path)) continue;
             String originalPath=elasticFolder.getPath();
             elasticFolder.setPath(newPath+originalPath.substring(path.length()));
             if(originalPath.length()==path.length()) elasticFolder.setFolderName(newName);
+            elasticsearchOperations.delete(elasticFolder.getId(),ElasticFolder.class);
+            System.out.println(elasticFolder);
             elasticsearchOperations.save(elasticFolder);
         }
 
     }
 
     public void move(String ownerId, String originalPath,String destinationPath){
-        Criteria criteria = Criteria.where("path").startsWith(originalPath)
-                .and(Criteria.where("ownerId").matches(ownerId));
+        Criteria criteria = Criteria.where("ownerId").matches(ownerId);
         Query query=new CriteriaQuery(criteria);
         SearchHits<ElasticFolder> elasticFolderList = elasticsearchOperations.search(query, ElasticFolder.class);
         String []tokens= Arrays.stream(originalPath.split("/")).filter(e -> e.trim().length() > 0).toArray(String[]::new);
@@ -86,6 +100,7 @@ public class CustomElasticFolderRepositoryImpl implements CustomElasticFolderRep
 
         for(SearchHit<ElasticFolder> current: elasticFolderList){
             ElasticFolder elasticFolder=current.getContent();
+            if(!elasticFolder.getPath().startsWith(originalPath)) continue;
             String currentPath=elasticFolder.getPath();
             elasticFolder.setPath(destinationPath+currentFolderName+currentPath.substring(originalPath.length()));
             elasticsearchOperations.save(elasticFolder);

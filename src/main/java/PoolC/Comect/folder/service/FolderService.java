@@ -72,12 +72,13 @@ public class FolderService {
             elasticFolderRepository.delete(user.getId().toString(),path);
             elasticLinkRepository.deleteFolder(user.getId().toString(),path);
 
-            Criteria criteria = Criteria.where("path").startsWith(path)
-                    .and(Criteria.where("ownerId").matches(user.getId().toString()));
+            Criteria criteria =Criteria.where("ownerId").matches(user.getId().toString());
             Query query=new CriteriaQuery(criteria);
             SearchHits<ElasticLink> elasticLinkSearchHits = elasticsearchOperations.search(query, ElasticLink.class);
+
             for(SearchHit<ElasticLink> elasticLinkSearchHit : elasticLinkSearchHits){
                 ElasticLink elasticLink=elasticLinkSearchHit.getContent();
+                if(!elasticLink.getPath().startsWith(path)) continue;
                 String linkEmail=userService.findOneId(new ObjectId(user.getId().toString())).getEmail();
                 Link link=linkRead(linkEmail,elasticLink.getPath(),elasticLink.getLinkId());
                 imageService.deleteImage(link.getImageId());

@@ -49,7 +49,8 @@ public class ElasticFolderController {
             for(ElasticFolder elasticFolder:searchMeList){
                 String folderOwnerId=elasticFolder.getOwnerId();
                 String folderOwnerNickname=userService.findOneId(new ObjectId(folderOwnerId)).getNickname();
-                myFolders.add(ElasticFolderSearchInfo.toElasticFolderSearchInfo(elasticFolder,folderOwnerNickname));
+                String folderOwnerEmail=userService.findOneId(new ObjectId(folderOwnerId)).getEmail();
+                myFolders.add(ElasticFolderSearchInfo.toElasticFolderSearchInfo(elasticFolder,folderOwnerNickname,folderOwnerEmail));
             }
         }
         else{
@@ -60,12 +61,14 @@ public class ElasticFolderController {
             for(ElasticFolder elasticFolder:searchFollowingList){
                 String folderOwnerId=elasticFolder.getOwnerId();
                 String folderOwnerNickname=userService.findOneId(new ObjectId(folderOwnerId)).getNickname();
-                followingFolders.add(ElasticFolderSearchInfo.toElasticFolderSearchInfo(elasticFolder,folderOwnerNickname));
+                String folderOwnerEmail=userService.findOneId(new ObjectId(folderOwnerId)).getEmail();
+                followingFolders.add(ElasticFolderSearchInfo.toElasticFolderSearchInfo(elasticFolder,folderOwnerNickname,folderOwnerEmail));
             }
             for(ElasticFolder elasticFolder:searchNotFollowingList){
                 String folderOwnerId=elasticFolder.getOwnerId();
                 String folderOwnerNickname=userService.findOneId(new ObjectId(folderOwnerId)).getNickname();
-                notFollowingFolders.add(ElasticFolderSearchInfo.toElasticFolderSearchInfo(elasticFolder,folderOwnerNickname));
+                String folderOwnerEmail=userService.findOneId(new ObjectId(folderOwnerId)).getEmail();
+                notFollowingFolders.add(ElasticFolderSearchInfo.toElasticFolderSearchInfo(elasticFolder,folderOwnerNickname,folderOwnerEmail));
             }
         }
 

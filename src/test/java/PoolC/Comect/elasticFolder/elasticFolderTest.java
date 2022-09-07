@@ -74,6 +74,7 @@ public class elasticFolderTest {
 
 
 
+        folderService.folderCreate("sungha.kim123@gmail.com","","유투브 스포츠");
         folderService.folderCreate("sungha.kim123@gmail.com","","로아");
         folderService.folderCreate("sungha.kim123@gmail.com","","메이플");
         folderService.folderCreate("sungha.kim123@gmail.com","로아/","직업");
@@ -84,46 +85,49 @@ public class elasticFolderTest {
         folderService.folderCreate("sungha.kim123@gmail.com","로아/직업/","디트");
         folderService.folderCreate("sungha.kim123@gmail.com","로아/직업/디트/","디트 레이드 스킬트리");
 
-        List<String> d=new ArrayList<>();
-        d.add("나는");
-        d.add("비행기");
-        d.add("개인링");
-        folderService.linkCreate("sungha.kim123@gmail.com","로아/직업/블래/","블래스터링크","링크",null,d,"true",null);
-        folderService.linkCreate("sungha.kim123@gmail.com","로아/직업/블래/","블래스터링크1","링크",null,null,"true",null);
-        folderService.linkCreate("sungha.kim123@gmail.com","로아/직업/블래/","블래스터링크2","링크",null,null,"true",null);
-        folderService.linkCreate("sungha.kim123@gmail.com","로아/직업/블래/","블래스터링크3","링크",null,null,"true",null);
-        folderService.linkCreate("sungha.kim123@gmail.com","로아/직업/블래/","블래스터링크4","링크",null,null,"true",null);
+//        List<String> d=new ArrayList<>();
+//        d.add("나는");
+//        d.add("비행기");
+//        d.add("개인링");
+
+//        folderService.folderUpdate("sungha.kim123@gmail.com","로아/직업/소서/","소서리스");
+//        folderService.folderUpdate("sungha.kim123@gmail.com","유투브 스포츠/","나는 돌고래");
+//        folderService.linkCreate("sungha.kim123@gmail.com","로아/직업/블래/","블래스터링크","링크",null,d,"true",null);
+//        folderService.linkCreate("sungha.kim123@gmail.com","로아/직업/블래/","블래스터링크1","링크",null,null,"true",null);
+//        folderService.linkCreate("sungha.kim123@gmail.com","로아/직업/블래/","블래스터링크2","링크",null,null,"true",null);
+//        folderService.linkCreate("sungha.kim123@gmail.com","로아/직업/블래/","블래스터링크3","링크",null,null,"true",null);
+//        folderService.linkCreate("sungha.kim123@gmail.com","로아/직업/블래/","블래스터링크4","링크",null,null,"true",null);
 //        folderService.linkCreate("sungha.kim123@gmail.com","로아/직업/블래/","블래스터링크5","링크",null,null,"true",null);
 
 //        Folder folder=folderService.folderRead("sungha.kim123@gmail.com","로아/직업/블래/");
 //        String id=folder.getLinks().get(0).get_id().toString();
-//
+////
 //        List<String> stringList=new ArrayList<>();
-//        stringList.add(id);
-//        folderService.linkMove("sungha.kim123@gmail.com","로아/직업/블래/",stringList,"메이플/");
-        //folderService.folderDelete("sungha.kim123@gmail.com",);
+//        stringList.add("유투브 스포츠/");
+//        //folderService.linkMove("sungha.kim123@gmail.com","로아/직업/블래/",stringList,"메이플/");
+//        folderService.folderDelete("sungha.kim123@gmail.com",stringList);
 
 
         //        folderService.folderCreate("young.min123@gmail.com","","로아");
-        folderService.folderCreate("young.min123@gmail.com","","로아");
-        folderService.folderCreate("young.min123@gmail.com","","메이플");
-        folderService.folderCreate("young.min123@gmail.com","로아/","직업");
-        folderService.folderCreate("young.min123@gmail.com","로아/직업/","블래");
-        folderService.folderCreate("young.min123@gmail.com","로아/직업/블래/","블래스터 카던 스킬트리");
-        folderService.folderCreate("young.min123@gmail.com","로아/직업/","소서");
-        folderService.folderCreate("young.min123@gmail.com","로아/직업/소서/","소서리스 카오스던전 스킬트리");
-        folderService.folderCreate("young.min123@gmail.com","로아/직업/","디트");
-        folderService.folderCreate("young.min123@gmail.com","로아/직업/디트/","디트 레이드 스킬트리");
-
-        folderService.linkCreate("young.min123@gmail.com","로아/직업/블래/","블래스터링크","링크",null,d,"true",null);
-        folderService.linkCreate("young.min123@gmail.com","로아/직업/블래/","블래스터링크1","링크",null,null,"true",null);
-        folderService.linkCreate("young.min123@gmail.com","로아/직업/블래/","블래스터링크2","링크",null,null,"true",null);
-        folderService.linkCreate("young.min123@gmail.com","로아/직업/블래/","블래스터링크3","링크",null,null,"true",null);
-        folderService.linkCreate("young.min123@gmail.com","로아/직업/블래/","블래스터링크4","링크",null,null,"true",null);
+//        folderService.folderCreate("young.min123@gmail.com","","로아");
+//        folderService.folderCreate("young.min123@gmail.com","","메이플");
+//        folderService.folderCreate("young.min123@gmail.com","로아/","직업");
+//        folderService.folderCreate("young.min123@gmail.com","로아/직업/","블래");
+//        folderService.folderCreate("young.min123@gmail.com","로아/직업/블래/","블래스터 카던 스킬트리");
+//        folderService.folderCreate("young.min123@gmail.com","로아/직업/","소서");
+//        folderService.folderCreate("young.min123@gmail.com","로아/직업/소서/","소서리스 카오스던전 스킬트리");
+//        folderService.folderCreate("young.min123@gmail.com","로아/직업/","디트");
+//        folderService.folderCreate("young.min123@gmail.com","로아/직업/디트/","디트 레이드 스킬트리");
+//
+//        folderService.linkCreate("young.min123@gmail.com","로아/직업/블래/","블래스터링크","링크",null,d,"true",null);
+//        folderService.linkCreate("young.min123@gmail.com","로아/직업/블래/","블래스터링크1","링크",null,null,"true",null);
+//        folderService.linkCreate("young.min123@gmail.com","로아/직업/블래/","블래스터링크2","링크",null,null,"true",null);
+//        folderService.linkCreate("young.min123@gmail.com","로아/직업/블래/","블래스터링크3","링크",null,null,"true",null);
+//        folderService.linkCreate("young.min123@gmail.com","로아/직업/블래/","블래스터링크4","링크",null,null,"true",null);
 //        List<String> stringList=new ArrayList<>();
-//        stringList.add("로아/직업/");
+//        stringList.add("유투브 스포츠/");
 //        folderService.folderMove("sungha.kim123@gmail.com",stringList,"메이플/");
-        //folderService.folderUpdate("sungha.kim123@gmail.com","로아/직업/","로ㄴㅇㄹㄴㅇㅁ");
+        folderService.folderUpdate("sungha.kim123@gmail.com","유투브 스포츠/","유튜브");
  //       List<String> t=new ArrayList<>();
   //      t.add("로아/직업/블래/");
 //

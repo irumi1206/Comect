@@ -373,7 +373,7 @@ public class FolderTest {
         HttpHeaders headers = new HttpHeaders();
         headers.set("JSON","true");
 
-        String baseUrl="http://localhost:" + port + "/folder";
+        String baseUrl="http://localhost:" + port + "/folder/me";
         String email="user1Email@email.com";
         String path="";
         String showLink="false";
@@ -407,7 +407,7 @@ public class FolderTest {
         HttpHeaders headers = new HttpHeaders();
         headers.set("JSON","true");
 
-        String baseUrl="http://localhost:" + port + "/folder";
+        String baseUrl="http://localhost:" + port + "/folder/me";
         String email="user1Email@email.com";
         String path="folder11/folder21";
         String showLink="false";

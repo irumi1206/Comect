@@ -14,23 +14,23 @@ import java.util.List;
 @NoArgsConstructor
 public class ElasticFolderSearchInfo {
 
-    private String ownerId;
+    private String ownerEmail;
     private String nickName;
     private String path;
     private String name;
 
     @Builder
-    public ElasticFolderSearchInfo(String ownerId,String nickName, String path, String name){
-        this.ownerId=ownerId;
+    public ElasticFolderSearchInfo(String ownerEmail,String nickName, String path, String name){
+        this.ownerEmail=ownerEmail;
         this.nickName=nickName;
         this.path=path;
         this.name=name;
     }
 
-    public static ElasticFolderSearchInfo toElasticFolderSearchInfo(ElasticFolder elasticFolder, String nickName){
+    public static ElasticFolderSearchInfo toElasticFolderSearchInfo(ElasticFolder elasticFolder, String nickName ,String email){
 
         return ElasticFolderSearchInfo.builder()
-                .ownerId(elasticFolder.getOwnerId().toString())
+                .ownerEmail(email)
                 .nickName(nickName)
                 .path(elasticFolder.getPath())
                 .name(elasticFolder.getFolderName())

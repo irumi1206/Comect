@@ -54,7 +54,8 @@ public class ElasticFolderController {
             }
         }
         else{
-            List<String> followingIds=userService.findOneId(ownerId).getFollowers().stream().map(current->current.toString()).collect(Collectors.toList());
+            List<String> followingIds=userService.readFollowingById(ownerId).stream().map(current->current.toString()).collect(Collectors.toList());
+            System.out.println(followingIds);
             List<ElasticFolder> searchFollowingList= elasticService.searchFolder(followingIds,keyword);
             followingIds.add(ownerId.toString());
             List<ElasticFolder> searchNotFollowingList= elasticService.searchExcludeFolder(followingIds,keyword);

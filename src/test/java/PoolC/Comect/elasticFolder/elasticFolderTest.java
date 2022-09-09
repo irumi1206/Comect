@@ -72,6 +72,7 @@ public class elasticFolderTest {
         userService.join("sungha.kim123@gmail.com","1234","sungha",null);
         userService.join("young.min123@gmail.com","1234","youngmin",null);
 
+        userService.createFollow("sungha.kim123@gmail.com","youngmin");
 
 
         folderService.folderCreate("sungha.kim123@gmail.com","","유투브 스포츠");
@@ -109,15 +110,15 @@ public class elasticFolderTest {
 
 
         //        folderService.folderCreate("young.min123@gmail.com","","로아");
-//        folderService.folderCreate("young.min123@gmail.com","","로아");
-//        folderService.folderCreate("young.min123@gmail.com","","메이플");
-//        folderService.folderCreate("young.min123@gmail.com","로아/","직업");
-//        folderService.folderCreate("young.min123@gmail.com","로아/직업/","블래");
-//        folderService.folderCreate("young.min123@gmail.com","로아/직업/블래/","블래스터 카던 스킬트리");
-//        folderService.folderCreate("young.min123@gmail.com","로아/직업/","소서");
-//        folderService.folderCreate("young.min123@gmail.com","로아/직업/소서/","소서리스 카오스던전 스킬트리");
-//        folderService.folderCreate("young.min123@gmail.com","로아/직업/","디트");
-//        folderService.folderCreate("young.min123@gmail.com","로아/직업/디트/","디트 레이드 스킬트리");
+        folderService.folderCreate("young.min123@gmail.com","","로아");
+        folderService.folderCreate("young.min123@gmail.com","","메이플");
+        folderService.folderCreate("young.min123@gmail.com","로아/","직업");
+        folderService.folderCreate("young.min123@gmail.com","로아/직업/","블래");
+        folderService.folderCreate("young.min123@gmail.com","로아/직업/블래/","블래스터 카던 스킬트리");
+        folderService.folderCreate("young.min123@gmail.com","로아/직업/","소서");
+        folderService.folderCreate("young.min123@gmail.com","로아/직업/소서/","소서리스 카오스던전 스킬트리");
+        folderService.folderCreate("young.min123@gmail.com","로아/직업/","디트");
+        folderService.folderCreate("young.min123@gmail.com","로아/직업/디트/","디트 레이드 스킬트리");
 //
 //        folderService.linkCreate("young.min123@gmail.com","로아/직업/블래/","블래스터링크","링크",null,d,"true",null);
 //        folderService.linkCreate("young.min123@gmail.com","로아/직업/블래/","블래스터링크1","링크",null,null,"true",null);

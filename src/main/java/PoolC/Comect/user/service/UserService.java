@@ -105,7 +105,7 @@ public class UserService {
     public FollowInfo createFollow(String email, String followedNickname){
         User user = findOneEmail(email);
         if(user.getNickname().equals(followedNickname)) throw new CustomException(ErrorCode.FOLLOW_ME);
-        User followed = userRepository.findByNickname(followedNickname).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        User followed = findOneNickname(followedNickname);
         if(user.getFollowings().contains(followed.getId())){
             throw new CustomException(ErrorCode.FOLLOWING_EXIST);
         }
@@ -122,32 +122,38 @@ public class UserService {
         return followInfo;
     }
 
-    public MemberData getMemberInfo(String nickname){
-        User user = userRepository.findByNickname(nickname).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+    public MemberData getMemberInfo(String email, String nickname){
+        User user = findOneEmail(email);
+        User other = findOneNickname(nickname);
+        List<ObjectId> followings = user.getFollowings();
         MemberData memberData = MemberData.builder()
-                .follower(user.getFollowers().size())
-                .following(user.getFollowings().size())
-                .nickname(user.getNickname())
-                .imageUrl(user.getImageUrl())
+                .follower(other.getFollowers().size())
+                .following(other.getFollowings().size())
+                .nickname(other.getNickname())
+                .imageUrl(other.getImageUrl())
+                .isFollowing(String.valueOf(followings.contains(other.getId())))
                 .build();
         return memberData;
     }
 
-    public MemberData getMemberInfoByEmail(String email){
+    public MemberData getMemberInfoByEmail(String email, String otherEmail){
         User user = findOneEmail(email);
+        User other = findOneEmail(otherEmail);
+        List<ObjectId> followings = user.getFollowings();
         MemberData memberData = MemberData.builder()
-                .imageUrl(user.getImageUrl())
-                .nickname(user.getNickname())
-                .following(user.getFollowings().size())
-                .follower(user.getFollowers().size())
+                .imageUrl(other.getImageUrl())
+                .nickname(other.getNickname())
+                .following(other.getFollowings().size())
+                .follower(other.getFollowers().size())
+                .isFollowing(String.valueOf(followings.contains(other.getId())))
                 .build();
         return memberData;
     }
 
     //user가 followed를 팔로우 중인지 확인하는 함수
     public boolean isFollower(ObjectId id, ObjectId followedId){
-        User user = userRepository.findById(id).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-        User followed = userRepository.findById(followedId).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        User user = findOneId(id);
+        User followed = findOneId(followedId);
         for (ObjectId followerId : user.getFollowers()) {
             if(followed.getId().equals(followerId)){
                 return true;
@@ -198,7 +204,7 @@ public class UserService {
     //@Transactional
     public void deleteFollow(String email, String followedNickname) {
         User user = findOneEmail(email);
-        User followed = userRepository.findByNickname(followedNickname).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        User followed = findOneNickname(followedNickname);
         user.getFollowings().remove(followed.getId());
         followed.getFollowers().remove(user.getId());
         userRepository.save(user);

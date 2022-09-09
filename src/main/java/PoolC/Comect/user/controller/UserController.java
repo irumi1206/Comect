@@ -180,7 +180,7 @@ public class UserController {
     })
     @GetMapping("/member/nickname")
     public ResponseEntity<MemberData> getMember(@ModelAttribute GetMemberRequestDto request){
-        MemberData memberInfo = userService.getMemberInfo(request.getNickname());
+        MemberData memberInfo = userService.getMemberInfo(request.getEmail(),request.getNickname());
         return ResponseEntity.ok(memberInfo);
     }
 
@@ -194,7 +194,7 @@ public class UserController {
     @GetMapping("/member/email")
     public ResponseEntity<MemberData> getMemberByEmail(@ModelAttribute GetMemberEmailRequestDto request){
 
-        MemberData memberInfo = userService.getMemberInfoByEmail(request.getEmail());
+        MemberData memberInfo = userService.getMemberInfoByEmail(request.getEmail(),request.getOtherEmail());
         return ResponseEntity.ok(memberInfo);
     }
 

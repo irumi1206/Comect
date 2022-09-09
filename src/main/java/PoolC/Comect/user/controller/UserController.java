@@ -2,7 +2,7 @@ package PoolC.Comect.user.controller;
 
 
 import PoolC.Comect.user.domain.*;
-import PoolC.Comect.common.infra.JwtTokenProvider;
+//import PoolC.Comect.common.infra.JwtTokenProvider;
 import PoolC.Comect.user.dto.follow.*;
 import PoolC.Comect.user.dto.member.*;
 import PoolC.Comect.user.service.UserService;
@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -33,8 +33,8 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
+//    private final PasswordEncoder passwordEncoder;
+//    private final JwtTokenProvider jwtTokenProvider;
 
     @ApiOperation(value="회원가입", notes="")
     @ApiResponses({
@@ -44,7 +44,9 @@ public class UserController {
     })
     @PostMapping(path="/member", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CreateUserResponseDto> createUser(@Valid @ModelAttribute CreateUserRequestDto request){
-        boolean success = userService.join(request.getEmail(), passwordEncoder.encode(request.getPassword()), request.getNickname(), request.getMultipartFile());
+//        boolean success = userService.join(request.getEmail(), passwordEncoder.encode(request.getPassword()), request.getNickname(), request.getMultipartFile());
+        boolean success = userService.join(request.getEmail(),request.getPassword(), request.getNickname(), request.getMultipartFile());
+
         CreateUserResponseDto createUserResponseDto = CreateUserResponseDto.builder()
                 .imageSuccess(success)
                 .build();
@@ -61,7 +63,9 @@ public class UserController {
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request){
 
         User member=userService.login(request.getEmail(), request.getPassword());
-        LoginResponseDto loginResponseDto = new LoginResponseDto(jwtTokenProvider.createToken(member.getNickname(), member.getRoles()));
+//        LoginResponseDto loginResponseDto = new LoginResponseDto(jwtTokenProvider.createToken(member.getNickname(), member.getRoles()));
+        LoginResponseDto loginResponseDto = new LoginResponseDto(request.getEmail());
+
         return ResponseEntity.ok(loginResponseDto);
     }
 
@@ -73,8 +77,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때")
     })
     @GetMapping("/member/me")
-    public ResponseEntity<ReadUserResponseDto> readUser(@ModelAttribute ReadUserRequestDto request, Principal principal){
-        System.out.println(principal.getName());
+    public ResponseEntity<ReadUserResponseDto> readUser(@ModelAttribute ReadUserRequestDto request){
         User user = userService.findOneEmail(request.getEmail());
         return ResponseEntity.ok(new ReadUserResponseDto(user));
     }
@@ -116,7 +119,6 @@ public class UserController {
                 .imageUrl(follow.getImageUrl())
                 .nickname(follow.getNickname())
                 .build();
-
         return ResponseEntity.ok(createFollowResponseDto);
     }
 
@@ -147,7 +149,6 @@ public class UserController {
     })
     @GetMapping("/following")
     public ResponseEntity<ReadFollowingResponseDto> readFollowing(@ModelAttribute ReadFollowRequestDto request){
-
         List<FollowInfo> followings = userService.readFollowing(request.getEmail());
         ReadFollowingResponseDto readFollowingResponseDto = ReadFollowingResponseDto.builder()
                 .numberOfFollowing(followings.size())
@@ -165,29 +166,35 @@ public class UserController {
     })
     @DeleteMapping("/follow")
     public ResponseEntity<Void> deleteFollow(@RequestBody DeleteFollowRequestDto request){
-
         userService.deleteFollow(request.getEmail(),request.getFollowedNickname());
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperation(value="유저 검색", notes="")
+    @ApiOperation(value="유저 검색, 닉네임으로", notes="")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "유저 검색됨."),
             @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식"),
             @ApiResponse(responseCode = "401", description = "쿠키가 유효하지 않음"),
             @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때")
     })
-    @GetMapping("/member")
-    public ResponseEntity<GetMemberResponseDto> getMember(@ModelAttribute GetMemberRequestDto request){
+    @GetMapping("/member/nickname")
+    public ResponseEntity<MemberData> getMember(@ModelAttribute GetMemberRequestDto request){
+        MemberData memberInfo = userService.getMemberInfo(request.getEmail(),request.getNickname());
+        return ResponseEntity.ok(memberInfo);
+    }
 
-        MemberData memberInfo = userService.getMemberInfo(request.getNickname());
-        GetMemberResponseDto getMemberResponseDto = GetMemberResponseDto.builder()
-                .imageUrl(memberInfo.getImageUrl())
-                .nickname(memberInfo.getNickname())
-                .follower(memberInfo.getFollower())
-                .following(memberInfo.getFollowing())
-                .build();
-        return ResponseEntity.ok(getMemberResponseDto);
+    @ApiOperation(value="유저 검색, 이메일로", notes="")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "유저 검색됨."),
+            @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식"),
+            @ApiResponse(responseCode = "401", description = "쿠키가 유효하지 않음"),
+            @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때")
+    })
+    @GetMapping("/member/email")
+    public ResponseEntity<MemberData> getMemberByEmail(@ModelAttribute GetMemberEmailRequestDto request){
+
+        MemberData memberInfo = userService.getMemberInfoByEmail(request.getEmail(),request.getOtherEmail());
+        return ResponseEntity.ok(memberInfo);
     }
 
     @ApiOperation(value="유저 탈퇴", notes="")

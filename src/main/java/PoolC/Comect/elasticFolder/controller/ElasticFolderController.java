@@ -49,23 +49,27 @@ public class ElasticFolderController {
             for(ElasticFolder elasticFolder:searchMeList){
                 String folderOwnerId=elasticFolder.getOwnerId();
                 String folderOwnerNickname=userService.findOneId(new ObjectId(folderOwnerId)).getNickname();
-                myFolders.add(ElasticFolderSearchInfo.toElasticFolderSearchInfo(elasticFolder,folderOwnerNickname));
+                String folderOwnerEmail=userService.findOneId(new ObjectId(folderOwnerId)).getEmail();
+                myFolders.add(ElasticFolderSearchInfo.toElasticFolderSearchInfo(elasticFolder,folderOwnerNickname,folderOwnerEmail));
             }
         }
         else{
-            List<String> followingIds=userService.findOneId(ownerId).getFollowers().stream().map(current->current.toString()).collect(Collectors.toList());
+            List<String> followingIds=userService.readFollowingById(ownerId).stream().map(current->current.toString()).collect(Collectors.toList());
+            System.out.println(followingIds);
             List<ElasticFolder> searchFollowingList= elasticService.searchFolder(followingIds,keyword);
             followingIds.add(ownerId.toString());
             List<ElasticFolder> searchNotFollowingList= elasticService.searchExcludeFolder(followingIds,keyword);
             for(ElasticFolder elasticFolder:searchFollowingList){
                 String folderOwnerId=elasticFolder.getOwnerId();
                 String folderOwnerNickname=userService.findOneId(new ObjectId(folderOwnerId)).getNickname();
-                followingFolders.add(ElasticFolderSearchInfo.toElasticFolderSearchInfo(elasticFolder,folderOwnerNickname));
+                String folderOwnerEmail=userService.findOneId(new ObjectId(folderOwnerId)).getEmail();
+                followingFolders.add(ElasticFolderSearchInfo.toElasticFolderSearchInfo(elasticFolder,folderOwnerNickname,folderOwnerEmail));
             }
             for(ElasticFolder elasticFolder:searchNotFollowingList){
                 String folderOwnerId=elasticFolder.getOwnerId();
                 String folderOwnerNickname=userService.findOneId(new ObjectId(folderOwnerId)).getNickname();
-                notFollowingFolders.add(ElasticFolderSearchInfo.toElasticFolderSearchInfo(elasticFolder,folderOwnerNickname));
+                String folderOwnerEmail=userService.findOneId(new ObjectId(folderOwnerId)).getEmail();
+                notFollowingFolders.add(ElasticFolderSearchInfo.toElasticFolderSearchInfo(elasticFolder,folderOwnerNickname,folderOwnerEmail));
             }
         }
 

@@ -158,16 +158,21 @@ public class CustomElasticLinkRepositoryImpl implements  CustomElasticLinkReposi
     }
 
     public void deleteFolder(String ownerId, String path){
-        Criteria criteria = Criteria.where("path").startsWith(path)
-                .and(Criteria.where("ownerId").matches(ownerId));
+
+        Criteria criteria =Criteria.where("ownerId").matches(ownerId);
         Query query=new CriteriaQuery(criteria);
-        elasticsearchOperations.delete(query, ElasticLink.class);
+        SearchHits<ElasticFolder> elasticFolderList = elasticsearchOperations.search(query, ElasticFolder.class);
+
+        for(SearchHit<ElasticFolder> current: elasticFolderList){
+            ElasticFolder elasticFolder=current.getContent();
+            if(!elasticFolder.getPath().startsWith(path)) continue;
+            elasticsearchOperations.delete(elasticFolder);
+        }
 
     }
     public void updateFolder(String ownerId, String path,String newName){
 
-        Criteria criteria = Criteria.where("path").startsWith(path)
-                .and(Criteria.where("ownerId").matches(ownerId));
+        Criteria criteria = Criteria.where("ownerId").matches(ownerId);
         Query query=new CriteriaQuery(criteria);
         SearchHits<ElasticLink> elasticLinkSearchHits = elasticsearchOperations.search(query, ElasticLink.class);
 
@@ -181,6 +186,7 @@ public class CustomElasticLinkRepositoryImpl implements  CustomElasticLinkReposi
 
         for(SearchHit<ElasticLink> current: elasticLinkSearchHits){
             ElasticLink elasticLink=current.getContent();
+            if(!elasticLink.getPath().startsWith(path)) continue;
             String originalPath=elasticLink.getPath();
             elasticLink.setPath(newPath+originalPath.substring(path.length()));
             System.out.println(elasticLink);
@@ -189,8 +195,7 @@ public class CustomElasticLinkRepositoryImpl implements  CustomElasticLinkReposi
     }
     public void moveFolder(String ownerId, String originalPath, String destinationPath){
 
-        Criteria criteria = Criteria.where("path").startsWith(originalPath)
-                .and(Criteria.where("ownerId").matches(ownerId));
+        Criteria criteria = Criteria.where("ownerId").matches(ownerId);
         Query query=new CriteriaQuery(criteria);
         SearchHits<ElasticLink> elasticLinkSearchHits = elasticsearchOperations.search(query, ElasticLink.class);
         String []tokens= Arrays.stream(originalPath.split("/")).filter(e -> e.trim().length() > 0).toArray(String[]::new);
@@ -198,6 +203,7 @@ public class CustomElasticLinkRepositoryImpl implements  CustomElasticLinkReposi
 
         for(SearchHit<ElasticLink> current: elasticLinkSearchHits){
             ElasticLink elasticLink=current.getContent();
+            if(!elasticLink.getPath().startsWith(originalPath)) continue;
             String currentPath=elasticLink.getPath();
             elasticLink.setPath(destinationPath+currentFolderName+currentPath.substring(originalPath.length()));
             elasticsearchOperations.save(elasticLink);

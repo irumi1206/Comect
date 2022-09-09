@@ -47,4 +47,25 @@ public class LinkInfo {
 
         return linkInfoList;
     }
+
+    public static List<LinkInfo> toLinkInfoPublic(List<Link> links) {
+
+        List<LinkInfo> linkInfoList = new ArrayList<>();
+
+        for (Link currentLink : links) {
+            if(currentLink.getIsPublic().equals("true")) {
+                linkInfoList.add(LinkInfo.builder()
+                        .id(currentLink.get_id().toString())
+                        .name(currentLink.getName())
+                        .imageUrl(currentLink.getImageUrl())
+                        .url(currentLink.getUrl())
+                        .keywords(currentLink.getKeywords())
+                        .isPublic(currentLink.getIsPublic())
+                        .build());
+            }
+
+        }
+
+        return linkInfoList;
+    }
 }

@@ -51,7 +51,7 @@ public class ImageService {
             try{
                 saveFile(upLoadDir,image.getId().toHexString(),multipartFile);
                 imageRepository.save(image);
-                imageUploadData.setImageUrl("http://43.200.175.52:8080/image?id="+image.getId().toHexString());
+                imageUploadData.setImageUrl("http://119.71.1.161:8081/image?id="+image.getId().toHexString());
             }catch(Exception e){
                 imageUploadData.setSuccess(false);
             }

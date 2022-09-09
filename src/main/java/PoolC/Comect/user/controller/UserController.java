@@ -1,12 +1,11 @@
 package PoolC.Comect.user.controller;
 
+
+import PoolC.Comect.user.domain.*;
 //import PoolC.Comect.common.infra.JwtTokenProvider;
-import PoolC.Comect.user.domain.FollowInfo;
 import PoolC.Comect.user.dto.follow.*;
 import PoolC.Comect.user.dto.member.*;
 import PoolC.Comect.user.service.UserService;
-import PoolC.Comect.user.domain.MemberData;
-import PoolC.Comect.user.domain.User;
 import PoolC.Comect.user.dto.*;
 //import io.swagger.annotations.ApiOperation;
 //import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -221,13 +220,13 @@ public class UserController {
     @GetMapping("/follow/small")
     public ResponseEntity<ReadFollowSmallResponseDto> readFollow(@ModelAttribute ReadFollowSmallRequestDto request){
 
-        List<FollowInfo> followers = userService.readFollowerSmall(request.getEmail());
-        List<FollowInfo> followings = userService.readFollowingSmall(request.getEmail());
+        ReadFollowerData readFollowerData = userService.readFollowerSmall(request.getEmail());
+        ReadFollowingData readFollowingData = userService.readFollowingSmall(request.getEmail());
         ReadFollowSmallResponseDto readFollowSmallResponseDto = ReadFollowSmallResponseDto.builder()
-                .numberOfFollowing(followings.size())
-                .numberOfFollower(followers.size())
-                .followings(followings)
-                .followers(followers)
+                .numberOfFollowing(readFollowingData.getNumberOfFollowings())
+                .numberOfFollower(readFollowerData.getNumberOfFollowers())
+                .followings(readFollowingData.getFollowings())
+                .followers(readFollowerData.getFollowers())
                 .build();
         return ResponseEntity.ok(readFollowSmallResponseDto);
     }

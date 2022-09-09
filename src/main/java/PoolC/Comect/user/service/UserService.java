@@ -7,10 +7,7 @@ import PoolC.Comect.folder.repository.FolderRepository;
 import PoolC.Comect.image.domain.Image;
 import PoolC.Comect.image.repository.ImageRepository;
 import PoolC.Comect.image.service.ImageService;
-import PoolC.Comect.user.domain.FollowInfo;
-import PoolC.Comect.user.domain.ImageUploadData;
-import PoolC.Comect.user.domain.MemberData;
-import PoolC.Comect.user.domain.User;
+import PoolC.Comect.user.domain.*;
 import PoolC.Comect.user.repository.UserRepository;
 import com.mongodb.client.ClientSession;
 import lombok.RequiredArgsConstructor;
@@ -243,7 +240,8 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    public List<FollowInfo> readFollowerSmall(String email) {
+    public ReadFollowerData readFollowerSmall(String email) {
+        ReadFollowerData readFollowerData = new ReadFollowerData();
         User user = findOneEmail(email);
         List<ObjectId> followers = user.getFollowers();
         List<ObjectId> followings = user.getFollowings();
@@ -253,11 +251,14 @@ public class UserService {
         }else{
             followerInfos=listToInfo(followers.subList(0,5),followings);
         }
-        return followerInfos;
+        readFollowerData.setNumberOfFollowers(followers.size());
+        readFollowerData.setFollowers(followerInfos);
+        return readFollowerData;
 
     }
 
-    public List<FollowInfo> readFollowingSmall(String email) {
+    public ReadFollowingData readFollowingSmall(String email) {
+        ReadFollowingData readFollowingData = new ReadFollowingData();
         User user = findOneEmail(email);
         List<ObjectId> followings = user.getFollowings();
         List<FollowInfo> followingInfos;
@@ -266,7 +267,9 @@ public class UserService {
         }else{
             followingInfos=listToInfo(followings.subList(0,5),followings);
         }
-        return followingInfos;
+        readFollowingData.setNumberOfFollowings(followings.size());
+        readFollowingData.setFollowings(followingInfos);
+        return readFollowingData;
     }
 
 

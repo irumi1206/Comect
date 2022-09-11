@@ -27,6 +27,7 @@ public class ElasticFolderController {
     private final ElasticService elasticService;
     private final UserService userService;
     private final FolderService folderService;
+    private final UserRepository userRepository;
 
     @GetMapping(value = "/folder/elastic")
     public ResponseEntity<ElasticFolderSearchResponseDto> folderSearch(@ModelAttribute ElasticFolderSearchRequestDto elasticFolderSearchRequestDto) {
@@ -57,19 +58,32 @@ public class ElasticFolderController {
             List<String> followingIds=userService.readFollowingById(ownerId).stream().map(current->current.toString()).collect(Collectors.toList());
             System.out.println(followingIds);
             List<ElasticFolder> searchFollowingList= elasticService.searchFolder(followingIds,keyword);
+            System.out.println("1");
             followingIds.add(ownerId.toString());
             List<ElasticFolder> searchNotFollowingList= elasticService.searchExcludeFolder(followingIds,keyword);
+            System.out.println(searchFollowingList);
+            System.out.println(searchNotFollowingList);
             for(ElasticFolder elasticFolder:searchFollowingList){
                 String folderOwnerId=elasticFolder.getOwnerId();
-                String folderOwnerNickname=userService.findOneId(new ObjectId(folderOwnerId)).getNickname();
-                String folderOwnerEmail=userService.findOneId(new ObjectId(folderOwnerId)).getEmail();
-                followingFolders.add(ElasticFolderSearchInfo.toElasticFolderSearchInfo(elasticFolder,folderOwnerNickname,folderOwnerEmail));
+                userRepository.findById(new ObjectId(folderOwnerId)).ifPresent((folderOwner)->{
+                    String folderOwnerNickname=folderOwner.getNickname();
+                    String folderOwnerEmail=folderOwner.getEmail();
+                    followingFolders.add(ElasticFolderSearchInfo.toElasticFolderSearchInfo(elasticFolder,folderOwnerNickname,folderOwnerEmail));
+                });
+//                String folderOwnerNickname=userService.findOneId(new ObjectId(folderOwnerId)).getNickname();
+//                String folderOwnerEmail=userService.findOneId(new ObjectId(folderOwnerId)).getEmail();
+//                followingFolders.add(ElasticFolderSearchInfo.toElasticFolderSearchInfo(elasticFolder,folderOwnerNickname,folderOwnerEmail));
             }
             for(ElasticFolder elasticFolder:searchNotFollowingList){
                 String folderOwnerId=elasticFolder.getOwnerId();
-                String folderOwnerNickname=userService.findOneId(new ObjectId(folderOwnerId)).getNickname();
-                String folderOwnerEmail=userService.findOneId(new ObjectId(folderOwnerId)).getEmail();
-                notFollowingFolders.add(ElasticFolderSearchInfo.toElasticFolderSearchInfo(elasticFolder,folderOwnerNickname,folderOwnerEmail));
+                userRepository.findById(new ObjectId(folderOwnerId)).ifPresent((folderOwner)->{
+                    String folderOwnerNickname=folderOwner.getNickname();
+                    String folderOwnerEmail=folderOwner.getEmail();
+                    notFollowingFolders.add(ElasticFolderSearchInfo.toElasticFolderSearchInfo(elasticFolder,folderOwnerNickname,folderOwnerEmail));
+                });
+//                String folderOwnerNickname=userService.findOneId(new ObjectId(folderOwnerId)).getNickname();
+//                String folderOwnerEmail=userService.findOneId(new ObjectId(folderOwnerId)).getEmail();
+//                notFollowingFolders.add(ElasticFolderSearchInfo.toElasticFolderSearchInfo(elasticFolder,folderOwnerNickname,folderOwnerEmail));
             }
         }
 
@@ -101,13 +115,22 @@ public class ElasticFolderController {
             System.out.println(searchMeList.size());
             for(ElasticLink elasticLink:searchMeList){
                 String linkOwnerId=elasticLink.getOwnerId();
-                String linkOwnerNickName=userService.findOneId(new ObjectId(linkOwnerId)).getNickname();
-                String linkPath=elasticLink.getPath();
-                String linkName=elasticLink.getLinkName();
-                String linkId=elasticLink.getLinkId();
-                String linkEmail=userService.findOneId(new ObjectId(linkOwnerId)).getEmail();
-                Link link=folderService.linkRead(linkEmail,linkPath,linkId);
-                myLinks.add(new ElasticLinkSearchInfo(linkOwnerId,linkOwnerNickName,linkPath,linkId,linkName,link.getImageUrl(),link.getUrl(),link.getKeywords()));
+                userRepository.findById(new ObjectId(linkOwnerId)).ifPresent((linkOwner)->{
+                    String linkOwnerNickName=linkOwner.getNickname();
+                    String linkPath=elasticLink.getPath();
+                    String linkName=elasticLink.getLinkName();
+                    String linkId=elasticLink.getLinkId();
+                    String linkEmail=linkOwner.getEmail();
+                    Link link=folderService.linkRead(linkEmail,linkPath,linkId);
+                    myLinks.add(new ElasticLinkSearchInfo(linkOwnerId,linkOwnerNickName,linkPath,linkId,linkName,link.getImageUrl(),link.getUrl(),link.getKeywords()));
+                });
+//                String linkOwnerNickName=userService.findOneId(new ObjectId(linkOwnerId)).getNickname();
+//                String linkPath=elasticLink.getPath();
+//                String linkName=elasticLink.getLinkName();
+//                String linkId=elasticLink.getLinkId();
+//                String linkEmail=userService.findOneId(new ObjectId(linkOwnerId)).getEmail();
+//                Link link=folderService.linkRead(linkEmail,linkPath,linkId);
+//                myLinks.add(new ElasticLinkSearchInfo(linkOwnerId,linkOwnerNickName,linkPath,linkId,linkName,link.getImageUrl(),link.getUrl(),link.getKeywords()));
             }
         }
         else{
@@ -119,23 +142,41 @@ public class ElasticFolderController {
             System.out.println(searchNotFollowingList.size());
             for(ElasticLink elasticLink:searchFollowingList){
                 String linkOwnerId=elasticLink.getOwnerId();
-                String linkOwnerNickName=userService.findOneId(new ObjectId(linkOwnerId)).getNickname();
-                String linkPath=elasticLink.getPath();
-                String linkName=elasticLink.getLinkName();
-                String linkId=elasticLink.getLinkId();
-                String linkEmail=userService.findOneId(new ObjectId(linkOwnerId)).getEmail();
-                Link link=folderService.linkRead(linkEmail,linkPath,linkId);
-                followingLinks.add(new ElasticLinkSearchInfo(linkOwnerId,linkOwnerNickName,linkPath,linkId,linkName,link.getImageUrl(),link.getUrl(),link.getKeywords()));
+                userRepository.findById(new ObjectId(linkOwnerId)).ifPresent((linkOwner)->{
+                    String linkOwnerNickName=linkOwner.getNickname();
+                    String linkPath=elasticLink.getPath();
+                    String linkName=elasticLink.getLinkName();
+                    String linkId=elasticLink.getLinkId();
+                    String linkEmail=linkOwner.getEmail();
+                    Link link=folderService.linkRead(linkEmail,linkPath,linkId);
+                    followingLinks.add(new ElasticLinkSearchInfo(linkOwnerId,linkOwnerNickName,linkPath,linkId,linkName,link.getImageUrl(),link.getUrl(),link.getKeywords()));
+                });
+//                String linkOwnerNickName=userService.findOneId(new ObjectId(linkOwnerId)).getNickname();
+//                String linkPath=elasticLink.getPath();
+//                String linkName=elasticLink.getLinkName();
+//                String linkId=elasticLink.getLinkId();
+//                String linkEmail=userService.findOneId(new ObjectId(linkOwnerId)).getEmail();
+//                Link link=folderService.linkRead(linkEmail,linkPath,linkId);
+//                followingLinks.add(new ElasticLinkSearchInfo(linkOwnerId,linkOwnerNickName,linkPath,linkId,linkName,link.getImageUrl(),link.getUrl(),link.getKeywords()));
             }
             for(ElasticLink elasticLink:searchNotFollowingList){
                 String linkOwnerId=elasticLink.getOwnerId();
-                String linkOwnerNickName=userService.findOneId(new ObjectId(linkOwnerId)).getNickname();
-                String linkPath=elasticLink.getPath();
-                String linkName=elasticLink.getLinkName();
-                String linkId=elasticLink.getLinkId();
-                String linkEmail=userService.findOneId(new ObjectId(linkOwnerId)).getEmail();
-                Link link=folderService.linkRead(linkEmail,linkPath,linkId);
-                notFollowingLinks.add(new ElasticLinkSearchInfo(linkOwnerId,linkOwnerNickName,linkPath,linkId,linkName,link.getImageUrl(),link.getUrl(),link.getKeywords()));
+                userRepository.findById(new ObjectId(linkOwnerId)).ifPresent((linkOwner)->{
+                    String linkOwnerNickName=linkOwner.getNickname();
+                    String linkPath=elasticLink.getPath();
+                    String linkName=elasticLink.getLinkName();
+                    String linkId=elasticLink.getLinkId();
+                    String linkEmail=linkOwner.getEmail();
+                    Link link=folderService.linkRead(linkEmail,linkPath,linkId);
+                    notFollowingLinks.add(new ElasticLinkSearchInfo(linkOwnerId,linkOwnerNickName,linkPath,linkId,linkName,link.getImageUrl(),link.getUrl(),link.getKeywords()));
+                });
+//                String linkOwnerNickName=userService.findOneId(new ObjectId(linkOwnerId)).getNickname();
+//                String linkPath=elasticLink.getPath();
+//                String linkName=elasticLink.getLinkName();
+//                String linkId=elasticLink.getLinkId();
+//                String linkEmail=userService.findOneId(new ObjectId(linkOwnerId)).getEmail();
+//                Link link=folderService.linkRead(linkEmail,linkPath,linkId);
+//                notFollowingLinks.add(new ElasticLinkSearchInfo(linkOwnerId,linkOwnerNickName,linkPath,linkId,linkName,link.getImageUrl(),link.getUrl(),link.getKeywords()));
             }
         }
 

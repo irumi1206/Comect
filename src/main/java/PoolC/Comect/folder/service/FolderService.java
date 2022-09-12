@@ -152,14 +152,14 @@ public class FolderService {
             folderRepository.linkUpdate(user.getRootFolderId(), path,new ObjectId(id), link);
             String keywordString="";
             if(keywords!=null) for(String keyword : keywords) keywordString+=keyword+" ";
-            elasticLinkRepository.update(user.getId().toString(),path,id,link.get_id().toString(),name,keywordString);
+            elasticLinkRepository.update(user.getId().toString(),path,id,link.get_id().toString(),name,keywordString,isPublic);
         }else{
             String originalImageUrl=linkRead(email,path,id).getImageUrl();
             Link link=new Link(name,originalImageUrl,url,keywords,isPublic);
             folderRepository.linkUpdate(user.getRootFolderId(), path,new ObjectId(id), link);
             String keywordString="";
             if(keywords!=null) for(String keyword : keywords) keywordString+=keyword+" ";
-            elasticLinkRepository.update(user.getId().toString(),path,id,link.get_id().toString(),name,keywordString);
+            elasticLinkRepository.update(user.getId().toString(),path,id,link.get_id().toString(),name,keywordString,isPublic);
         }
         return changeSuccess;
     }

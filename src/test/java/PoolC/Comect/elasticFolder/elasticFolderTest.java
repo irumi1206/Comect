@@ -121,14 +121,14 @@ public class elasticFolderTest {
         folderService.folderCreate("young.min123@gmail.com","로아/직업/디트/","디트 레이드 스킬트리");
 //
 //        folderService.linkCreate("young.min123@gmail.com","로아/직업/블래/","블래스터링크","링크",null,d,"true",null);
-//        folderService.linkCreate("young.min123@gmail.com","로아/직업/블래/","블래스터링크1","링크",null,null,"true",null);
-//        folderService.linkCreate("young.min123@gmail.com","로아/직업/블래/","블래스터링크2","링크",null,null,"true",null);
-//        folderService.linkCreate("young.min123@gmail.com","로아/직업/블래/","블래스터링크3","링크",null,null,"true",null);
-//        folderService.linkCreate("young.min123@gmail.com","로아/직업/블래/","블래스터링크4","링크",null,null,"true",null);
+        folderService.linkCreate("young.min123@gmail.com","로아/직업/블래/","블래스터링크1","링크",null,null,"false",null);
+        folderService.linkCreate("young.min123@gmail.com","로아/직업/블래/","블래스터링크2","링크",null,null,"false",null);
+        folderService.linkCreate("young.min123@gmail.com","로아/직업/블래/","블래스터링크3","링크",null,null,"true",null);
+        folderService.linkCreate("young.min123@gmail.com","로아/직업/블래/","블래스터링크4","링크",null,null,"true",null);
 //        List<String> stringList=new ArrayList<>();
 //        stringList.add("유투브 스포츠/");
 //        folderService.folderMove("sungha.kim123@gmail.com",stringList,"메이플/");
-        folderService.folderUpdate("sungha.kim123@gmail.com","유투브 스포츠/","유튜브");
+ //       folderService.folderUpdate("sungha.kim123@gmail.com","유투브 스포츠/","유튜브");
  //       List<String> t=new ArrayList<>();
   //      t.add("로아/직업/블래/");
 //

@@ -99,10 +99,31 @@ public class UserService {
     }
 
     //@Transactional
-    public FollowInfo createFollow(String email, String followedNickname){
+    public FollowInfo createFollowNickname(String email, String followedNickname){
         User user = findOneEmail(email);
         if(user.getNickname().equals(followedNickname)) throw new CustomException(ErrorCode.FOLLOW_ME);
         User followed = findOneNickname(followedNickname);
+        if(user.getFollowings().contains(followed.getId())){
+            throw new CustomException(ErrorCode.FOLLOWING_EXIST);
+        }
+        user.getFollowings().add(followed.getId());
+        followed.getFollowers().add(user.getId());
+        userRepository.save(user);
+        userRepository.save(followed);
+        FollowInfo followInfo = FollowInfo.builder()
+                .isFollowing(true)
+                .imageUrl(followed.getImageUrl())
+                .email(followed.getEmail())
+                .nickname(followed.getNickname())
+                .build();
+        return followInfo;
+    }
+
+    //@Transactional
+    public FollowInfo createFollowEmail(String email, String followedEmail){
+        if(email.equals(followedEmail)) throw new CustomException(ErrorCode.FOLLOW_ME);
+        User user = findOneEmail(email);
+        User followed = findOneEmail(followedEmail);
         if(user.getFollowings().contains(followed.getId())){
             throw new CustomException(ErrorCode.FOLLOWING_EXIST);
         }
@@ -199,9 +220,19 @@ public class UserService {
     }
 
     //@Transactional
-    public void deleteFollow(String email, String followedNickname) {
+    public void deleteFollowNickname(String email, String followedNickname) {
         User user = findOneEmail(email);
         User followed = findOneNickname(followedNickname);
+        user.getFollowings().remove(followed.getId());
+        followed.getFollowers().remove(user.getId());
+        userRepository.save(user);
+        userRepository.save(followed);
+    }
+
+    //@Transactional
+    public void deleteFollowEmail(String email, String followedEmail) {
+        User user = findOneEmail(email);
+        User followed = findOneEmail(followedEmail);
         user.getFollowings().remove(followed.getId());
         followed.getFollowers().remove(user.getId());
         userRepository.save(user);

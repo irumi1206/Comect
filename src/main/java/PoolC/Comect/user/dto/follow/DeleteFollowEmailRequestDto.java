@@ -3,7 +3,7 @@ package PoolC.Comect.user.dto.follow;
 import lombok.Data;
 
 @Data
-public class DeleteFollowRequestDto {
+public class DeleteFollowEmailRequestDto {
     private String email;
-    private String followedNickname;
+    private String followedEmail;
 }

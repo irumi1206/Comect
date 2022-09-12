@@ -15,16 +15,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.io.IOException;
-import java.lang.reflect.Member;
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -100,7 +96,7 @@ public class UserController {
         return ResponseEntity.ok(updateUserResponseDto);
     }
 
-    @ApiOperation(value="팔로우", notes="")
+    @ApiOperation(value="팔로우, 닉네임으로", notes="")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "팔로우 잘 됨."),
             @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식"),
@@ -110,9 +106,9 @@ public class UserController {
             @ApiResponse(responseCode = "417", description = "나를 팔로우 시도")
 
     })
-    @PostMapping("/follow")
-    public ResponseEntity<CreateFollowResponseDto> createFollow(@RequestBody CreateFollowRequestDto request){
-        FollowInfo follow = userService.createFollow(request.getEmail(), request.getFollowedNickname());
+    @PostMapping("/follow/nickname")
+    public ResponseEntity<CreateFollowResponseDto> createFollowByNickname(@RequestBody CreateFollowNicknameRequestDto request){
+        FollowInfo follow = userService.createFollowNickname(request.getEmail(), request.getFollowedNickname());
         CreateFollowResponseDto createFollowResponseDto = CreateFollowResponseDto.builder()
                 .isFollowing(true)
                 .email(follow.getEmail())
@@ -121,6 +117,30 @@ public class UserController {
                 .build();
         return ResponseEntity.ok(createFollowResponseDto);
     }
+
+    @ApiOperation(value="팔로우, 이메일로", notes="")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "팔로우 잘 됨."),
+            @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식"),
+            @ApiResponse(responseCode = "401", description = "쿠키가 유효하지 않음"),
+            @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때"),
+            @ApiResponse(responseCode = "409", description = "이미 존재하는 팔로우"),
+            @ApiResponse(responseCode = "417", description = "나를 팔로우 시도")
+
+    })
+    @PostMapping("/follow/email")
+    public ResponseEntity<CreateFollowResponseDto> createFollowByEmail(@RequestBody CreateFollowEmailRequestDto request){
+        FollowInfo follow = userService.createFollowEmail(request.getEmail(), request.getFollowedEmail());
+        CreateFollowResponseDto createFollowResponseDto = CreateFollowResponseDto.builder()
+                .isFollowing(true)
+                .email(follow.getEmail())
+                .imageUrl(follow.getImageUrl())
+                .nickname(follow.getNickname())
+                .build();
+        return ResponseEntity.ok(createFollowResponseDto);
+    }
+
+
 
     @ApiOperation(value="팔로워 조회", notes="나를 팔로우 하는 사람들을 조회합니다.")
     @ApiResponses({
@@ -157,16 +177,29 @@ public class UserController {
         return ResponseEntity.ok(readFollowingResponseDto);
     }
 
-    @ApiOperation(value="팔로워 취소", notes="")
+    @ApiOperation(value="팔로워 취소, 닉네임으로", notes="")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "팔로우 취소됨."),
             @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식"),
             @ApiResponse(responseCode = "401", description = "쿠키가 유효하지 않음"),
             @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때, 해당 팔로우가 없을때")
     })
-    @DeleteMapping("/follow")
-    public ResponseEntity<Void> deleteFollow(@RequestBody DeleteFollowRequestDto request){
-        userService.deleteFollow(request.getEmail(),request.getFollowedNickname());
+    @DeleteMapping("/follow/nickname")
+    public ResponseEntity<Void> deleteFollowByNickname(@RequestBody DeleteFollowNicknameRequestDto request){
+        userService.deleteFollowNickname(request.getEmail(),request.getFollowedNickname());
+        return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value="팔로워 취소, 이메일로", notes="")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "팔로우 취소됨."),
+            @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식"),
+            @ApiResponse(responseCode = "401", description = "쿠키가 유효하지 않음"),
+            @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때, 해당 팔로우가 없을때")
+    })
+    @DeleteMapping("/follow/email")
+    public ResponseEntity<Void> deleteFollowByEmail(@RequestBody DeleteFollowEmailRequestDto request){
+        userService.deleteFollowEmail(request.getEmail(),request.getFollowedEmail());
         return ResponseEntity.ok().build();
     }
 

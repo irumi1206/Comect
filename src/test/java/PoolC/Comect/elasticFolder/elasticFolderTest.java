@@ -72,7 +72,7 @@ public class elasticFolderTest {
         userService.join("sungha.kim123@gmail.com","1234","sungha",null);
         userService.join("young.min123@gmail.com","1234","youngmin",null);
 
-        userService.createFollow("sungha.kim123@gmail.com","youngmin");
+        userService.createFollowNickname("sungha.kim123@gmail.com","youngmin");
 
 
         folderService.folderCreate("sungha.kim123@gmail.com","","유투브 스포츠");

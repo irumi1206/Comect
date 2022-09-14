@@ -2,14 +2,14 @@ package PoolC.Comect.user.service;
 
 import PoolC.Comect.common.exception.CustomException;
 import PoolC.Comect.common.exception.ErrorCode;
+import PoolC.Comect.elasticUser.domain.ElasticUser;
+import PoolC.Comect.elasticUser.repository.ElasticUserRepository;
 import PoolC.Comect.folder.domain.Folder;
 import PoolC.Comect.folder.repository.FolderRepository;
-import PoolC.Comect.image.domain.Image;
 import PoolC.Comect.image.repository.ImageRepository;
 import PoolC.Comect.image.service.ImageService;
 import PoolC.Comect.user.domain.*;
 import PoolC.Comect.user.repository.UserRepository;
-import com.mongodb.client.ClientSession;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 //import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,6 +32,7 @@ public class UserService {
     private final FolderRepository folderRepository;
     private final ImageService imageService;
     private final ImageRepository imageRepository;
+    private final ElasticUserRepository elasticUserRepository;
     //private final PasswordEncoder passwordEncoder;
 
     //회원 가입
@@ -48,6 +50,11 @@ public class UserService {
         folderRepository.save(folder);
         User user=new User(nickname,email,folder.get_id(),imageUploadData.getImageUrl(), password);
         userRepository.save(user);
+
+        //es에 저장
+        ElasticUser elasticUser=new ElasticUser(user.getId().toString(),nickname);
+        elasticUserRepository.save(elasticUser);
+
         return imageUploadData.isSuccess();
     }
 
@@ -68,6 +75,17 @@ public class UserService {
         if(!user.getNickname().equals(userNickname)){
             validateDuplicateNickname(userNickname);
             user.setNickname(userNickname);
+            //es update
+            System.out.println(userNickname);
+            System.out.println(user.getId().toString());
+            Optional<ElasticUser> elasticUser=elasticUserRepository.findByUserId(user.getId().toString());
+            elasticUser.ifPresent(
+                    currentUser->{
+                        System.out.println(currentUser);
+                        currentUser.setNickname(userNickname);
+                        elasticUserRepository.save(currentUser);
+                    }
+            );
         }
         boolean changeSuccess;
         if(imageChange.equals("true")){
@@ -269,6 +287,8 @@ public class UserService {
         folderRepository.findById(user.getRootFolderId()).ifPresent((folder)->folderRepository.delete(folder));
         imageService.deleteImage(user.getImageId());
         userRepository.delete(user);
+        //es에서 제거
+        elasticUserRepository.deleteByUserId(user.getId().toString());
     }
 
     public ReadFollowerData readFollowerSmall(String email) {

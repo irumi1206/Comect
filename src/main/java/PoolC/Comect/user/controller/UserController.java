@@ -1,4 +1,4 @@
-package PoolC.Comect.image.controller;
+package PoolC.Comect.user.controller;
 
 
 import PoolC.Comect.common.infra.JwtTokenProvider;

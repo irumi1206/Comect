@@ -4,6 +4,7 @@ import PoolC.Comect.common.exception.CustomException;
 import PoolC.Comect.common.exception.ErrorCode;
 import PoolC.Comect.elasticUser.domain.ElasticUser;
 import PoolC.Comect.elasticUser.repository.ElasticUserRepository;
+import PoolC.Comect.email.EmailService;
 import PoolC.Comect.folder.domain.Folder;
 import PoolC.Comect.folder.repository.FolderRepository;
 import PoolC.Comect.image.repository.ImageRepository;
@@ -31,8 +32,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final FolderRepository folderRepository;
     private final ImageService imageService;
-    private final ImageRepository imageRepository;
     private final ElasticUserRepository elasticUserRepository;
+    private final EmailService emailService;
     //private final PasswordEncoder passwordEncoder;
 
     //회원 가입
@@ -43,6 +44,7 @@ public class UserService {
         validateDuplicateUser(email);
         validateDuplicateNickname(nickname);
         //validatePassword(password);
+        emailService.emailAuthCheck(email);
 
         //이미지 저장
         ImageUploadData imageUploadData = imageService.createImage(multipartFile, email);

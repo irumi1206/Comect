@@ -1,6 +1,7 @@
-package PoolC.Comect.user.controller;
+package PoolC.Comect.image.controller;
 
 
+import PoolC.Comect.common.infra.JwtTokenProvider;
 import PoolC.Comect.user.domain.*;
 //import PoolC.Comect.common.infra.JwtTokenProvider;
 import PoolC.Comect.user.dto.follow.*;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -29,8 +31,8 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-//    private final PasswordEncoder passwordEncoder;
-//    private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @ApiOperation(value="회원가입", notes="")
     @ApiResponses({
@@ -40,8 +42,8 @@ public class UserController {
     })
     @PostMapping(path="/member", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CreateUserResponseDto> createUser(@Valid @ModelAttribute CreateUserRequestDto request){
-//        boolean success = userService.join(request.getEmail(), passwordEncoder.encode(request.getPassword()), request.getNickname(), request.getMultipartFile());
-        boolean success = userService.join(request.getEmail(),request.getPassword(), request.getNickname(), request.getMultipartFile());
+        boolean success = userService.join(request.getEmail(), passwordEncoder.encode(request.getPassword()), request.getNickname(), request.getMultipartFile());
+        //boolean success = userService.join(request.getEmail(),request.getPassword(), request.getNickname(), request.getMultipartFile());
 
         CreateUserResponseDto createUserResponseDto = CreateUserResponseDto.builder()
                 .imageSuccess(success)
@@ -59,8 +61,8 @@ public class UserController {
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request){
 
         User member=userService.login(request.getEmail(), request.getPassword());
-//        LoginResponseDto loginResponseDto = new LoginResponseDto(jwtTokenProvider.createToken(member.getNickname(), member.getRoles()));
-        LoginResponseDto loginResponseDto = new LoginResponseDto(request.getEmail());
+        LoginResponseDto loginResponseDto = new LoginResponseDto(jwtTokenProvider.createToken(member.getNickname(), member.getRoles()));
+        //LoginResponseDto loginResponseDto = new LoginResponseDto(request.getEmail());
 
         return ResponseEntity.ok(loginResponseDto);
     }

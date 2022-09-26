@@ -28,9 +28,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             // SecurityContext 에 Authentication 객체를 저장합니다.
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-        else{
-            System.out.println("no token provided");
-        }
         chain.doFilter(request, response);
     }
 }

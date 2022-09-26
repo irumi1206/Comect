@@ -61,7 +61,9 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request){
 
-        User member=userService.login(request.getEmail(), request.getPassword());
+        System.out.println(request);
+        System.out.println(passwordEncoder.encode(request.getPassword()));
+        User member=userService.login(request.getEmail(), passwordEncoder.encode(request.getPassword()));
         LoginResponseDto loginResponseDto = new LoginResponseDto(jwtTokenProvider.createToken(member.getEmail(), member.getRoles()));
         //LoginResponseDto loginResponseDto = new LoginResponseDto(request.getEmail());
 

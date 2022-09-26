@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,7 +62,7 @@ public class UserController {
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request){
 
         User member=userService.login(request.getEmail(), request.getPassword());
-        LoginResponseDto loginResponseDto = new LoginResponseDto(jwtTokenProvider.createToken(member.getNickname(), member.getRoles()));
+        LoginResponseDto loginResponseDto = new LoginResponseDto(jwtTokenProvider.createToken(member.getEmail(), member.getRoles()));
         //LoginResponseDto loginResponseDto = new LoginResponseDto(request.getEmail());
 
         return ResponseEntity.ok(loginResponseDto);
@@ -75,8 +76,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때")
     })
     @GetMapping("/member/me")
-    public ResponseEntity<ReadUserResponseDto> readUser(@ModelAttribute ReadUserRequestDto request){
-        User user = userService.findOneEmail(request.getEmail());
+    public ResponseEntity<ReadUserResponseDto> readUser(@ModelAttribute ReadUserRequestDto request, @AuthenticationPrincipal User user){
         return ResponseEntity.ok(new ReadUserResponseDto(user));
     }
 
@@ -89,8 +89,8 @@ public class UserController {
             @ApiResponse(responseCode = "409", description = "이미 존재하는 닉네임")
     })
     @PutMapping("/member/me")
-    public ResponseEntity<UpdateUserResponseDto> updateUser(@Valid @ModelAttribute UpdateUserRequestDto request){
-        boolean success = userService.update(request.getEmail(), request.getNewNickname(), request.getNewMultipartFile(), request.getImageChange());
+    public ResponseEntity<UpdateUserResponseDto> updateUser(@Valid @ModelAttribute UpdateUserRequestDto request,@AuthenticationPrincipal User user){
+        boolean success = userService.update(user.getEmail(), request.getNewNickname(), request.getNewMultipartFile(), request.getImageChange());
         UpdateUserResponseDto updateUserResponseDto = UpdateUserResponseDto
                 .builder()
                 .imageSuccess(success)
@@ -109,8 +109,8 @@ public class UserController {
 
     })
     @PostMapping("/follow/nickname")
-    public ResponseEntity<CreateFollowResponseDto> createFollowByNickname(@RequestBody CreateFollowNicknameRequestDto request){
-        FollowInfo follow = userService.createFollowNickname(request.getEmail(), request.getFollowedNickname());
+    public ResponseEntity<CreateFollowResponseDto> createFollowByNickname(@RequestBody CreateFollowNicknameRequestDto request,@AuthenticationPrincipal User user){
+        FollowInfo follow = userService.createFollowNickname(user.getEmail(), request.getFollowedNickname());
         CreateFollowResponseDto createFollowResponseDto = CreateFollowResponseDto.builder()
                 .isFollowing(true)
                 .email(follow.getEmail())
@@ -131,8 +131,8 @@ public class UserController {
 
     })
     @PostMapping("/follow/email")
-    public ResponseEntity<CreateFollowResponseDto> createFollowByEmail(@RequestBody CreateFollowEmailRequestDto request){
-        FollowInfo follow = userService.createFollowEmail(request.getEmail(), request.getFollowedEmail());
+    public ResponseEntity<CreateFollowResponseDto> createFollowByEmail(@RequestBody CreateFollowEmailRequestDto request,@AuthenticationPrincipal User user){
+        FollowInfo follow = userService.createFollowEmail(user.getEmail(), request.getFollowedEmail());
         CreateFollowResponseDto createFollowResponseDto = CreateFollowResponseDto.builder()
                 .isFollowing(true)
                 .email(follow.getEmail())
@@ -152,9 +152,9 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때")
     })
     @GetMapping("/follower")
-    public ResponseEntity<ReadFollowerResponseDto> readFollower(@ModelAttribute ReadFollowRequestDto request){
+    public ResponseEntity<ReadFollowerResponseDto> readFollower(@ModelAttribute ReadFollowRequestDto request,@AuthenticationPrincipal User user){
 
-        List<FollowInfo> followers = userService.readFollower(request.getEmail());
+        List<FollowInfo> followers = userService.readFollower(user.getEmail());
         ReadFollowerResponseDto readFollowResponseDto = ReadFollowerResponseDto.builder()
                 .numberOfFollower(followers.size())
                 .followers(followers)
@@ -170,8 +170,8 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때")
     })
     @GetMapping("/following")
-    public ResponseEntity<ReadFollowingResponseDto> readFollowing(@ModelAttribute ReadFollowRequestDto request){
-        List<FollowInfo> followings = userService.readFollowing(request.getEmail());
+    public ResponseEntity<ReadFollowingResponseDto> readFollowing(@ModelAttribute ReadFollowRequestDto request,@AuthenticationPrincipal User user){
+        List<FollowInfo> followings = userService.readFollowing(user.getEmail());
         ReadFollowingResponseDto readFollowingResponseDto = ReadFollowingResponseDto.builder()
                 .numberOfFollowing(followings.size())
                 .followings(followings)
@@ -187,8 +187,8 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때, 해당 팔로우가 없을때")
     })
     @DeleteMapping("/follow/nickname")
-    public ResponseEntity<Void> deleteFollowByNickname(@RequestBody DeleteFollowNicknameRequestDto request){
-        userService.deleteFollowNickname(request.getEmail(),request.getFollowedNickname());
+    public ResponseEntity<Void> deleteFollowByNickname(@RequestBody DeleteFollowNicknameRequestDto request,@AuthenticationPrincipal User user){
+        userService.deleteFollowNickname(user.getEmail(),request.getFollowedNickname());
         return ResponseEntity.ok().build();
     }
 
@@ -200,8 +200,8 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때, 해당 팔로우가 없을때")
     })
     @DeleteMapping("/follow/email")
-    public ResponseEntity<Void> deleteFollowByEmail(@RequestBody DeleteFollowEmailRequestDto request){
-        userService.deleteFollowEmail(request.getEmail(),request.getFollowedEmail());
+    public ResponseEntity<Void> deleteFollowByEmail(@RequestBody DeleteFollowEmailRequestDto request,@AuthenticationPrincipal User user){
+        userService.deleteFollowEmail(user.getEmail(),request.getFollowedEmail());
         return ResponseEntity.ok().build();
     }
 
@@ -213,8 +213,8 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때")
     })
     @GetMapping("/member/nickname")
-    public ResponseEntity<MemberData> getMember(@ModelAttribute GetMemberRequestDto request){
-        MemberData memberInfo = userService.getMemberInfo(request.getEmail(),request.getNickname());
+    public ResponseEntity<MemberData> getMember(@ModelAttribute GetMemberRequestDto request,@AuthenticationPrincipal User user){
+        MemberData memberInfo = userService.getMemberInfo(user.getEmail(),request.getNickname());
         return ResponseEntity.ok(memberInfo);
     }
 
@@ -226,9 +226,9 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때")
     })
     @GetMapping("/member/email")
-    public ResponseEntity<MemberData> getMemberByEmail(@ModelAttribute GetMemberEmailRequestDto request){
+    public ResponseEntity<MemberData> getMemberByEmail(@ModelAttribute GetMemberEmailRequestDto request,@AuthenticationPrincipal User user){
 
-        MemberData memberInfo = userService.getMemberInfoByEmail(request.getEmail(),request.getOtherEmail());
+        MemberData memberInfo = userService.getMemberInfoByEmail(user.getEmail(),request.getOtherEmail());
         return ResponseEntity.ok(memberInfo);
     }
 
@@ -240,8 +240,8 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때, 비밀번호가 틀릴때")
     })
     @DeleteMapping("/member")
-    public ResponseEntity<Void> deleteMember(@RequestBody DeleteUserRequestDto request){
-        userService.deleteMember(request.getEmail(), request.getPassword());
+    public ResponseEntity<Void> deleteMember(@RequestBody DeleteUserRequestDto request,@AuthenticationPrincipal User user){
+        userService.deleteMember(user.getEmail(), request.getPassword());
         return ResponseEntity.ok().build();
     }
 
@@ -253,10 +253,10 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "해당 유저가 없을때, 해당 이메일의 유저가 없을때")
     })
     @GetMapping("/follow/small")
-    public ResponseEntity<ReadFollowSmallResponseDto> readFollow(@ModelAttribute ReadFollowSmallRequestDto request){
+    public ResponseEntity<ReadFollowSmallResponseDto> readFollow(@ModelAttribute ReadFollowSmallRequestDto request,@AuthenticationPrincipal User user){
 
-        ReadFollowerData readFollowerData = userService.readFollowerSmall(request.getEmail());
-        ReadFollowingData readFollowingData = userService.readFollowingSmall(request.getEmail());
+        ReadFollowerData readFollowerData = userService.readFollowerSmall(user.getEmail());
+        ReadFollowingData readFollowingData = userService.readFollowingSmall(user.getEmail());
         ReadFollowSmallResponseDto readFollowSmallResponseDto = ReadFollowSmallResponseDto.builder()
                 .numberOfFollowing(readFollowingData.getNumberOfFollowings())
                 .numberOfFollower(readFollowerData.getNumberOfFollowers())

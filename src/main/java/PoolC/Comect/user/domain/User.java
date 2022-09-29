@@ -50,7 +50,7 @@ public class User implements UserDetails {
         this.password = password;
         this.followings=new ArrayList<>();
         this.followers=new ArrayList<>();
-        this.roles= Collections.singletonList("ROLE_USER");
+        this.roles= Collections.singletonList("ROLE_UN");
     }
     public ObjectId getImageId(){
         if(this.imageUrl==null){

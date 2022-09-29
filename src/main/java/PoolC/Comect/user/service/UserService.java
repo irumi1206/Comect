@@ -4,6 +4,7 @@ import PoolC.Comect.common.exception.CustomException;
 import PoolC.Comect.common.exception.ErrorCode;
 import PoolC.Comect.elasticUser.domain.ElasticUser;
 import PoolC.Comect.elasticUser.repository.ElasticUserRepository;
+import PoolC.Comect.email.EmailService;
 import PoolC.Comect.folder.domain.Folder;
 import PoolC.Comect.folder.repository.FolderRepository;
 import PoolC.Comect.image.repository.ImageRepository;
@@ -32,8 +33,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final FolderRepository folderRepository;
     private final ImageService imageService;
-    private final ImageRepository imageRepository;
     private final ElasticUserRepository elasticUserRepository;
+    private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
 
     //회원 가입
@@ -44,6 +45,7 @@ public class UserService {
         validateDuplicateUser(email);
         validateDuplicateNickname(nickname);
         //validatePassword(password);
+        emailService.emailSend(email);
 
         //이미지 저장
         ImageUploadData imageUploadData = imageService.createImage(multipartFile, email);
@@ -66,6 +68,9 @@ public class UserService {
         User user = userRepository.findByEmail(email).orElseThrow(()->new CustomException(ErrorCode.LOGIN_FAIL));
         if(passwordEncoder.matches(password, user.getPassword())) {
             throw new CustomException(ErrorCode.LOGIN_FAIL);
+        }
+        if(!user.getRoles().contains("ROLE_AU")){
+            throw new CustomException(ErrorCode.EMAIL_AUTH_FAILED);
         }
         return user;
     }

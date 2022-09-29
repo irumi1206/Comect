@@ -14,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 public class LinkCreateRequestDto {
 
-    private String email;
     private String path;
     @NotNull
     @Size(max=50)
@@ -26,8 +25,7 @@ public class LinkCreateRequestDto {
     private String imageUrl;
 
     @Builder
-    public LinkCreateRequestDto(String email, String path, String name, MultipartFile multipartFile, String url, List<String> keywords, String isPublic,String imageUrl){
-        this.email=email;
+    public LinkCreateRequestDto(String path, String name, MultipartFile multipartFile, String url, List<String> keywords, String isPublic,String imageUrl){
         this.path=path;
         this.name= name;
         this.url=url;

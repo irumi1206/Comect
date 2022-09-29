@@ -8,13 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 public class ElasticFolderSearchRequestDto {
 
-    private String email;
     private String keyword;
     private String searchMe;
 
     @Builder
-    public ElasticFolderSearchRequestDto(String email, String keyword, String searchMe){
-        this.email=email;
+    public ElasticFolderSearchRequestDto(String keyword, String searchMe){
         this.keyword=keyword;
         this.searchMe=searchMe;
     }

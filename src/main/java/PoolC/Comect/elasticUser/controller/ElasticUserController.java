@@ -9,6 +9,7 @@ import PoolC.Comect.user.repository.UserRepository;
 import PoolC.Comect.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,8 +27,8 @@ public class ElasticUserController {
     private final UserService userService;
 
     @GetMapping(value="/user/elastic")
-    public ResponseEntity<ElasticUserSearchResponseDto> searchUser(@ModelAttribute ElasticUserSearchRequestDto elasticUserSearchRequestDto){
-        String email= elasticUserSearchRequestDto.getEmail();
+    public ResponseEntity<ElasticUserSearchResponseDto> searchUser(@ModelAttribute ElasticUserSearchRequestDto elasticUserSearchRequestDto, @AuthenticationPrincipal User user){
+        String email= user.getEmail();
         User searchUser=userService.findOneEmail(email);
         String keyword= elasticUserSearchRequestDto.getKeyword();
         List<String> nicknames= elasticUserService.searchUser(keyword);
@@ -37,8 +38,8 @@ public class ElasticUserController {
 
             String nickname=nicknames.get(i);
             if(searchUser.getNickname().equals(nickname)) continue;
-            Optional<User> user=userRepository.findByNickname(nickname);
-            user.ifPresent(
+            Optional<User> userOption=userRepository.findByNickname(nickname);
+            userOption.ifPresent(
                     currentUser->{
                         String imageUrl=currentUser.getImageUrl();
                         String isFollowing=userService.isFollower(currentUser.getId(),searchUser.getId())?"true":"false";

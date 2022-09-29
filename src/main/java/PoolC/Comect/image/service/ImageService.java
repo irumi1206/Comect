@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -30,23 +31,22 @@ public class ImageService {
 
     private final ImageRepository imageRepository;
 
-    public void deleteImage(ObjectId id){
+    public void deleteImage(ObjectId id,String userId){
         try{
-            Files.delete(Paths.get("imageStorage/"+id.toHexString()));
-        }catch(Exception e){
-            System.out.println("exception1");
-        }
-        try{
-            imageRepository.deleteById(id);
-        }catch(Exception e){
-
+            Image image = imageRepository.findById(id).get();
+            if(image.getOwnerId().equals(userId)){
+                Files.delete(Paths.get("imageStorage/"+id.toHexString()));
+                imageRepository.deleteById(id);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public ImageUploadData createImage(MultipartFile multipartFile,String email){
+    public ImageUploadData createImage(MultipartFile multipartFile,String email,String ownerId){
         ImageUploadData imageUploadData = new ImageUploadData();
         if(multipartFile!=null && !multipartFile.isEmpty()){
-            Image image = new Image(multipartFile.getContentType(),email);
+            Image image = new Image(multipartFile.getContentType(),email,ownerId);
             String upLoadDir = "imageStorage";
             try{
                 saveFile(upLoadDir,image.getId().toHexString(),multipartFile);

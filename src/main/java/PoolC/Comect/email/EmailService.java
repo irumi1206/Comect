@@ -44,7 +44,7 @@ public class EmailService {
             throw new CustomException(ErrorCode.EMAIL_AUTH_FAILED);
         });
         emailAuthCheck(emailAuth.getEmail());
-        user.getRoles().add("ROLE_AU");
+        user.setRoles(Collections.singletonList("ROLE_AU"));
         userRepository.save(user);
         emailRepository.delete(emailAuth);
     }

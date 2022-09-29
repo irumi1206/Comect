@@ -12,13 +12,11 @@ import java.util.List;
 @NoArgsConstructor
 public class LinkDeleteRequestDto {
 
-    private String email;
     private String path;
     private List<String> ids;
 
     @Builder
-    public LinkDeleteRequestDto(String email,String path,List<String> ids){
-        this.email=email;
+    public LinkDeleteRequestDto(String path,List<String> ids){
         this.path=path;
         this.ids=ids;
     }

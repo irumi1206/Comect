@@ -81,7 +81,7 @@ public class FolderService {
                 if(!elasticLink.getPath().startsWith(path)) continue;
                 String linkEmail=userService.findOneId(new ObjectId(user.getId().toString())).getEmail();
                 Link link=linkRead(linkEmail,elasticLink.getPath(),elasticLink.getLinkId());
-                imageService.deleteImage(link.getImageId());
+                imageService.deleteImage(link.getImageId(),user.getId().toString());
             }
 
             folderRepository.folderDelete(user.getRootFolderId(), path);
@@ -112,7 +112,7 @@ public class FolderService {
         boolean changeSuccess;
         Link link;
         if(multipartFile!=null && !multipartFile.isEmpty()){
-            ImageUploadData imageUploadData = imageService.createImage(multipartFile, userEmail);
+            ImageUploadData imageUploadData = imageService.createImage(multipartFile, userEmail, user.getId().toString());
             changeSuccess = imageUploadData.isSuccess();
             link=new Link(name,imageUploadData.getImageUrl(),url,keywords,isPublic);
         }else{
@@ -143,7 +143,7 @@ public class FolderService {
         if(imageChange.equals("true")){
             Link link;
             if(multipartFile!=null && !multipartFile.isEmpty()) {
-                ImageUploadData imageUploadData = imageService.createImage(multipartFile, email);
+                ImageUploadData imageUploadData = imageService.createImage(multipartFile, email,user.getId().toString());
                 changeSuccess = imageUploadData.isSuccess();
                 link=new Link(name,imageUploadData.getImageUrl(),url,keywords,isPublic);
             }else{
@@ -170,7 +170,7 @@ public class FolderService {
         for(int i=0;i<ids.size();++i){
             ObjectId imageId=linkRead(email,path,ids.get(i)).getImageId();
             if(imageId!=null){
-                imageService.deleteImage(imageId);
+                imageService.deleteImage(imageId,user.getId().toString());
             }
             folderRepository.linkDelete(user.getRootFolderId(), path,new ObjectId(ids.get(i)));
             elasticLinkRepository.delete(user.getId().toString(),path,ids.get(i));

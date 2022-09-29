@@ -8,13 +8,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ElasticLinkSearchRequestDto {
 
-    private String email;
     private String keyword;
     private String searchMe;
 
     @Builder
-    public ElasticLinkSearchRequestDto(String email, String keyword, String searchMe){
-        this.email=email;
+    public ElasticLinkSearchRequestDto(String keyword, String searchMe){
         this.keyword=keyword;
         this.searchMe=searchMe;
     }

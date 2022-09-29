@@ -8,12 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FolderReadPublicRequestDto {
 
-    private String email;
     private String path;
 
     @Builder
-    public FolderReadPublicRequestDto(String email, String path){
-        this.email=email;
+    public FolderReadPublicRequestDto(String path){
         this.path=path;
     }
 }

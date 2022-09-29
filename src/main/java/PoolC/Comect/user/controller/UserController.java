@@ -61,8 +61,6 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request){
 
-        System.out.println(request);
-        System.out.println(passwordEncoder.encode(request.getPassword()));
         User member=userService.login(request.getEmail(), passwordEncoder.encode(request.getPassword()));
         LoginResponseDto loginResponseDto = new LoginResponseDto(jwtTokenProvider.createToken(member.getEmail(), member.getRoles()));
         //LoginResponseDto loginResponseDto = new LoginResponseDto(request.getEmail());
@@ -277,5 +275,30 @@ public class UserController {
         userService.validateDuplicateUser(request.getEmail());
         return ResponseEntity.ok().build();
     }
+
+//    @GetMapping("/test")
+//    public ResponseEntity<Void> testtest(){
+//        userService.test();
+//        return ResponseEntity.ok().build();
+//    }
+//
+//    @ApiOperation(value="비밀번호 재설정 메일 전송", notes="")
+//    @GetMapping("/password/email")
+//    public ResponseEntity<Void> passwordResetMail(@ModelAttribute PasswordEmailRequestDto request){
+//        return ResponseEntity.ok().build();
+//    }
+//
+//    @ApiOperation(value="비밀번호 재설정 인증", notes="")
+//    @GetMapping("/password/check")
+//    public ResponseEntity<Void> passwordResetCheck(@ModelAttribute PasswordCheckRequestDto request){
+//        return ResponseEntity.ok().build();
+//    }
+//
+//    @ApiOperation(value="비밀번호 재설정", notes="")
+//    @PostMapping("/password")
+//    public ResponseEntity<Void> passwordReset(@ModelAttribute PasswordResetRequestDto request){
+//        return ResponseEntity.ok().build();
+//    }
+
 }
 

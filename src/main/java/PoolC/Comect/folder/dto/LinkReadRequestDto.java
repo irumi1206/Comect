@@ -8,13 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 public class LinkReadRequestDto {
 
-    private String email;
     private String path;
     private String id;
 
     @Builder
-    public LinkReadRequestDto(String email,String path,String id){
-        this.email=email;
+    public LinkReadRequestDto(String path,String id){
         this.path=path;
         this.id=id;
     }

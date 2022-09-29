@@ -12,14 +12,12 @@ import java.util.List;
 @NoArgsConstructor
 public class LinkMoveRequestDto {
 
-    private String email;
     private String originalPath;
     private List<String> originalIds;
     private String modifiedPath;
 
     @Builder
-    public LinkMoveRequestDto(String email, String originalPath, List<String> originalIds, String modifiedPath){
-        this.email=email;
+    public LinkMoveRequestDto(String originalPath, List<String> originalIds, String modifiedPath){
         this.originalPath=originalPath;
         this.originalIds=originalIds;
         this.modifiedPath=modifiedPath;

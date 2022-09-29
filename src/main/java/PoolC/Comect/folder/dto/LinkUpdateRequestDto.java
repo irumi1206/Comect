@@ -15,7 +15,6 @@ import java.util.List;
 public class LinkUpdateRequestDto {
 
     private String id;
-    private String email;
     private String path;
     @NotNull
     @Size(max=50)
@@ -28,9 +27,8 @@ public class LinkUpdateRequestDto {
     private String imageUrl;
 
     @Builder
-    public LinkUpdateRequestDto(String id, String email, String path, String name,String url,MultipartFile multipartFile,List<String> keywords,String isPublic,String imageChange,String imageUrl){
+    public LinkUpdateRequestDto(String id, String path, String name,String url,MultipartFile multipartFile,List<String> keywords,String isPublic,String imageChange,String imageUrl){
         this.id=id;
-        this.email=email;
         this.path=path;
         this.name=name;
         this.url=url;

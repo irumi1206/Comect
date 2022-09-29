@@ -12,12 +12,10 @@ import javax.validation.constraints.NotNull;
 
 public class FolderCheckPathRequestDto {
 
-    private String email;
     private String path;
 
     @Builder
-    public FolderCheckPathRequestDto(String email, String path){
-        this.email=email;
+    public FolderCheckPathRequestDto(String path){
         this.path=path;
     }
 }

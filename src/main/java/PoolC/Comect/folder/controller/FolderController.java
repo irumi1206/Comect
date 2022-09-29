@@ -5,12 +5,14 @@ import PoolC.Comect.folder.domain.Folder;
 import PoolC.Comect.folder.domain.Link;
 import PoolC.Comect.folder.dto.*;
 import PoolC.Comect.folder.service.FolderService;
+import PoolC.Comect.user.domain.User;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,9 +36,9 @@ public class FolderController {
             @ApiResponse(responseCode = "409", description = "이미 동일한 이름의 폴더가 존재함")
     })
     @PostMapping(value="/folder")
-    public ResponseEntity<Void> folderCreate(@Valid @RequestBody FolderCreateRequestDto folderCreateRequestDto){
+    public ResponseEntity<Void> folderCreate(@Valid @RequestBody FolderCreateRequestDto folderCreateRequestDto, @AuthenticationPrincipal User user){
 
-        String email = folderCreateRequestDto.getEmail();
+        String email = user.getEmail();
         String path = folderCreateRequestDto.getPath();
         String name = folderCreateRequestDto.getName();
         folderService.folderCreate(email,path,name);
@@ -51,9 +53,9 @@ public class FolderController {
             @ApiResponse(responseCode = "404", description = "경로를 못찾음"),
     })
     @GetMapping(value="/folder/me")
-    public ResponseEntity<FolderReadResponseDto> folderReadMe(@ModelAttribute FolderReadRequestDto folderReadRequestDto){
+    public ResponseEntity<FolderReadResponseDto> folderReadMe(@ModelAttribute FolderReadRequestDto folderReadRequestDto,@AuthenticationPrincipal User user){
 
-        String email=folderReadRequestDto.getEmail();
+        String email=user.getEmail();
         String path=folderReadRequestDto.getPath();
         String showFolder=folderReadRequestDto.getShowLink();
         Folder folder =folderService.folderRead(email,path);
@@ -70,9 +72,9 @@ public class FolderController {
     }
 
     @GetMapping(value="/folder")
-    public ResponseEntity<FolderReadResponseDto> folderRead(@ModelAttribute FolderReadPublicRequestDto folderReadRequestDto){
+    public ResponseEntity<FolderReadResponseDto> folderRead(@ModelAttribute FolderReadPublicRequestDto folderReadRequestDto,@AuthenticationPrincipal User user){
 
-        String email=folderReadRequestDto.getEmail();
+        String email=user.getEmail();
         String path=folderReadRequestDto.getPath();
         //String showFolder=folderReadRequestDto.getShowLink();
         Folder folder =folderService.folderRead(email,path);
@@ -95,8 +97,8 @@ public class FolderController {
             @ApiResponse(responseCode = "409", description = "이미 해당 폴더이름이 존재함")
     })
     @PutMapping(value="/folder")
-    public ResponseEntity<Void> folderUpdate(@Valid @RequestBody FolderUpdateRequestDto folderUpdateRequestDto){
-        String email = folderUpdateRequestDto.getEmail();
+    public ResponseEntity<Void> folderUpdate(@Valid @RequestBody FolderUpdateRequestDto folderUpdateRequestDto,@AuthenticationPrincipal User user){
+        String email = user.getEmail();
         String path = folderUpdateRequestDto.getPath();
         String newName = folderUpdateRequestDto.getNewName();
         System.out.println(email);
@@ -112,8 +114,8 @@ public class FolderController {
             @ApiResponse(responseCode = "404", description = "경로를 못찾음")
     })
     @DeleteMapping(value="/folder")
-    public ResponseEntity<Void> folderDelete(@RequestBody FolderDeleteRequestDto folderDeleteRequestDto){
-        String email = folderDeleteRequestDto.getEmail();
+    public ResponseEntity<Void> folderDelete(@RequestBody FolderDeleteRequestDto folderDeleteRequestDto,@AuthenticationPrincipal User user){
+        String email = user.getEmail();
         List<String> paths = folderDeleteRequestDto.getPaths();
         folderService.folderDelete(email,paths);
         return ResponseEntity.ok().build();
@@ -127,8 +129,8 @@ public class FolderController {
             @ApiResponse(responseCode = "409", description = "이미 폴더가 존재함")
     })
     @PutMapping(value="/folder/path")
-    public ResponseEntity<Void> folderMove(@RequestBody FolderMoveRequestDto folderMoveRequestDto){
-        String email=folderMoveRequestDto.getEmail();
+    public ResponseEntity<Void> folderMove(@RequestBody FolderMoveRequestDto folderMoveRequestDto,@AuthenticationPrincipal User user){
+        String email=user.getEmail();
         List<String> originalPaths=folderMoveRequestDto.getOriginalPaths();
         String modifiedPath=folderMoveRequestDto.getModifiedPath();
         folderService.folderMove(email,originalPaths,modifiedPath);
@@ -141,8 +143,8 @@ public class FolderController {
             @ApiResponse(responseCode = "401", description = "쿠키가 유효하지 않음")
     })
     @GetMapping(value="/folder/path")
-    public ResponseEntity<FolderCheckPathResponseDto> folderCheckPath(@ModelAttribute FolderCheckPathRequestDto folderCheckPathRequestDto){
-        String email = folderCheckPathRequestDto.getEmail();
+    public ResponseEntity<FolderCheckPathResponseDto> folderCheckPath(@ModelAttribute FolderCheckPathRequestDto folderCheckPathRequestDto,@AuthenticationPrincipal User user){
+        String email = user.getEmail();
         String path = folderCheckPathRequestDto.getPath();
         boolean checkValid = folderService.folderCheckPath(email,path);
         int valid = checkValid? 1 :0;
@@ -160,8 +162,8 @@ public class FolderController {
             @ApiResponse(responseCode = "404", description = "경로를 못찾음")
     })
     @PostMapping(value="/link")
-    public ResponseEntity<LinkCreateResponseDto> linkCreate(@Valid @ModelAttribute LinkCreateRequestDto linkCreateRequestDto){
-        String email=linkCreateRequestDto.getEmail();
+    public ResponseEntity<LinkCreateResponseDto> linkCreate(@Valid @ModelAttribute LinkCreateRequestDto linkCreateRequestDto,@AuthenticationPrincipal User user){
+        String email=user.getEmail();
         String path=linkCreateRequestDto.getPath();
         String name=linkCreateRequestDto.getName();
         String url=linkCreateRequestDto.getUrl();
@@ -184,9 +186,9 @@ public class FolderController {
             @ApiResponse(responseCode = "404", description = "경로를 못찾음")
     })
     @GetMapping(value="/link")
-    public ResponseEntity<LinkReadResponseDto> linkRead(@ModelAttribute LinkReadRequestDto linkReadRequestDto){
+    public ResponseEntity<LinkReadResponseDto> linkRead(@ModelAttribute LinkReadRequestDto linkReadRequestDto,@AuthenticationPrincipal User user){
 
-        String email=linkReadRequestDto.getEmail();
+        String email=user.getEmail();
         String path=linkReadRequestDto.getPath();
         String id=linkReadRequestDto.getId();
         Link link=folderService.linkRead(email,path,id);
@@ -209,9 +211,9 @@ public class FolderController {
             @ApiResponse(responseCode = "404", description = "경로를 못찾음")
     })
     @PutMapping(value="/link")
-    public ResponseEntity<LinkUpdateResponseDto> linkUpdate(@Valid @ModelAttribute LinkUpdateRequestDto linkUpdateRequestDto){
+    public ResponseEntity<LinkUpdateResponseDto> linkUpdate(@Valid @ModelAttribute LinkUpdateRequestDto linkUpdateRequestDto,@AuthenticationPrincipal User user){
         String id=linkUpdateRequestDto.getId();
-        String email=linkUpdateRequestDto.getEmail();
+        String email=user.getEmail();
         String path=linkUpdateRequestDto.getPath();
         String name=linkUpdateRequestDto.getName();
         String url=linkUpdateRequestDto.getUrl();
@@ -234,8 +236,8 @@ public class FolderController {
             @ApiResponse(responseCode = "404", description = "경로를 못찾음")
     })
     @DeleteMapping(value="/link")
-    public ResponseEntity<Void> linkDelete(@RequestBody LinkDeleteRequestDto linkDeleteRequestDto){
-        String email=linkDeleteRequestDto.getEmail();
+    public ResponseEntity<Void> linkDelete(@RequestBody LinkDeleteRequestDto linkDeleteRequestDto,@AuthenticationPrincipal User user){
+        String email=user.getEmail();
         String path=linkDeleteRequestDto.getPath();
         List<String> ids=linkDeleteRequestDto.getIds();
         folderService.linkDelete(email,path,ids);
@@ -249,8 +251,8 @@ public class FolderController {
             @ApiResponse(responseCode = "404", description = "경로를 못찾음")
     })
     @PutMapping(value="/link/path")
-    public ResponseEntity<Void> linkMove(@RequestBody LinkMoveRequestDto linkMoveRequestDto){
-        String email=linkMoveRequestDto.getEmail();
+    public ResponseEntity<Void> linkMove(@RequestBody LinkMoveRequestDto linkMoveRequestDto,@AuthenticationPrincipal User user){
+        String email=user.getEmail();
         String originalPath=linkMoveRequestDto.getOriginalPath();
         List<String> originalIds=linkMoveRequestDto.getOriginalIds();
         String modifiedPath=linkMoveRequestDto.getModifiedPath();

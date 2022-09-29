@@ -6,6 +6,7 @@ import PoolC.Comect.image.domain.ReadImageDomain;
 import PoolC.Comect.image.dto.*;
 import PoolC.Comect.image.service.ImageService;
 import PoolC.Comect.user.domain.ImageUploadData;
+import PoolC.Comect.user.domain.User;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -15,6 +16,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
@@ -71,9 +73,9 @@ public class ImageController {
             @ApiResponse(responseCode = "404", description = "해당 아이디의 파일이 없음"),
     })
     @DeleteMapping("/image")
-    public ResponseEntity<Void> deleteImage(@ModelAttribute DeleteImageRequestDto deleteImageRequestDto){
+    public ResponseEntity<Void> deleteImage(@ModelAttribute DeleteImageRequestDto deleteImageRequestDto, @AuthenticationPrincipal User user){
         ObjectId id = validateId(deleteImageRequestDto.getId());
-        imageService.deleteImage(id);
+        imageService.deleteImage(id,user.getId().toString());
         return ResponseEntity.ok().build();
     }
 

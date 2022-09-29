@@ -6,12 +6,10 @@ import lombok.Data;
 @Data
 public class ElasticUserSearchRequestDto {
 
-    private String email;
     private String keyword;
 
     @Builder
-    public ElasticUserSearchRequestDto(String email, String keyword){
-        this.email=email;
+    public ElasticUserSearchRequestDto(String keyword){
         this.keyword=keyword;
     }
 }

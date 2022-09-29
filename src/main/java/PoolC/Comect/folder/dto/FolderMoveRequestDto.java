@@ -12,13 +12,11 @@ import java.util.List;
 @NoArgsConstructor
 public class FolderMoveRequestDto {
 
-    private String email;
     private List<String> originalPaths;
     private String modifiedPath;
 
     @Builder
-    public FolderMoveRequestDto(String email, List<String> originalPaths, String modifiedPath){
-        this.email=email;
+    public FolderMoveRequestDto(List<String> originalPaths, String modifiedPath){
         this.originalPaths=originalPaths;
         this.modifiedPath=modifiedPath;
     }

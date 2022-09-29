@@ -13,6 +13,7 @@ import PoolC.Comect.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -30,13 +31,12 @@ public class ElasticFolderController {
     private final UserRepository userRepository;
 
     @GetMapping(value = "/folder/elastic")
-    public ResponseEntity<ElasticFolderSearchResponseDto> folderSearch(@ModelAttribute ElasticFolderSearchRequestDto elasticFolderSearchRequestDto) {
+    public ResponseEntity<ElasticFolderSearchResponseDto> folderSearch(@ModelAttribute ElasticFolderSearchRequestDto elasticFolderSearchRequestDto, @AuthenticationPrincipal User user) {
 
-        String email=elasticFolderSearchRequestDto.getEmail();
+        String email=user.getEmail();
         String keyword=elasticFolderSearchRequestDto.getKeyword();
         String searchMe=elasticFolderSearchRequestDto.getSearchMe();
 
-        User user=userService.findOneEmail(email);
         ObjectId ownerId=user.getId();
 
         List<ElasticFolderSearchInfo> myFolders=new ArrayList<>();
@@ -97,13 +97,12 @@ public class ElasticFolderController {
     }
 
     @GetMapping(value = "/link/elastic")
-    public ResponseEntity<ElasticLinkSearchResponseDto> linkSearch(@ModelAttribute ElasticLinkSearchRequestDto elasticLinkSearchRequestDto) {
+    public ResponseEntity<ElasticLinkSearchResponseDto> linkSearch(@ModelAttribute ElasticLinkSearchRequestDto elasticLinkSearchRequestDto, @AuthenticationPrincipal User user) {
 
-        String email=elasticLinkSearchRequestDto.getEmail();
+        String email=user.getEmail();
         String keyword=elasticLinkSearchRequestDto.getKeyword();
         String searchMe=elasticLinkSearchRequestDto.getSearchMe();
 
-        User user=userService.findOneEmail(email);
         ObjectId ownerId=user.getId();
 
         List<ElasticLinkSearchInfo> myLinks=new ArrayList<>();

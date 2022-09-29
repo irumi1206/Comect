@@ -16,11 +16,13 @@ public class Image {
     private ObjectId id;
     private String email;
     private String extender;
+    private String ownerId;
 
-    public Image(String extender,String email) {
+    public Image(String extender,String email,String ownerId) {
         this.id=new ObjectId();
         this.extender=extender;
         this.email=email;
+        this.ownerId=ownerId;
     }
 
     @Override

@@ -13,7 +13,6 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class FolderCreateRequestDto {
 
-    private String email;
     private String path;
 
     @NotNull
@@ -22,8 +21,7 @@ public class FolderCreateRequestDto {
     private String name;
 
     @Builder
-    public FolderCreateRequestDto(String email, String path, String name){
-        this.email=email;
+    public FolderCreateRequestDto(String path, String name){
         this.path=path;
         this.name=name;
     }

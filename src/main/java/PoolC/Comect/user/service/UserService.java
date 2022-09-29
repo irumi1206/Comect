@@ -48,10 +48,11 @@ public class UserService {
         emailService.emailSend(email);
 
         //이미지 저장
-        ImageUploadData imageUploadData = imageService.createImage(multipartFile, email);
         Folder folder=new Folder("");
+        User user=new User(nickname,email,folder.get_id(), password);
+        ImageUploadData imageUploadData = imageService.createImage(multipartFile, email,user.getId().toString());
         folderRepository.save(folder);
-        User user=new User(nickname,email,folder.get_id(),imageUploadData.getImageUrl(), password);
+        user.setImageUrl(imageUploadData.getImageUrl());
         userRepository.save(user);
 
         //es에 저장
@@ -96,10 +97,10 @@ public class UserService {
         boolean changeSuccess;
         if(imageChange.equals("true")){
             ObjectId postImageId=user.getImageId();
-            ImageUploadData imageUploadData = imageService.createImage(newMultipartFile, email);
+            ImageUploadData imageUploadData = imageService.createImage(newMultipartFile, email,user.getId().toString());
             changeSuccess = imageUploadData.isSuccess();
             if(changeSuccess){
-                imageService.deleteImage(postImageId);
+                imageService.deleteImage(postImageId,user.getId().toString());
                 user.setImageUrl(imageUploadData.getImageUrl());
             }
         }else{
@@ -291,7 +292,7 @@ public class UserService {
             userRepository.findById(followingId).ifPresent((following) -> following.getFollowers().remove(user.getId()));
         }
         folderRepository.findById(user.getRootFolderId()).ifPresent((folder)->folderRepository.delete(folder));
-        imageService.deleteImage(user.getImageId());
+        imageService.deleteImage(user.getImageId(),user.getId().toString());
         userRepository.delete(user);
         //es에서 제거
         elasticUserRepository.deleteByUserId(user.getId().toString());
@@ -337,6 +338,17 @@ public class UserService {
         if(!matcher.matches()){
             throw new CustomException(ErrorCode.EMAIL_NOT_VALID);
         }
+    }
+
+    @Transactional
+    public void test(){
+        User user = new User("YMYM","eeee",new ObjectId(),"39471");
+        userRepository.save(user);
+        if(true){
+            throw new CustomException(ErrorCode.EMAIL_SEND_FAIL);
+
+        }
+        userRepository.deleteById(user.getId());
     }
 
 //    private void validatePassword(String password){

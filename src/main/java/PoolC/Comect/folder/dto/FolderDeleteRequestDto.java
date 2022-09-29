@@ -12,12 +12,10 @@ import java.util.List;
 @NoArgsConstructor
 public class FolderDeleteRequestDto {
 
-    private String email;
     private List<String> paths;
 
     @Builder
-    public FolderDeleteRequestDto(String email, List<String> paths){
-        this.email=email;
+    public FolderDeleteRequestDto(List<String> paths){
         this.paths=paths;
     }
 

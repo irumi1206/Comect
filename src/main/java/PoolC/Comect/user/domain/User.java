@@ -35,13 +35,13 @@ public class User implements UserDetails {
     private String nickname;
     private String email;
     private ObjectId rootFolderId;
-    private String imageUrl;
+    private String imageUrl=null;
     private List<ObjectId> followings;
     private List<ObjectId> followers;
     private String password;
     private List<String> roles = new ArrayList<>();
 
-    public User(String nickname, String email, ObjectId rootFolderId, String imageUrl, String password) {
+    public User(String nickname, String email, ObjectId rootFolderId, String password) {
         this.id=new ObjectId();
         this.nickname = nickname;
         this.email = email;

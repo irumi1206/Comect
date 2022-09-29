@@ -13,7 +13,6 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class FolderUpdateRequestDto {
 
-    private String email;
     private String path;
     @NotNull
     @Size(max=10)
@@ -21,8 +20,7 @@ public class FolderUpdateRequestDto {
     private String newName;
 
     @Builder
-    public FolderUpdateRequestDto(String email, String path, String newName){
-        this.email=email;
+    public FolderUpdateRequestDto(String path, String newName){
         this.path=path;
         this.newName=newName;
     }

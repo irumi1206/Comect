@@ -21,13 +21,11 @@ public class Email{
     private ObjectId id;
     private String email;
     private LocalDateTime validDate;
-    private boolean checked;
 
     public Email(String email) {
         this.id=new ObjectId();
         this.email = email;
         this.validDate= LocalDateTime.now().plusHours(24);
-        this.checked=false;
     }
 
     public boolean isValid(){

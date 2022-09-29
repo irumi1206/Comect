@@ -44,7 +44,7 @@ public class UserService {
         validateDuplicateUser(email);
         validateDuplicateNickname(nickname);
         //validatePassword(password);
-        emailService.emailAuthCheck(email);
+        emailService.emailSend(email);
 
         //이미지 저장
         ImageUploadData imageUploadData = imageService.createImage(multipartFile, email);
@@ -67,6 +67,9 @@ public class UserService {
         User user = userRepository.findByEmail(email).orElseThrow(()->new CustomException(ErrorCode.LOGIN_FAIL));
         if(!password.equals(user.getPassword())) {
             throw new CustomException(ErrorCode.LOGIN_FAIL);
+        }
+        if(!user.getRoles().contains("ROLE_AU")){
+            throw new CustomException(ErrorCode.EMAIL_AUTH_FAILED);
         }
         return user;
     }

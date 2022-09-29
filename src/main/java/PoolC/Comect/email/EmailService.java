@@ -10,6 +10,7 @@ import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -39,15 +40,18 @@ public class EmailService {
 
     public void emailCheck(String id){
         Email emailAuth = findOneId(id);
-        if(emailAuth.isValid()){
-            emailAuth.setChecked(true);
-        }
-        emailRepository.save(emailAuth);
+        User user = userRepository.findByEmail(emailAuth.getEmail()).orElseThrow(() -> {
+            throw new CustomException(ErrorCode.EMAIL_AUTH_FAILED);
+        });
+        emailAuthCheck(emailAuth.getEmail());
+        user.getRoles().add("ROLE_AU");
+        userRepository.save(user);
+        emailRepository.delete(emailAuth);
     }
 
     public void emailAuthCheck(String email){
         Email emailAuth = findOneEmail(email);
-        if((!emailAuth.isChecked())||(!emailAuth.isValid())){
+        if(!emailAuth.isValid()){
             throw new CustomException(ErrorCode.EMAIL_AUTH_FAILED);
         }
     }

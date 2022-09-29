@@ -29,7 +29,7 @@ public class RegisterMail {
         message.setSubject("Linky 회원가입 이메일 인증");
 
         String msgg="";
-        msgg+="<a href=\""+"http://linky.linky-authentication.site:8081/authenticationCheck?id="+id+"\">여기를 클릭해주세요!</a>";
+        msgg+="<a href=\""+"http://localhost:8080/authenticationCheck?id="+id+"\">여기를 클릭해주세요!</a>";
         message.setText(msgg,"utf-8","html");
         message.setFrom(new InternetAddress("linky_mail@naver.com","linky_authentication"));
 

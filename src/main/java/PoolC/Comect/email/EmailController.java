@@ -22,19 +22,19 @@ import javax.validation.Valid;
 public class EmailController {
     private final EmailService emailService;
 
-    @ApiOperation(value="이메일 인증", notes="")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "이메일 전송."),
-            @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식 또는 비밀번호 형식"),
-            @ApiResponse(responseCode = "404", description = "이메일 전송 실패"),
-            @ApiResponse(responseCode = "409", description = "이미 존재하는 이메일 또는 닉네임")
-    })
-    @PostMapping("/authentication")
-    public ResponseEntity<LoginResponseDto> emailAuth(@Valid @RequestBody EmailAuthRequestDto request){
-        emailService.emailSend(request.getEmail());
-
-        return ResponseEntity.ok().build();
-    }
+//    @ApiOperation(value="이메일 인증", notes="")
+//    @ApiResponses({
+//            @ApiResponse(responseCode = "200", description = "이메일 전송."),
+//            @ApiResponse(responseCode = "400", description = "잘못된 이메일 형식 또는 비밀번호 형식"),
+//            @ApiResponse(responseCode = "404", description = "이메일 전송 실패"),
+//            @ApiResponse(responseCode = "409", description = "이미 존재하는 이메일 또는 닉네임")
+//    })
+//    @PostMapping("/authentication")
+//    public ResponseEntity<LoginResponseDto> emailAuth(@Valid @RequestBody EmailAuthRequestDto request){
+//        emailService.emailSend(request.getEmail());
+//
+//        return ResponseEntity.ok().build();
+//    }
 
     @ApiOperation(value="이메일 인증 완료", notes="")
     @ApiResponses({

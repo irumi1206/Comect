@@ -14,6 +14,7 @@ import PoolC.Comect.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 //import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +35,7 @@ public class UserService {
     private final ImageService imageService;
     private final ElasticUserRepository elasticUserRepository;
     private final EmailService emailService;
-    //private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     //회원 가입
     @Transactional
@@ -65,7 +66,7 @@ public class UserService {
     public User login(String email, String password){
         //validateEmailUser(email);
         User user = userRepository.findByEmail(email).orElseThrow(()->new CustomException(ErrorCode.LOGIN_FAIL));
-        if(!password.equals(user.getPassword())) {
+        if(passwordEncoder.matches(password, user.getPassword())) {
             throw new CustomException(ErrorCode.LOGIN_FAIL);
         }
         if(!user.getRoles().contains("ROLE_AU")){

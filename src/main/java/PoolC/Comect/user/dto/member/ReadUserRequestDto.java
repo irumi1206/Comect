@@ -6,6 +6,4 @@ import javax.validation.constraints.Email;
 
 @Data
 public class ReadUserRequestDto {
-    @Email
-    private String email;
 }

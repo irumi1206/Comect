@@ -42,9 +42,9 @@ public class EmailController {
             @ApiResponse(responseCode = "200", description = "이메일 인증됨"),
     })
     @GetMapping("/authenticationCheck")
-    public ResponseEntity<LoginResponseDto> emailAuthSuccess(@Valid @ModelAttribute EmailAuthLinkRequestDto request){
+    public String emailAuthSuccess(@Valid @ModelAttribute EmailAuthLinkRequestDto request){
         emailService.emailCheck(request.getId());
 
-        return ResponseEntity.ok().build();
+        return "mainAuth";
     }
 }

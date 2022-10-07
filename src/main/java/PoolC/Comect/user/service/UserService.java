@@ -38,7 +38,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     //회원 가입
-    @Transactional
+//    @Transactional
     public boolean join(String email, String password, String nickname, MultipartFile multipartFile){
         //validation check
         validateEmailUser(email);

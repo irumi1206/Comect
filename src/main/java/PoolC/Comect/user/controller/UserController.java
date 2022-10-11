@@ -65,6 +65,7 @@ public class UserController {
         LoginResponseDto loginResponseDto = new LoginResponseDto(jwtTokenProvider.createToken(member.getEmail(), member.getRoles()));
         //LoginResponseDto loginResponseDto = new LoginResponseDto(request.getEmail());
 
+        System.out.println("토큰 발급 정보 : "+loginResponseDto);
         return ResponseEntity.ok(loginResponseDto);
     }
 

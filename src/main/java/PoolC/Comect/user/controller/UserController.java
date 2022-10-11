@@ -35,6 +35,11 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
+    @GetMapping(path="/token/valid")
+    public ResponseEntity<Void> getTokenValid(@ModelAttribute GetTokenValidRequestDto request, @AuthenticationPrincipal User user){
+        return ResponseEntity.ok().build();
+    }
+
     @ApiOperation(value="회원가입", notes="")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "유저 잘 생성됨."),

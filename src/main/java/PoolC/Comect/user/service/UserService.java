@@ -56,8 +56,8 @@ public class UserService {
         userRepository.save(user);
 
         //es에 저장
-        ElasticUser elasticUser=new ElasticUser(user.getId().toString(),nickname);
-        elasticUserRepository.save(elasticUser);
+//        ElasticUser elasticUser=new ElasticUser(user.getId().toString(),nickname);
+//        elasticUserRepository.save(elasticUser);
 
         return imageUploadData.isSuccess();
     }

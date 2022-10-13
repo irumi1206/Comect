@@ -74,7 +74,7 @@ public class FolderController {
     @GetMapping(value="/folder")
     public ResponseEntity<FolderReadResponseDto> folderRead(@ModelAttribute FolderReadPublicRequestDto folderReadRequestDto,@AuthenticationPrincipal User user){
 
-        String email=user.getEmail();
+        String email=folderReadRequestDto.getEmail();
         String path=folderReadRequestDto.getPath();
         //String showFolder=folderReadRequestDto.getShowLink();
         Folder folder =folderService.folderRead(email,path);

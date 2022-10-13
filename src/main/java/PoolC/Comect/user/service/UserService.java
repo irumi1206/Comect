@@ -174,7 +174,7 @@ public class UserService {
                 .following(other.getFollowings().size())
                 .nickname(other.getNickname())
                 .imageUrl(other.getImageUrl())
-                .isFollowing(String.valueOf(followings.contains(other.getId())))
+                .isFollowing(followings.contains(other.getId()))
                 .build();
         return memberData;
     }
@@ -188,7 +188,7 @@ public class UserService {
                 .nickname(other.getNickname())
                 .following(other.getFollowings().size())
                 .follower(other.getFollowers().size())
-                .isFollowing(String.valueOf(followings.contains(other.getId())))
+                .isFollowing(followings.contains(other.getId()))
                 .build();
         return memberData;
     }

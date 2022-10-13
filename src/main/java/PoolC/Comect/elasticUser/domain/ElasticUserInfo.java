@@ -9,17 +9,17 @@ public class ElasticUserInfo {
     private String email;
     private String nickname;
     private String imageUrl;
-    private String isFollowing;
+    private Boolean isFollowing;
 
     @Builder
-    public ElasticUserInfo(String email,String nickname,String imageUrl,String isFollowing){
+    public ElasticUserInfo(String email,String nickname,String imageUrl,Boolean isFollowing){
         this.email=email;
         this.nickname=nickname;
         this.imageUrl=imageUrl;
         this.isFollowing=isFollowing;
     }
 
-    public static ElasticUserInfo toElasticUserInfo(String email,String nickname,String imageUrl,String isFollowing){
+    public static ElasticUserInfo toElasticUserInfo(String email,String nickname,String imageUrl,Boolean isFollowing){
 
         return ElasticUserInfo.builder()
                 .email(email)

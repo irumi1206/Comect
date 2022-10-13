@@ -42,7 +42,7 @@ public class ElasticUserController {
             userOption.ifPresent(
                     currentUser->{
                         String imageUrl=currentUser.getImageUrl();
-                        String isFollowing=userService.isFollower(currentUser.getId(),searchUser.getId())?"true":"false";
+                        Boolean isFollowing=userService.isFollower(currentUser.getId(),searchUser.getId())?true:false;
                         String currentEmail=currentUser.getEmail();
                         users.add(ElasticUserInfo.toElasticUserInfo(currentEmail,nickname,imageUrl,isFollowing));
                     }

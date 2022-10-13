@@ -21,7 +21,7 @@ public enum ErrorCode{
     FOLLOWING_EXIST(HttpStatus.CONFLICT,"이미 존재하는 팔로잉"),
     EMAIL_AUTH_FAILED(HttpStatus.CONFLICT,"인증된 이메일이 아님"),
 
-    NICKNAME_EXISTS(HttpStatus.FORBIDDEN,"이미 존재하는 닉네임"),
+    NICKNAME_EXISTS(HttpStatus.CONFLICT,"이미 존재하는 닉네임"),
 
     //객체가 존재하지 않음 404
     PATH_NOT_FOUND(HttpStatus.NOT_FOUND,"경로가 존재하지 않음"),

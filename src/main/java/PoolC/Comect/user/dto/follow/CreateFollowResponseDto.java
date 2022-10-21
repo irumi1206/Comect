@@ -9,9 +9,9 @@ public class CreateFollowResponseDto {
     private String email;
     private String nickname;
     private String imageUrl;
-    private boolean isFollowing;
+    private Boolean isFollowing;
 
-    public CreateFollowResponseDto(String email, String nickname, String imageUrl, boolean isFollowing) {
+    public CreateFollowResponseDto(String email, String nickname, String imageUrl, Boolean isFollowing) {
         this.email = email;
         this.nickname = nickname;
         this.imageUrl = imageUrl;

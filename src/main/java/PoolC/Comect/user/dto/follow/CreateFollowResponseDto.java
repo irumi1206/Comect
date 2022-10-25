@@ -7,7 +7,7 @@ import lombok.Data;
 public class CreateFollowResponseDto {
     private String email;
     private String nickname;
-    private String imageUrl;
+    private String imageUrl="";
     private Boolean isFollowing;
 
     public CreateFollowResponseDto(String email, String nickname, String imageUrl, Boolean isFollowing) {

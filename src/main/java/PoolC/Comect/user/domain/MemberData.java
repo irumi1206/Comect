@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 public class MemberData {
     private String nickname;
-    private String imageUrl;
+    private String imageUrl="";
     private int follower;
     private int following;
     private Boolean isFollowing;

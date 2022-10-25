@@ -35,7 +35,7 @@ public class User implements UserDetails {
     private String nickname;
     private String email;
     private ObjectId rootFolderId;
-    private String imageUrl=null;
+    private String imageUrl="";
     private List<ObjectId> followings;
     private List<ObjectId> followers;
     private String password;
@@ -46,14 +46,13 @@ public class User implements UserDetails {
         this.nickname = nickname;
         this.email = email;
         this.rootFolderId = rootFolderId;
-        this.imageUrl = imageUrl;
         this.password = password;
         this.followings=new ArrayList<>();
         this.followers=new ArrayList<>();
         this.roles= Collections.singletonList("ROLE_UN");
     }
     public ObjectId getImageId(){
-        if(this.imageUrl==null){
+        if(this.imageUrl.equals("")){
             return null;
         }
         String[] split = imageUrl.split("id=");

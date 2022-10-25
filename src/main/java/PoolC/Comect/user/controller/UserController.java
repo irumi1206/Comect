@@ -117,7 +117,7 @@ public class UserController {
     @PostMapping("/follow/nickname")
     public ResponseEntity<CreateFollowResponseDto> createFollowByNickname(@RequestBody CreateFollowNicknameRequestDto request,@AuthenticationPrincipal User user){
         FollowInfo follow = userService.createFollowNickname(user.getEmail(), request.getFollowedNickname());
-        CreateFollowResponseDto createFollowResponseDto = new CreateFollowResponseDto(follow.getEmail(), follow.getNickname(), follow.getEmail(), true);
+        CreateFollowResponseDto createFollowResponseDto = new CreateFollowResponseDto(follow.getEmail(), follow.getNickname(), follow.getImageUrl(), true);
 //        CreateFollowResponseDto createFollowResponseDto = CreateFollowResponseDto.builder()
 //                .isFollowing(true)
 //                .email(follow.getEmail())
@@ -140,7 +140,7 @@ public class UserController {
     @PostMapping("/follow/email")
     public ResponseEntity<CreateFollowResponseDto> createFollowByEmail(@RequestBody CreateFollowEmailRequestDto request,@AuthenticationPrincipal User user){
         FollowInfo follow = userService.createFollowEmail(user.getEmail(), request.getFollowedEmail());
-        CreateFollowResponseDto createFollowResponseDto = new CreateFollowResponseDto(follow.getEmail(), follow.getNickname(), follow.getEmail(), true);
+        CreateFollowResponseDto createFollowResponseDto = new CreateFollowResponseDto(follow.getEmail(), follow.getNickname(), follow.getImageUrl(), true);
 //        CreateFollowResponseDto createFollowResponseDto = CreateFollowResponseDto.builder()
 //                .isFollowing(true)
 //                .email(follow.getEmail())

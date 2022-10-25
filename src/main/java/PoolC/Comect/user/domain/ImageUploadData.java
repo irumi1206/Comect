@@ -7,6 +7,6 @@ import org.bson.types.ObjectId;
 @Data
 public class ImageUploadData {
     private boolean success = true;
-    private String imageUrl = null;
+    private String imageUrl = "";
 
 }

@@ -41,11 +41,10 @@ public class User implements UserDetails {
     private String password;
     private List<String> roles = new ArrayList<>();
 
-    public User(String nickname, String email, ObjectId rootFolderId, String password) {
+    public User(String nickname, String email, String password) {
         this.id=new ObjectId();
         this.nickname = nickname;
         this.email = email;
-        this.rootFolderId = rootFolderId;
         this.password = password;
         this.followings=new ArrayList<>();
         this.followers=new ArrayList<>();

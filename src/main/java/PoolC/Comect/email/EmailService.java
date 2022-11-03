@@ -4,6 +4,8 @@ import PoolC.Comect.common.exception.CustomException;
 import PoolC.Comect.common.exception.ErrorCode;
 import PoolC.Comect.elasticUser.domain.ElasticUser;
 import PoolC.Comect.elasticUser.repository.ElasticUserRepository;
+import PoolC.Comect.folder.domain.Folder;
+import PoolC.Comect.folder.repository.FolderRepository;
 import PoolC.Comect.user.domain.User;
 import PoolC.Comect.user.repository.UserRepository;
 import PoolC.Comect.user.service.UserService;
@@ -24,6 +26,7 @@ public class EmailService {
     private final UserRepository userRepository;
     private final RegisterMail registerMail;
     private final ElasticUserRepository elasticUserRepository;
+    private final FolderRepository folderRepository;
 
     public void emailSend(String email) {
         validateDuplicateUser(email);
@@ -58,6 +61,9 @@ public class EmailService {
             });
             emailAuthCheck(emailAuth.getEmail());
             user.setRoles(Collections.singletonList("ROLE_AU"));
+            Folder folder=new Folder("");
+            user.setRootFolderId(folder.get_id());
+            folderRepository.save(folder);
             userRepository.save(user);
             emailRepository.delete(emailAuth);
 

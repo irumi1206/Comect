@@ -44,17 +44,15 @@ public class UserService {
 //    @Transactional
     public boolean join(String email, String password, String nickname, MultipartFile multipartFile){
         //validation check
-        validateEmailUser(email);
+//        validateEmailUser(email);
         validateDuplicateUser(email);
         validateDuplicateNickname(nickname);
         //validatePassword(password);
         emailService.emailSend(email);
 
         //이미지 저장
-        Folder folder=new Folder("");
-        User user=new User(nickname,email,folder.get_id(), password);
+        User user=new User(nickname,email,password);
         ImageUploadData imageUploadData = imageService.createImage(multipartFile, email,user.getId().toString());
-        folderRepository.save(folder);
         user.setImageUrl(imageUploadData.getImageUrl());
         userRepository.save(user);
 
@@ -131,15 +129,21 @@ public class UserService {
     }
 
     public User findOneEmail(String email){
-        return userRepository.findByEmail(email).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        if(!user.getRoles().contains("ROLE_AU")) throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        return user;
     }
 
     public User findOneNickname(String nickname){
-        return userRepository.findByNickname(nickname).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        User user = userRepository.findByNickname(nickname).orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        if(!user.getRoles().contains("ROLE_AU")) throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        return user;
     }
 
     public User findOneId(ObjectId id){
-        return userRepository.findById(id).orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        User user = userRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        if(!user.getRoles().contains("ROLE_AU")) throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        return user;
     }
 
     //@Transactional
@@ -351,6 +355,7 @@ public class UserService {
 
 
     private void validateEmailUser(String email){
+        if(email==null) throw new CustomException(ErrorCode.EMAIL_NOT_VALID);
         String regx = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
         Pattern pattern = Pattern.compile(regx);
         Matcher matcher = pattern.matcher(email);
@@ -361,7 +366,7 @@ public class UserService {
 
     @Transactional
     public void test(){
-        User user = new User("YMYM","eeee",new ObjectId(),"39471");
+        User user = new User("YMYM","eeee","39471");
         userRepository.save(user);
         if(true){
             throw new CustomException(ErrorCode.EMAIL_SEND_FAIL);

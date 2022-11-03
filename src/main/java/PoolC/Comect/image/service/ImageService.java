@@ -38,8 +38,7 @@ public class ImageService {
                 Files.delete(Paths.get("imageStorage/"+id.toHexString()));
                 imageRepository.deleteById(id);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
         }
     }
 

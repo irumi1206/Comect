@@ -4,6 +4,7 @@ import PoolC.Comect.email.Email;
 import PoolC.Comect.email.EmailRepository;
 import PoolC.Comect.email.PasswordChangeEmail;
 import PoolC.Comect.email.PasswordChangeEmailRepository;
+import PoolC.Comect.folder.repository.FolderRepository;
 import PoolC.Comect.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,6 +20,7 @@ public class ScheduleTask {
     private final EmailRepository emailRepository;
     private final PasswordChangeEmailRepository passwordChangeEmailRepository;
     private final UserRepository userRepository;
+    private final FolderRepository folderRepository;
 
     @Scheduled(fixedDelay = 86400000)
 //    @Scheduled(fixedDelay = 2000)

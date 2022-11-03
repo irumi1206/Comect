@@ -1,5 +1,6 @@
 package PoolC.Comect.folder;
 
+import PoolC.Comect.common.configuration.ElasticSearchConfig;
 import PoolC.Comect.elasticFolder.repository.ElasticFolderRepository;
 import PoolC.Comect.elasticUser.repository.ElasticUserRepository;
 import PoolC.Comect.email.EmailRepository;
@@ -7,6 +8,7 @@ import PoolC.Comect.email.EmailService;
 import PoolC.Comect.folder.repository.FolderRepository;
 import PoolC.Comect.user.repository.UserRepository;
 import PoolC.Comect.user.service.UserService;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -14,18 +16,28 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.*;
+import org.springframework.data.elasticsearch.client.ClientConfiguration;
+import org.springframework.data.elasticsearch.client.RestClients;
+import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfiguration;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
+import org.springframework.data.elasticsearch.core.convert.ElasticsearchConverter;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.images.builder.ImageFromDockerfile;
 
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.DisplayName.class)
+@ActiveProfiles("test")
 public class FolderTest {
-
-    @LocalServerPort
-    int port;
 
     @Autowired
     UserRepository userRepository;

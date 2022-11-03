@@ -77,6 +77,7 @@ public class UserService {
             User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
             user.setPassword(newPassword);
             userRepository.save(user);
+            System.out.println("password changed!");
         }else{
             throw new CustomException(ErrorCode.EMAIL_AUTH_FAILED);
         }
@@ -85,7 +86,7 @@ public class UserService {
     public User login(String email, String password){
         //validateEmailUser(email);
         User user = userRepository.findByEmail(email).orElseThrow(()->new CustomException(ErrorCode.LOGIN_FAIL));
-        if(passwordEncoder.matches(password, user.getPassword())) {
+        if(!passwordEncoder.matches(password, user.getPassword())) {
             throw new CustomException(ErrorCode.LOGIN_FAIL);
         }
         if(!user.getRoles().contains("ROLE_AU")){

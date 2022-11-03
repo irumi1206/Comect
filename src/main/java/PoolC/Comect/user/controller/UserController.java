@@ -292,7 +292,7 @@ public class UserController {
 
     @PatchMapping("/passwordCheck")
     public ResponseEntity<Void> passwordChangeCheck(@ModelAttribute PasswordChangeCheckRequestDto request){
-        userService.passwordChangeCheck(request.getEmail(),request.getRandomNumber(),request.getNewPassword());
+        userService.passwordChangeCheck(request.getEmail(),request.getRandomNumber(),passwordEncoder.encode(request.getNewPassword()));
         return ResponseEntity.ok().build();
     }
 

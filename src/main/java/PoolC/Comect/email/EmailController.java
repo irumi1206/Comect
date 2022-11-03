@@ -44,7 +44,7 @@ public class EmailController {
     })
     @GetMapping("/authenticationCheck")
     public String emailAuthSuccess(@Valid @ModelAttribute EmailAuthLinkRequestDto request, Model model){
-//        emailService.emailCheck(request.getId());
+        emailService.emailCheck(request.getId());
 
         return "mainAuth";
     }

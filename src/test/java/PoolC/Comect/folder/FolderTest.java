@@ -1,98 +1,77 @@
-//package PoolC.Comect.folder;
-//
-//import PoolC.Comect.folder.domain.Folder;
-//import PoolC.Comect.folder.domain.Link;
-//import PoolC.Comect.folder.dto.*;
-//import PoolC.Comect.folder.repository.FolderRepository;
-//import PoolC.Comect.user.domain.User;
-//import PoolC.Comect.user.repository.UserRepository;
-//import com.fasterxml.jackson.core.JsonProcessingException;
-//import com.fasterxml.jackson.databind.JsonNode;
-//import com.fasterxml.jackson.databind.ObjectMapper;
-//import org.assertj.core.api.Assertions;
-//import org.bson.types.ObjectId;
-//import org.junit.Before;
-//import org.junit.Test;
-//import org.junit.jupiter.api.DisplayName;
-//import org.junit.jupiter.api.MethodOrderer;
-//import org.junit.jupiter.api.TestMethodOrder;
-//import org.junit.runner.RunWith;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.boot.test.web.client.TestRestTemplate;
-//import org.springframework.boot.test.web.server.LocalServerPort;
-//import org.springframework.http.*;
-//import org.springframework.test.context.junit4.SpringRunner;
-//import org.springframework.web.multipart.MultipartFile;
-//import org.springframework.web.util.UriComponentsBuilder;
-//
-//import java.net.URI;
-//import java.net.URISyntaxException;
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//@RunWith(SpringRunner.class)
-//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-//@TestMethodOrder(MethodOrderer.DisplayName.class)
-//public class FolderTest {
-//
-//    @LocalServerPort
-//    int port;
-//
-//    @Autowired
-//    TestRestTemplate restTemplate;
-//    @Autowired
-//    FolderRepository folderRepository;
-//    @Autowired
-//    UserRepository userRepository;
-//
-//    ObjectId idUpdate;
-//    ObjectMapper jsonMapper=new ObjectMapper();
-//
-//    @Before
-//    public void before() {
-//        userRepository.deleteAll();
-//        folderRepository.deleteAll();
-//
-//        Folder userRootFolder = new Folder("");
-//        User user1 = new User("user1", "user1Email@email.com", userRootFolder.get_id(), null, "user1");
-//        folderRepository.save(userRootFolder);
-//        userRepository.save(user1);
-//
-//        Folder folder11=new Folder("folder11");
-//        folderRepository.folderCreate(userRootFolder.get_id(),"",folder11);
-//        Folder folder12=new Folder("folder12");
-//        folderRepository.folderCreate(userRootFolder.get_id(),"",folder12);
-////        Folder folder13=new Folder("folder21");
-////        folderRepository.folderCreate(userRootFolder.get_id(),"",folder13);
-//        Link link11=new Link("link11",null,"url",null,"true");
-//        folderRepository.linkCreate(userRootFolder.get_id(),"",link11);
-//        Link link12=new Link("link12",null,"url",null,"true");
-//        folderRepository.linkCreate(userRootFolder.get_id(),"",link12);
-//
-//
-//        Folder folder21=new Folder("folder21");
-//        folderRepository.folderCreate(userRootFolder.get_id(),"folder11",folder21);
-//        Folder folder22=new Folder("folder22");
-//        folderRepository.folderCreate(userRootFolder.get_id(),"folder11",folder22);
-//        Link link21=new Link("link21",null,"url",null,"true");
-//        folderRepository.linkCreate(userRootFolder.get_id(),"folder11",link21);
-//        Link link22=new Link("link22",null,"url",null,"true");
-//        folderRepository.linkCreate(userRootFolder.get_id(),"folder11",link22);
-//
-//
-//        Folder folder31=new Folder("folder31");
-//        folderRepository.folderCreate(userRootFolder.get_id(),"folder11/folder21",folder31);
-//        Folder folder32=new Folder("folder32");
-//        folderRepository.folderCreate(userRootFolder.get_id(),"folder11/folder21",folder32);
-//        Link link31=new Link("link31",null,"url",null,"true");
-//        idUpdate=link31.get_id();
-//        folderRepository.linkCreate(userRootFolder.get_id(),"folder11/folder21",link31);
-//        Link link32=new Link("link32",null,"url",null,"true");
-//        folderRepository.linkCreate(userRootFolder.get_id(),"folder11/folder21",link32);
-//
-//
-//    }
+package PoolC.Comect.folder;
+
+import PoolC.Comect.elasticFolder.repository.ElasticFolderRepository;
+import PoolC.Comect.elasticUser.repository.ElasticUserRepository;
+import PoolC.Comect.email.EmailRepository;
+import PoolC.Comect.email.EmailService;
+import PoolC.Comect.folder.repository.FolderRepository;
+import PoolC.Comect.user.repository.UserRepository;
+import PoolC.Comect.user.service.UserService;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.junit4.SpringRunner;
+
+
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestMethodOrder(MethodOrderer.DisplayName.class)
+public class FolderTest {
+
+    @LocalServerPort
+    int port;
+
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    FolderRepository folderRepository;
+    @Autowired
+    ElasticUserRepository elasticUserRepository;
+    @Autowired
+    ElasticFolderRepository elasticFolderRepository;
+    @Autowired
+    EmailRepository emailRepository;
+    @Autowired
+    UserService userService;
+    @Autowired
+    EmailService emailService;
+
+    public void deleteAllTestData(){
+        userRepository.deleteAll();
+        folderRepository.deleteAll();
+        elasticUserRepository.deleteAll();
+        elasticFolderRepository.deleteAll();
+    }
+
+    public void authorizedLogin1(){
+        String email="user1@email.com";
+        String password="user1Password";
+        String nickname="user1Nickname";
+        Boolean joinReturn=userService.join(email,password,nickname,null);
+        String user1Id=emailRepository.findByEmail("user1@email.com").get().getId().toString();
+        emailService.emailCheck(user1Id);
+
+    }
+
+    @Before
+    public void before() {
+        deleteAllTestData();
+        authorizedLogin1();
+
+
+    }
+
+    @Test
+    @DisplayName("1. 폴더생성")
+    public void 폴더생성(){
+
+    }
 //
 //    @Test
 //    @DisplayName("폴더 생성 성공1, 루트폴더")
@@ -1525,4 +1504,4 @@
 //
 //
 //
-//}
+}

@@ -64,7 +64,6 @@ public class UserService {
     }
 
     public void passwordChange(String email){
-        validateEmailUser(email);
         emailService.passwordChangeEmailSend(email);
     }
 
@@ -305,14 +304,20 @@ public class UserService {
 
     public void deleteMember(String email, String password) {
         User user = findOneEmail(email);
-        if(!password.equals(user.getPassword())){
+        if(!passwordEncoder.matches(password,user.getPassword())){
             throw new CustomException(ErrorCode.LOGIN_FAIL);
         }
         for (ObjectId followerId : user.getFollowers()) {
-            userRepository.findById(followerId).ifPresent((follower)->follower.getFollowings().remove(user.getId()));
+            userRepository.findById(followerId).ifPresent((follower)->{
+                follower.getFollowings().remove(user.getId());
+                userRepository.save(follower);
+            });
         }
         for (ObjectId followingId : user.getFollowings()) {
-            userRepository.findById(followingId).ifPresent((following) -> following.getFollowers().remove(user.getId()));
+            userRepository.findById(followingId).ifPresent((following) ->{
+                following.getFollowers().remove(user.getId());
+                userRepository.save(following);
+            });
         }
         folderRepository.findById(user.getRootFolderId()).ifPresent((folder)->folderRepository.delete(folder));
         imageService.deleteImage(user.getImageId(),user.getId().toString());
@@ -354,28 +359,4 @@ public class UserService {
     }
 
 
-    private void validateEmailUser(String email){
-        if(email==null) throw new CustomException(ErrorCode.EMAIL_NOT_VALID);
-        String regx = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
-        Pattern pattern = Pattern.compile(regx);
-        Matcher matcher = pattern.matcher(email);
-        if(!matcher.matches()){
-            throw new CustomException(ErrorCode.EMAIL_NOT_VALID);
-        }
-    }
-
-    @Transactional
-    public void test(){
-        User user = new User("YMYM","eeee","39471");
-        userRepository.save(user);
-        if(true){
-            throw new CustomException(ErrorCode.EMAIL_SEND_FAIL);
-
-        }
-        userRepository.deleteById(user.getId());
-    }
-
-//    private void validatePassword(String password){
-//
-//    }
 }

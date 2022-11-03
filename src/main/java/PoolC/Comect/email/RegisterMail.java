@@ -15,6 +15,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @Transactional
@@ -34,6 +35,28 @@ public class RegisterMail {
         message.setFrom(new InternetAddress("linky_mail@naver.com","linky_authentication"));
 
         return message;
+    }
+
+    public MimeMessage passwordChangeMessage(String to, int randomNumber) throws MessagingException, UnsupportedEncodingException {
+        MimeMessage message= emailSender.createMimeMessage();
+        message.addRecipients(MimeMessage.RecipientType.TO, to);
+        message.setSubject("Linky 비밀번호 변경 이메일 인증");
+        String msgg="";
+        msgg+="인증번호는 "+randomNumber+" 입니다.";
+        message.setText(msgg,"utf-8","html");
+        message.setFrom(new InternetAddress("linky_mail@naver.com","linky_authentication"));
+
+        return message;
+    }
+
+    public void sendSimplePasswordChangeMessage(String to, int randomNumber){
+        try{
+            MimeMessage message=passwordChangeMessage(to, randomNumber);
+            emailSender.send(message);
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new CustomException(ErrorCode.EMAIL_SEND_FAIL);
+        }
     }
 
     public void sendSimpleMessage(String to,String id){

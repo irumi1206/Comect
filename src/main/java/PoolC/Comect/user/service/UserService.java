@@ -5,6 +5,8 @@ import PoolC.Comect.common.exception.ErrorCode;
 import PoolC.Comect.elasticUser.domain.ElasticUser;
 import PoolC.Comect.elasticUser.repository.ElasticUserRepository;
 import PoolC.Comect.email.EmailService;
+import PoolC.Comect.email.PasswordChangeEmail;
+import PoolC.Comect.email.PasswordChangeEmailRepository;
 import PoolC.Comect.folder.domain.Folder;
 import PoolC.Comect.folder.repository.FolderRepository;
 import PoolC.Comect.image.repository.ImageRepository;
@@ -36,6 +38,7 @@ public class UserService {
     private final ElasticUserRepository elasticUserRepository;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
+    private final PasswordChangeEmailRepository passwordChangeEmailRepository;
 
     //회원 가입
 //    @Transactional
@@ -62,7 +65,21 @@ public class UserService {
         return imageUploadData.isSuccess();
     }
 
+    public void passwordChange(String email){
+        validateEmailUser(email);
+        emailService.passwordChangeEmailSend(email);
+    }
 
+    public void passwordChangeCheck(String email, int randomNumber, String newPassword){
+        PasswordChangeEmail passwordChangeEmail = passwordChangeEmailRepository.findByEmail(email).orElseThrow(() -> new CustomException(ErrorCode.EMAIL_AUTH_FAILED));
+        if(passwordChangeEmail.getRandomNumber()==randomNumber && passwordChangeEmail.isValid()){
+            passwordChangeEmailRepository.delete(passwordChangeEmail);
+            User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+            user.setPassword(newPassword);
+        }else{
+            throw new CustomException(ErrorCode.EMAIL_AUTH_FAILED);
+        }
+    }
 
     public User login(String email, String password){
         //validateEmailUser(email);

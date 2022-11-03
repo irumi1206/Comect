@@ -20,6 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class EmailService {
     private final EmailRepository emailRepository;
+    private final PasswordChangeEmailRepository passwordChangeEmailRepository;
     private final UserRepository userRepository;
     private final RegisterMail registerMail;
     private final ElasticUserRepository elasticUserRepository;
@@ -31,6 +32,14 @@ public class EmailService {
         Email emailAuth=new Email(email);
         registerMail.sendSimpleMessage(email,emailAuth.getId().toHexString());
         emailRepository.save(emailAuth);
+    }
+
+    public void passwordChangeEmailSend(String email){
+        passwordChangeEmailRepository.findByEmail(email).ifPresent((emailAuth)->passwordChangeEmailRepository.delete(emailAuth));
+        PasswordChangeEmail emailAuth=new PasswordChangeEmail(email);
+        registerMail.sendSimplePasswordChangeMessage(email,emailAuth.getRandomNumber());
+        passwordChangeEmailRepository.save(emailAuth);
+
     }
 
     public Email findOneEmail(String email){

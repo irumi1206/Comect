@@ -284,6 +284,18 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("/password")
+    public ResponseEntity<Void> passwordChangeEmail(@ModelAttribute PasswordChangeRequestDto request){
+        userService.passwordChange(request.getEmail());
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/passwordCheck")
+    public ResponseEntity<Void> passwordChangeCheck(@ModelAttribute PasswordChangeCheckRequestDto request){
+        userService.passwordChangeCheck(request.getEmail(),request.getRandomNumber(),request.getNewPassword());
+        return ResponseEntity.ok().build();
+    }
+
 //    @GetMapping("/test")
 //    public ResponseEntity<Void> testtest(){
 //        userService.test();

@@ -65,7 +65,7 @@ public class EmailService {
             ElasticUser elasticUser=new ElasticUser(user.getId().toString(),user.getNickname());
             elasticUserRepository.save(elasticUser);
             return true;
-        }catch(Error e){
+        }catch(Exception e){
             return false;
         }
     }

@@ -27,7 +27,7 @@ public class PasswordChangeEmail{
         this.id=new ObjectId();
         this.email = email;
         this.validDate= LocalDateTime.now().plusHours(24);
-        this.randomNumber=(int) (Math.random()*(9)+1)*100000;
+        this.randomNumber=(int) ((Math.random()*(9)+1)*100000);
     }
     public boolean isValid(){
         return LocalDateTime.now().isBefore(validDate);

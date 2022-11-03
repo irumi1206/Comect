@@ -76,6 +76,7 @@ public class UserService {
             passwordChangeEmailRepository.delete(passwordChangeEmail);
             User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
             user.setPassword(newPassword);
+            userRepository.save(user);
         }else{
             throw new CustomException(ErrorCode.EMAIL_AUTH_FAILED);
         }

@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -42,8 +43,8 @@ public class EmailController {
             @ApiResponse(responseCode = "200", description = "이메일 인증됨"),
     })
     @GetMapping("/authenticationCheck")
-    public String emailAuthSuccess(@Valid @ModelAttribute EmailAuthLinkRequestDto request){
-        emailService.emailCheck(request.getId());
+    public String emailAuthSuccess(@Valid @ModelAttribute EmailAuthLinkRequestDto request, Model model){
+//        emailService.emailCheck(request.getId());
 
         return "mainAuth";
     }

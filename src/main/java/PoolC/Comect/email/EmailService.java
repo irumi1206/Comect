@@ -41,19 +41,24 @@ public class EmailService {
         return emailRepository.findById(new ObjectId(id)).orElseThrow(()->new CustomException(ErrorCode.EMAIL_NOT_FOUND));
     }
 
-    public void emailCheck(String id){
+    public Boolean emailCheck(String id){
         Email emailAuth = findOneId(id);
-        User user = userRepository.findByEmail(emailAuth.getEmail()).orElseThrow(() -> {
-            throw new CustomException(ErrorCode.EMAIL_AUTH_FAILED);
-        });
-        emailAuthCheck(emailAuth.getEmail());
-        user.setRoles(Collections.singletonList("ROLE_AU"));
-        userRepository.save(user);
-        emailRepository.delete(emailAuth);
+        try{
+            User user = userRepository.findByEmail(emailAuth.getEmail()).orElseThrow(() -> {
+                throw new CustomException(ErrorCode.EMAIL_AUTH_FAILED);
+            });
+            emailAuthCheck(emailAuth.getEmail());
+            user.setRoles(Collections.singletonList("ROLE_AU"));
+            userRepository.save(user);
+            emailRepository.delete(emailAuth);
 
-        //es에 저장
-        ElasticUser elasticUser=new ElasticUser(user.getId().toString(),user.getNickname());
-        elasticUserRepository.save(elasticUser);
+            //es에 저장
+            ElasticUser elasticUser=new ElasticUser(user.getId().toString(),user.getNickname());
+            elasticUserRepository.save(elasticUser);
+            return true;
+        }catch(Error e){
+            return false;
+        }
     }
 
     public void emailAuthCheck(String email){

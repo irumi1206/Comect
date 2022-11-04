@@ -58,6 +58,7 @@ public class CustomFolderRepositoryImpl implements CustomFolderRepository {
 
         for(int i=0;i<tokens.length-1;++i){
             boolean flag=false;
+            System.out.println(folder);
             for(int j=0;j<folder.getFolders().size();++j){
                 if(folder.getFolders().get(j).getName().equals(tokens[i])) {
                     folder = folder.getFolders().get(j);

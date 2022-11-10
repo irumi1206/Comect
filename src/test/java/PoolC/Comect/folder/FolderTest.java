@@ -95,7 +95,6 @@ public class FolderTest {
     public void before() {
         deleteAllTestData();
         authorizedLogin(1);
-        authorizedLogin(2);
     }
 
     public void createFolder(){

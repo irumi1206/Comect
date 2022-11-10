@@ -1,5 +1,6 @@
 package PoolC.Comect.elasticUser.controller;
 
+import PoolC.Comect.elasticUser.domain.ElasticUser;
 import PoolC.Comect.elasticUser.domain.ElasticUserInfo;
 import PoolC.Comect.elasticUser.dto.ElasticUserSearchRequestDto;
 import PoolC.Comect.elasticUser.dto.ElasticUserSearchResponseDto;
@@ -23,31 +24,15 @@ import java.util.Optional;
 public class ElasticUserController {
 
     private final ElasticUserService elasticUserService;
-    private final UserRepository userRepository;
     private final UserService userService;
 
     @GetMapping(value="/user/elastic")
     public ResponseEntity<ElasticUserSearchResponseDto> searchUser(@ModelAttribute ElasticUserSearchRequestDto elasticUserSearchRequestDto, @AuthenticationPrincipal User user){
         String email= user.getEmail();
+
         User searchUser=userService.findOneEmail(email);
         String keyword= elasticUserSearchRequestDto.getKeyword();
-        List<String> nicknames= elasticUserService.searchUser(keyword);
-        List<ElasticUserInfo> users=new ArrayList<>();
-
-        for(int i=0;i<nicknames.size();++i){
-
-            String nickname=nicknames.get(i);
-            if(searchUser.getNickname().equals(nickname)) continue;
-            Optional<User> userOption=userRepository.findByNickname(nickname);
-            userOption.ifPresent(
-                    currentUser->{
-                        String imageUrl=currentUser.getImageUrl();
-                        Boolean isFollowing=userService.isFollower(currentUser.getId(),searchUser.getId())?true:false;
-                        String currentEmail=currentUser.getEmail();
-                        users.add(ElasticUserInfo.toElasticUserInfo(currentEmail,nickname,imageUrl,isFollowing));
-                    }
-            );
-        }
+        List<ElasticUserInfo> users= elasticUserService.searchUser(keyword,email);
 
         ElasticUserSearchResponseDto elasticUserSearchResponseDto=ElasticUserSearchResponseDto.builder()
                 .users(users)
